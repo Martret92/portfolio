@@ -1,5 +1,6 @@
 ---
-// Temporary M0 smoke page. Localized routes arrive in the next milestone.
+const englishPath = '/en';
+const spanishPath = '/es';
 ---
 
 <!doctype html>
@@ -8,15 +9,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <meta name="robots" content="noindex" />
-    <title>Portfolio Foundation</title>
+    <title>Temporary language entry</title>
   </head>
+
   <body>
     <main>
-      <h1>Portfolio foundation</h1>
-      <p>
-        M0 verifies the toolchain only. Product content starts in the vertical
-        slice.
-      </p>
+      <h1>Temporary language entry</h1>
+
+      <nav aria-label="Choose language">
+        <a href={englishPath} lang="en">English</a>
+        <a href={spanishPath} lang="es">Español</a>
+      </nav>
     </main>
   </body>
 </html>

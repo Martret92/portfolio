@@ -1,0 +1,33 @@
+---
+import LanguageSwitcher from '@components/LanguageSwitcher.astro';
+import { locales, type Locale } from '@i18n/config';
+import { useTranslations } from '@i18n/ui';
+import BaseLayout from '@layouts/BaseLayout.astro';
+
+export function getStaticPaths() {
+  return locales.map((locale) => ({
+    params: { lang: locale },
+    props: { locale },
+  }));
+}
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+
+const t = useTranslations(locale);
+---
+
+<BaseLayout
+  locale={locale}
+  title={t.foundation.title}
+  description={t.foundation.description}
+>
+  <LanguageSwitcher locale={locale} pathname={Astro.url.pathname} />
+
+  <h1>{t.foundation.heading}</h1>
+
+  <p>{t.foundation.description}</p>
+</BaseLayout>
