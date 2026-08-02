@@ -1,0 +1,24 @@
+---
+import type { Locale } from '@i18n/config';
+import { getAlternateLocale, getAlternateLocalePath } from '@i18n/routes';
+import { useTranslations } from '@i18n/ui';
+
+interface Props {
+  locale: Locale;
+  pathname: string;
+}
+
+const { locale, pathname } = Astro.props;
+
+const alternateLocale = getAlternateLocale(locale);
+const alternatePath = getAlternateLocalePath(locale, pathname);
+const t = useTranslations(locale);
+---
+
+<nav aria-label={t.language.navigationLabel}>
+  <span aria-current="true">{t.language.current}</span>
+
+  <a href={alternatePath} lang={alternateLocale} hreflang={alternateLocale}>
+    {t.language.switchTo}
+  </a>
+</nav>
