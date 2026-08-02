@@ -1,1 +1,118 @@
-/* M0 placeholder: real UI tokens are introduced during the UI foundation vertical slice. */
+:root {
+  color-scheme: light;
+
+  /* Color roles */
+  --color-canvas: #f7f7f5;
+  --color-surface: #ffffff;
+  --color-surface-subtle: #efefec;
+  --color-text: #1d1d1b;
+  --color-text-muted: #5f5f59;
+  --color-border: #d4d4ce;
+  --color-border-strong: #8a8a82;
+  --color-interactive: #30302d;
+  --color-interactive-hover: #050505;
+  --color-selected: #e4e4df;
+  --color-disabled: #777770;
+  --color-selection-background: #d9d9d3;
+  --color-selection-text: #111110;
+
+  /* Typography roles */
+  --font-family-display:
+    ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    sans-serif;
+  --font-family-body:
+    ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    sans-serif;
+  --font-family-mono:
+    ui-monospace, 'Cascadia Code', 'SFMono-Regular', Consolas,
+    'Liberation Mono', monospace;
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-body: clamp(1rem, 0.97rem + 0.15vw, 1.0625rem);
+  --font-size-lead: clamp(1.125rem, 1.04rem + 0.4vw, 1.375rem);
+  --font-size-heading-sm: clamp(1.375rem, 1.19rem + 0.9vw, 1.875rem);
+  --font-size-heading-md: clamp(1.75rem, 1.39rem + 1.8vw, 2.75rem);
+  --font-size-heading-lg: clamp(2.25rem, 1.61rem + 3.2vw, 4rem);
+  --font-weight-regular: 400;
+  --font-weight-medium: 600;
+  --font-weight-bold: 700;
+  --line-height-tight: 1.15;
+  --line-height-body: 1.6;
+  --line-height-loose: 1.75;
+  --letter-spacing-tight: -0.025em;
+  --letter-spacing-wide: 0.06em;
+
+  /* Spacing */
+  --space-0: 0;
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --space-9: 6rem;
+
+  /* Shape, borders, and elevation */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --border-width: 1px;
+  --border-width-strong: 2px;
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 8%);
+  --shadow-md: 0 8px 24px rgb(0 0 0 / 10%);
+
+  /* Focus and interaction */
+  --focus-ring-color: #3f3f3a;
+  --focus-ring-width: 3px;
+  --focus-ring-offset: 3px;
+  --touch-target-min: 2.75rem;
+
+  /* Motion */
+  --motion-duration-fast: 120ms;
+  --motion-duration-standard: 200ms;
+  --motion-duration-slow: 320ms;
+  --motion-easing-standard: cubic-bezier(0.2, 0, 0, 1);
+  --motion-easing-emphasized: cubic-bezier(0.2, 0, 0, 1.2);
+
+  /* Layering */
+  --z-index-base: 0;
+  --z-index-raised: 10;
+  --z-index-overlay: 100;
+  --z-index-modal: 1000;
+
+  /* Layout */
+  --layout-gutter: clamp(1rem, 4vw, 3rem);
+  --layout-container: 75rem;
+  --layout-container-wide: 90rem;
+  --content-measure: 68ch;
+
+  /* Shared density controls */
+  --density-space-inline: var(--space-4);
+  --density-space-block: var(--space-3);
+  --density-gap: var(--space-5);
+
+  /* Architecture explorer states */
+  --architecture-node-background: var(--color-surface);
+  --architecture-node-border: var(--color-border);
+  --architecture-node-interactive: var(--color-interactive);
+  --architecture-node-hover-border: var(--color-border-strong);
+  --architecture-node-focus-border: var(--color-border-strong);
+  --architecture-node-selected-background: var(--color-selected);
+  --architecture-node-dimmed-opacity: 0.4;
+  --architecture-connection: var(--color-border-strong);
+  --architecture-connection-active: var(--color-text);
+}
+
+[data-density='product'] {
+  --density-space-inline: var(--space-5);
+  --density-space-block: var(--space-4);
+  --density-gap: var(--space-6);
+}
+
+[data-density='system'] {
+  --density-space-inline: var(--space-3);
+  --density-space-block: var(--space-2);
+  --density-gap: var(--space-3);
+}
