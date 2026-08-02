@@ -24,8 +24,12 @@ const { locale, title, description } = Astro.props;
   </head>
 
   <body>
+    <slot name="header" />
+
     <main>
       <slot />
     </main>
+
+    <slot name="footer" />
   </body>
 </html>

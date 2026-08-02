@@ -1,6 +1,10 @@
 import { projects, type ProjectId } from '../content/projects';
-import { isLocale, locales } from '../i18n/config';
-import type { Project, ProjectEditorialIdentity } from '../types/project';
+import { isLocale, locales, type Locale } from '../i18n/config';
+import type {
+  Project,
+  ProjectEditorialEntry,
+  ProjectEditorialIdentity,
+} from '../types/project';
 
 export function isProjectId(value: string): value is ProjectId {
   return Object.hasOwn(projects, value);
@@ -18,6 +22,17 @@ export function requireProject(projectId: string): Project {
   }
 
   return project;
+}
+
+export function getProjectEditorialEntry<TEntry extends ProjectEditorialEntry>(
+  entries: readonly TEntry[],
+  projectId: ProjectId,
+  locale: Locale,
+): TEntry | undefined {
+  return entries.find(
+    (entry) =>
+      entry.data.projectId === projectId && entry.data.locale === locale,
+  );
 }
 
 export function validateProjectContentIdentity(

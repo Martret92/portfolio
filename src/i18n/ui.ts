@@ -13,6 +13,26 @@ const ui = {
       description:
         'The English route is generated statically. Portfolio content arrives in the next milestones.',
     },
+    home: {
+      title: 'Developer portfolio — temporary home',
+      description:
+        'Temporary portfolio home introducing the developer and featured work.',
+      siteIdentity: 'Developer Name',
+      siteIdentityStatus: 'Placeholder identity',
+      navigationLabel: 'Primary navigation',
+      navigation: {
+        home: 'Home',
+        featuredWork: 'Featured work',
+      },
+      eyebrow: 'Portfolio draft',
+      heading: 'Software work, presented with clarity.',
+      introduction:
+        'This is temporary introductory copy for validating the portfolio structure and bilingual experience.',
+      projectCta: 'Explore featured work',
+      featuredWorkLabel: 'Featured work',
+      projectLink: 'View DevData Generator project route',
+      footer: 'Temporary portfolio foundation.',
+    },
   },
   es: {
     language: {
@@ -25,6 +45,26 @@ const ui = {
       heading: 'Base de localización',
       description:
         'La ruta en español se genera de forma estática. El contenido del portfolio llegará en los siguientes hitos.',
+    },
+    home: {
+      title: 'Portfolio de desarrollo — inicio temporal',
+      description:
+        'Inicio temporal del portfolio para presentar a la persona desarrolladora y el trabajo destacado.',
+      siteIdentity: 'Nombre de desarrollo',
+      siteIdentityStatus: 'Identidad provisional',
+      navigationLabel: 'Navegación principal',
+      navigation: {
+        home: 'Inicio',
+        featuredWork: 'Trabajo destacado',
+      },
+      eyebrow: 'Borrador del portfolio',
+      heading: 'Trabajo de software presentado con claridad.',
+      introduction:
+        'Este texto introductorio es temporal y sirve para validar la estructura del portfolio y la experiencia bilingüe.',
+      projectCta: 'Explorar trabajo destacado',
+      featuredWorkLabel: 'Trabajo destacado',
+      projectLink: 'Ver la ruta del proyecto DevData Generator',
+      footer: 'Base temporal del portfolio.',
     },
   },
 } as const satisfies Record<Locale, object>;
