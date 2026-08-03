@@ -1,0 +1,419 @@
+---
+import {
+  getArchitectureNode,
+  getConnectedNodeIds,
+  validateArchitectureGraph,
+} from '@lib/architecture';
+import type {
+  ArchitectureConnection,
+  ArchitectureNode,
+} from '../types/architecture';
+
+interface Props {
+  id: string;
+  title: string;
+  description: string;
+  detailsLabel: string;
+  connectionsLabel: string;
+  nodes: readonly ArchitectureNode[];
+  connections: readonly ArchitectureConnection[];
+  defaultNodeId?: string;
+}
+
+const {
+  id,
+  title,
+  description,
+  detailsLabel,
+  connectionsLabel,
+  nodes,
+  connections,
+  defaultNodeId = nodes[0]?.id,
+} = Astro.props;
+
+validateArchitectureGraph(nodes, connections);
+
+const defaultNode = defaultNodeId
+  ? getArchitectureNode(nodes, defaultNodeId)
+  : undefined;
+
+if (!defaultNode) {
+  throw new Error(`Architecture explorer ${id} requires a valid default node`);
+}
+
+const detailsId = `${id}-details`;
+const detailsHeadingId = `${id}-details-heading`;
+const nodeCount = Math.max(nodes.length, 1);
+const nodePositions = new Map(
+  nodes.map((node, index) => [node.id, ((index + 0.5) / nodeCount) * 100]),
+);
+---
+
+<section
+  class="architecture-explorer stack"
+  data-architecture-explorer
+  data-default-node={defaultNode.id}
+  style={`--architecture-node-count: ${nodeCount}`}
+>
+  <header class="stack architecture-explorer__header">
+    <h3>{title}</h3>
+    <p class="measure">{description}</p>
+  </header>
+
+  <div class="architecture-diagram">
+    <svg
+      class="architecture-connections"
+      viewBox="0 0 100 20"
+      preserveAspectRatio="none"
+      aria-hidden="true"
+      focusable="false"
+    >
+      {
+        connections.map((connection) => (
+          <line
+            x1={nodePositions.get(connection.from) ?? 0}
+            y1="10"
+            x2={nodePositions.get(connection.to) ?? 0}
+            y2="10"
+            vector-effect="non-scaling-stroke"
+            data-architecture-connection
+            data-from={connection.from}
+            data-to={connection.to}
+          />
+        ))
+      }
+    </svg>
+
+    <div class="architecture-nodes">
+      {
+        nodes.map((node) => (
+          <article class="architecture-node" data-architecture-node={node.id}>
+            <div class="architecture-node__static-label">
+              {node.category && (
+                <span class="architecture-node__category">{node.category}</span>
+              )}
+              <h4>{node.label}</h4>
+            </div>
+
+            <button
+              class="architecture-node__control"
+              type="button"
+              aria-pressed={node.id === defaultNode.id ? 'true' : 'false'}
+              aria-controls={detailsId}
+              data-node-control
+              data-node-id={node.id}
+              data-node-label={node.label}
+              data-node-description={node.description}
+              data-connected-node-ids={getConnectedNodeIds(
+                connections,
+                node.id,
+              ).join(' ')}
+            >
+              {node.category && (
+                <span class="architecture-node__category">{node.category}</span>
+              )}
+              <span>{node.label}</span>
+            </button>
+            <p>{node.description}</p>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+
+  <section
+    id={detailsId}
+    class="architecture-details"
+    aria-labelledby={detailsHeadingId}
+  >
+    <p class="architecture-details__label">{detailsLabel}</p>
+    <h4 id={detailsHeadingId} data-details-heading>{defaultNode.label}</h4>
+    <p data-details-description>{defaultNode.description}</p>
+  </section>
+
+  <section class="architecture-connection-list">
+    <h4>{connectionsLabel}</h4>
+    <ul>
+      {
+        connections.map((connection) => {
+          const from = getArchitectureNode(nodes, connection.from);
+          const to = getArchitectureNode(nodes, connection.to);
+
+          return (
+            <li>
+              <strong>{from?.label}</strong> — {connection.label} —{' '}
+              <strong>{to?.label}</strong>
+            </li>
+          );
+        })
+      }
+    </ul>
+  </section>
+</section>
+
+<script>
+  for (const explorer of document.querySelectorAll<HTMLElement>(
+    '[data-architecture-explorer]',
+  )) {
+    const controls = explorer.querySelectorAll<HTMLButtonElement>(
+      '[data-node-control]',
+    );
+    const nodes = explorer.querySelectorAll<HTMLElement>(
+      '[data-architecture-node]',
+    );
+    const connections = explorer.querySelectorAll<SVGLineElement>(
+      '[data-architecture-connection]',
+    );
+    const detailsHeading = explorer.querySelector<HTMLElement>(
+      '[data-details-heading]',
+    );
+    const detailsDescription = explorer.querySelector<HTMLElement>(
+      '[data-details-description]',
+    );
+
+    const selectNode = (control: HTMLButtonElement) => {
+      const selectedId = control.dataset.nodeId;
+      const connectedIds = new Set(
+        control.dataset.connectedNodeIds?.split(' ').filter(Boolean),
+      );
+
+      if (!selectedId || !detailsHeading || !detailsDescription) return;
+
+      for (const candidate of controls) {
+        candidate.setAttribute(
+          'aria-pressed',
+          String(candidate.dataset.nodeId === selectedId),
+        );
+      }
+
+      for (const node of nodes) {
+        const nodeId = node.dataset.architectureNode;
+        node.dataset.nodeState =
+          nodeId === selectedId
+            ? 'selected'
+            : nodeId && connectedIds.has(nodeId)
+              ? 'connected'
+              : 'dimmed';
+      }
+
+      for (const connection of connections) {
+        connection.dataset.connectionState =
+          connection.dataset.from === selectedId ||
+          connection.dataset.to === selectedId
+            ? 'active'
+            : 'dimmed';
+      }
+
+      detailsHeading.textContent = control.dataset.nodeLabel ?? '';
+      detailsDescription.textContent = control.dataset.nodeDescription ?? '';
+      explorer.dataset.enhanced = 'true';
+    };
+
+    for (const control of controls) {
+      control.addEventListener('click', () => selectNode(control));
+    }
+
+    const defaultControl = Array.from(controls).find(
+      (control) => control.dataset.nodeId === explorer.dataset.defaultNode,
+    );
+
+    if (defaultControl) selectNode(defaultControl);
+  }
+</script>
+
+<style>
+  .architecture-explorer {
+    --stack-space: var(--space-5);
+
+    min-inline-size: 0;
+    margin-block-start: var(--space-6);
+  }
+
+  .architecture-explorer__header {
+    --stack-space: var(--space-2);
+  }
+
+  h3,
+  h4,
+  p {
+    margin-block: 0;
+  }
+
+  h3 {
+    font-size: var(--font-size-heading-sm);
+  }
+
+  h4 {
+    font-size: var(--font-size-body);
+  }
+
+  .architecture-explorer__header p,
+  .architecture-node p,
+  .architecture-details p,
+  .architecture-connection-list {
+    color: var(--color-text-muted);
+  }
+
+  .architecture-diagram {
+    position: relative;
+    min-inline-size: 0;
+  }
+
+  .architecture-connections {
+    position: absolute;
+    z-index: var(--z-index-base);
+    inset: 0;
+    inline-size: 100%;
+    block-size: 100%;
+    overflow: visible;
+    pointer-events: none;
+  }
+
+  .architecture-connections line {
+    stroke: var(--architecture-connection);
+    stroke-width: var(--border-width-strong);
+    transition:
+      stroke var(--motion-duration-fast) var(--motion-easing-standard),
+      opacity var(--motion-duration-fast) var(--motion-easing-standard);
+  }
+
+  .architecture-connections line[data-connection-state='active'] {
+    stroke: var(--architecture-connection-active);
+    stroke-width: 3px;
+  }
+
+  .architecture-connections line[data-connection-state='dimmed'] {
+    opacity: var(--architecture-node-dimmed-opacity);
+  }
+
+  .architecture-nodes {
+    position: relative;
+    z-index: var(--z-index-raised);
+    display: grid;
+    grid-template-columns: repeat(
+      var(--architecture-node-count),
+      minmax(0, 1fr)
+    );
+    gap: var(--space-5);
+  }
+
+  .architecture-node {
+    min-inline-size: 0;
+    padding: var(--space-3);
+    border: var(--border-width) solid var(--architecture-node-border);
+    border-radius: var(--radius-md);
+    background: var(--architecture-node-background);
+    transition:
+      background-color var(--motion-duration-standard)
+        var(--motion-easing-standard),
+      border-color var(--motion-duration-standard) var(--motion-easing-standard),
+      box-shadow var(--motion-duration-standard) var(--motion-easing-standard);
+  }
+
+  .architecture-node__control {
+    display: none;
+    inline-size: 100%;
+    border: var(--border-width-strong) solid transparent;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    padding: var(--space-2);
+    color: var(--architecture-node-interactive);
+    font-weight: var(--font-weight-bold);
+    text-align: start;
+  }
+
+  .architecture-explorer[data-enhanced='true'] .architecture-node__control {
+    display: block;
+  }
+
+  .architecture-explorer[data-enhanced='true']
+    .architecture-node__static-label {
+    display: none;
+  }
+
+  .architecture-node__control:hover {
+    border-color: var(--architecture-node-hover-border);
+  }
+
+  .architecture-node__control:focus-visible {
+    border-color: var(--architecture-node-focus-border);
+  }
+
+  .architecture-node__category {
+    display: block;
+    margin-block-end: var(--space-1);
+    color: var(--color-text-muted);
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-regular);
+    letter-spacing: var(--letter-spacing-wide);
+    text-transform: uppercase;
+  }
+
+  .architecture-node p {
+    margin-block-start: var(--space-2);
+    font-size: var(--font-size-sm);
+  }
+
+  .architecture-explorer[data-enhanced='true']
+    .architecture-node[data-node-state='selected'] {
+    border-color: var(--architecture-node-focus-border);
+    background: var(--architecture-node-selected-background);
+    box-shadow: inset var(--border-width-strong) 0
+      var(--architecture-node-focus-border);
+  }
+
+  .architecture-explorer[data-enhanced='true']
+    .architecture-node[data-node-state='connected'] {
+    border-style: dashed;
+    border-color: var(--architecture-node-hover-border);
+  }
+
+  .architecture-explorer[data-enhanced='true']
+    .architecture-node[data-node-state='dimmed'] {
+    border-style: dashed;
+  }
+
+  .architecture-details,
+  .architecture-connection-list {
+    padding: var(--space-4);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+  }
+
+  .architecture-details {
+    display: none;
+  }
+
+  .architecture-explorer[data-enhanced='true'] .architecture-details {
+    display: block;
+  }
+
+  .architecture-details__label {
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-xs);
+    letter-spacing: var(--letter-spacing-wide);
+    text-transform: uppercase;
+  }
+
+  .architecture-details h4 {
+    margin-block: var(--space-2);
+    color: var(--color-text);
+  }
+
+  .architecture-connection-list ul {
+    margin-block: var(--space-3) 0;
+    padding-inline-start: var(--space-5);
+  }
+
+  @media (width < 40rem) {
+    .architecture-connections {
+      display: none;
+    }
+
+    .architecture-nodes {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
