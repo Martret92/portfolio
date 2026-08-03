@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 
 import ArchitectureExplorer from '@components/ArchitectureExplorer.astro';
+import DecisionDisclosure from '@components/DecisionDisclosure.astro';
 import SiteHeader from '@components/SiteHeader.astro';
 import ViewModeControl from '@components/ViewModeControl.astro';
 import { projects, type ProjectId } from '@content/projects';
@@ -14,6 +15,7 @@ import type {
   ArchitectureConnection,
   ArchitectureNode,
 } from '../../../types/architecture';
+import type { TechnicalDecision } from '../../../types/decision';
 
 export function getStaticPaths() {
   return locales.flatMap((locale) =>
@@ -75,6 +77,24 @@ const architectureConnections = [
     label: t.architectureExplorer.connection,
   },
 ] satisfies readonly ArchitectureConnection[];
+const temporaryDecisions = [
+  {
+    id: 'temporary-decision-boundary',
+    title: t.decisionDisclosure.items.boundary.title,
+    summary: t.decisionDisclosure.items.boundary.summary,
+    detail: t.decisionDisclosure.items.boundary.detail,
+    tradeoff: {
+      label: t.decisionDisclosure.items.boundary.tradeoffLabel,
+      value: t.decisionDisclosure.items.boundary.tradeoffValue,
+    },
+  },
+  {
+    id: 'temporary-decision-alternative',
+    title: t.decisionDisclosure.items.alternative.title,
+    summary: t.decisionDisclosure.items.alternative.summary,
+    detail: t.decisionDisclosure.items.alternative.detail,
+  },
+] satisfies readonly TechnicalDecision[];
 ---
 
 <BaseLayout
@@ -143,9 +163,15 @@ const architectureConnections = [
 
       <section class="shell-section" aria-labelledby="decisions-heading">
         <h2 id="decisions-heading">{t.caseStudy.sections.decisions.title}</h2>
-        <p class="measure">
-          {t.caseStudy.sections.decisions.placeholder}
-        </p>
+        <div>
+          <p class="measure">
+            {t.caseStudy.sections.decisions.placeholder}
+          </p>
+          <DecisionDisclosure
+            heading={t.decisionDisclosure.heading}
+            decisions={temporaryDecisions}
+          />
+        </div>
       </section>
     </div>
   </article>
