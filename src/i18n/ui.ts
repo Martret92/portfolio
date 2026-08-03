@@ -33,6 +33,33 @@ const ui = {
       projectLink: 'View DevData Generator project route',
       footer: 'Temporary portfolio foundation.',
     },
+    caseStudy: {
+      titleSuffix: 'Temporary case study',
+      label: 'Case-study shell',
+      backHome: 'Back to Home',
+      sections: {
+        overview: {
+          title: 'Overview',
+          placeholder:
+            'Temporary overview placeholder. Project details will be added in a later milestone.',
+        },
+        product: {
+          title: 'Product view',
+          placeholder:
+            'Temporary Product View placeholder. No product claims are included yet.',
+        },
+        system: {
+          title: 'System view',
+          placeholder:
+            'Temporary System View placeholder. Technical structure is intentionally deferred.',
+        },
+        decisions: {
+          title: 'Technical decisions',
+          placeholder:
+            'Temporary decisions placeholder. Verified technical context will be added later.',
+        },
+      },
+    },
   },
   es: {
     language: {
@@ -65,6 +92,33 @@ const ui = {
       featuredWorkLabel: 'Trabajo destacado',
       projectLink: 'Ver la ruta del proyecto DevData Generator',
       footer: 'Base temporal del portfolio.',
+    },
+    caseStudy: {
+      titleSuffix: 'Caso de estudio temporal',
+      label: 'Estructura del caso de estudio',
+      backHome: 'Volver al inicio',
+      sections: {
+        overview: {
+          title: 'Resumen',
+          placeholder:
+            'Marcador temporal del resumen. Los detalles del proyecto se añadirán en un hito posterior.',
+        },
+        product: {
+          title: 'Vista de producto',
+          placeholder:
+            'Marcador temporal de la Vista de producto. Todavía no se incluyen afirmaciones sobre el producto.',
+        },
+        system: {
+          title: 'Vista de sistema',
+          placeholder:
+            'Marcador temporal de la Vista de sistema. La estructura técnica se reserva para más adelante.',
+        },
+        decisions: {
+          title: 'Decisiones técnicas',
+          placeholder:
+            'Marcador temporal de decisiones. El contexto técnico verificado se añadirá más adelante.',
+        },
+      },
     },
   },
 } as const satisfies Record<Locale, object>;
