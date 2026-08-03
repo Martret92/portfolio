@@ -1,0 +1,144 @@
+---
+import type { TechnicalDecision } from '../types/decision';
+
+interface Props {
+  heading: string;
+  decisions: readonly TechnicalDecision[];
+}
+
+const { heading, decisions } = Astro.props;
+---
+
+<div class="decision-disclosure stack">
+  <h3>{heading}</h3>
+
+  <div class="decision-disclosure__items">
+    {
+      decisions.map((decision) => (
+        <details id={decision.id} class="decision-item">
+          <summary>
+            <span class="decision-item__heading">
+              <strong>{decision.title}</strong>
+              <span>{decision.summary}</span>
+            </span>
+          </summary>
+
+          <div class="decision-item__body stack">
+            <p>{decision.detail}</p>
+            {decision.tradeoff && (
+              <dl>
+                <dt>{decision.tradeoff.label}</dt>
+                <dd>{decision.tradeoff.value}</dd>
+              </dl>
+            )}
+          </div>
+        </details>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .decision-disclosure {
+    --stack-space: var(--space-4);
+
+    min-inline-size: 0;
+    margin-block-start: var(--space-6);
+  }
+
+  h3,
+  p,
+  dl,
+  dd {
+    margin-block: 0;
+  }
+
+  h3 {
+    font-size: var(--font-size-heading-sm);
+  }
+
+  .decision-disclosure__items {
+    border-block-start: var(--border-width) solid var(--color-border);
+  }
+
+  .decision-item {
+    border-block-end: var(--border-width) solid var(--color-border);
+  }
+
+  summary {
+    min-block-size: var(--touch-target-min);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--space-4);
+    align-items: center;
+    padding-block: var(--space-4);
+    cursor: pointer;
+    list-style: none;
+  }
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  summary::after {
+    content: '+';
+    inline-size: 1.5rem;
+    color: var(--color-text-muted);
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-lead);
+    line-height: 1;
+    text-align: center;
+  }
+
+  details[open] summary::after {
+    content: '−';
+  }
+
+  summary:hover strong {
+    color: var(--color-interactive-hover);
+  }
+
+  summary:focus-visible {
+    border-radius: var(--radius-sm);
+    outline: var(--focus-ring-width) solid var(--focus-ring-color);
+    outline-offset: var(--focus-ring-offset);
+  }
+
+  .decision-item__heading {
+    display: grid;
+    gap: var(--space-1);
+  }
+
+  .decision-item__heading strong {
+    color: var(--color-text);
+    font-size: var(--font-size-body);
+  }
+
+  .decision-item__heading span,
+  .decision-item__body {
+    color: var(--color-text-muted);
+  }
+
+  .decision-item__body {
+    --stack-space: var(--space-4);
+
+    padding-block: 0 var(--space-5);
+    padding-inline-end: calc(var(--space-4) + 1.5rem);
+  }
+
+  dl {
+    display: grid;
+    gap: var(--space-1);
+    padding-inline-start: var(--space-4);
+    border-inline-start: var(--border-width-strong) solid
+      var(--color-border-strong);
+  }
+
+  dt {
+    color: var(--color-text);
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-xs);
+    letter-spacing: var(--letter-spacing-wide);
+    text-transform: uppercase;
+  }
+</style>

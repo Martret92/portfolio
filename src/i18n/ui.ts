@@ -90,6 +90,27 @@ const ui = {
         },
       },
     },
+    decisionDisclosure: {
+      heading: 'Temporary decision examples',
+      items: {
+        boundary: {
+          title: 'Temporary decision example',
+          summary: 'Generic summary for demonstrating progressive disclosure.',
+          detail:
+            'This is provisional demonstration content. A verified project decision will replace it after project inspection.',
+          tradeoffLabel: 'Tradeoff placeholder',
+          tradeoffValue:
+            'No project-specific tradeoff is asserted in this temporary example.',
+        },
+        alternative: {
+          title: 'Second temporary decision example',
+          summary:
+            'Another neutral example showing that disclosures can remain open together.',
+          detail:
+            'This placeholder demonstrates the reusable structure only and does not describe a DevData decision.',
+        },
+      },
+    },
   },
   es: {
     language: {
@@ -178,6 +199,27 @@ const ui = {
           label: 'Datos',
           description:
             'Marcador temporal para un componente de datos genérico.',
+        },
+      },
+    },
+    decisionDisclosure: {
+      heading: 'Ejemplos temporales de decisiones',
+      items: {
+        boundary: {
+          title: 'Ejemplo temporal de decisión',
+          summary: 'Resumen genérico para demostrar la divulgación progresiva.',
+          detail:
+            'Este contenido es provisional. Una decisión verificada del proyecto lo sustituirá después de inspeccionarlo.',
+          tradeoffLabel: 'Marcador temporal de contrapartida',
+          tradeoffValue:
+            'Este ejemplo temporal no afirma ninguna contrapartida específica del proyecto.',
+        },
+        alternative: {
+          title: 'Segundo ejemplo temporal de decisión',
+          summary:
+            'Otro ejemplo neutral que muestra que varias secciones pueden permanecer abiertas.',
+          detail:
+            'Este marcador demuestra únicamente la estructura reutilizable y no describe una decisión de DevData.',
         },
       },
     },
