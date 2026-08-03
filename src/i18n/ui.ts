@@ -37,6 +37,11 @@ const ui = {
       titleSuffix: 'Temporary case study',
       label: 'Case-study shell',
       backHome: 'Back to Home',
+      viewMode: {
+        label: 'Choose a project perspective',
+        explanation:
+          'Both perspectives remain available below. Choose one to emphasize it.',
+      },
       sections: {
         overview: {
           title: 'Overview',
@@ -97,6 +102,11 @@ const ui = {
       titleSuffix: 'Caso de estudio temporal',
       label: 'Estructura del caso de estudio',
       backHome: 'Volver al inicio',
+      viewMode: {
+        label: 'Elegir una perspectiva del proyecto',
+        explanation:
+          'Ambas perspectivas siguen disponibles. Elige una para destacarla.',
+      },
       sections: {
         overview: {
           title: 'Resumen',
