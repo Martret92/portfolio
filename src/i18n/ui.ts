@@ -65,6 +65,31 @@ const ui = {
         },
       },
     },
+    architectureExplorer: {
+      title: 'Temporary architecture explorer',
+      description:
+        'Generic demonstration structure only. It does not represent the verified project architecture.',
+      detailsLabel: 'Selected component details',
+      connectionsLabel: 'Temporary connections',
+      category: 'Placeholder layer',
+      connection: 'Temporary structural connection',
+      nodes: {
+        interface: {
+          label: 'Interface',
+          description:
+            'Temporary placeholder for an entry point in a generic system.',
+        },
+        application: {
+          label: 'Application',
+          description:
+            'Temporary placeholder for a generic application component.',
+        },
+        data: {
+          label: 'Data',
+          description: 'Temporary placeholder for a generic data component.',
+        },
+      },
+    },
   },
   es: {
     language: {
@@ -127,6 +152,32 @@ const ui = {
           title: 'Decisiones técnicas',
           placeholder:
             'Marcador temporal de decisiones. El contexto técnico verificado se añadirá más adelante.',
+        },
+      },
+    },
+    architectureExplorer: {
+      title: 'Explorador temporal de arquitectura',
+      description:
+        'Estructura genérica de demostración. No representa la arquitectura verificada del proyecto.',
+      detailsLabel: 'Detalles del componente seleccionado',
+      connectionsLabel: 'Conexiones temporales',
+      category: 'Capa provisional',
+      connection: 'Conexión estructural temporal',
+      nodes: {
+        interface: {
+          label: 'Interfaz',
+          description:
+            'Marcador temporal para un punto de entrada de un sistema genérico.',
+        },
+        application: {
+          label: 'Aplicación',
+          description:
+            'Marcador temporal para un componente de aplicación genérico.',
+        },
+        data: {
+          label: 'Datos',
+          description:
+            'Marcador temporal para un componente de datos genérico.',
         },
       },
     },

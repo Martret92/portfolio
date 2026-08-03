@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 
+import ArchitectureExplorer from '@components/ArchitectureExplorer.astro';
 import SiteHeader from '@components/SiteHeader.astro';
 import ViewModeControl from '@components/ViewModeControl.astro';
 import { projects, type ProjectId } from '@content/projects';
@@ -9,6 +10,10 @@ import { getLocalizedPath } from '@i18n/routes';
 import { useTranslations } from '@i18n/ui';
 import BaseLayout from '@layouts/BaseLayout.astro';
 import { getProjectEditorialEntry } from '@lib/projects';
+import type {
+  ArchitectureConnection,
+  ArchitectureNode,
+} from '../../../types/architecture';
 
 export function getStaticPaths() {
   return locales.flatMap((locale) =>
@@ -39,6 +44,37 @@ if (!projectEntry) {
 
 const homePath = getLocalizedPath(locale);
 const pageTitle = `${projectEntry.data.title} — ${t.caseStudy.titleSuffix}`;
+const architectureNodes = [
+  {
+    id: 'interface',
+    category: t.architectureExplorer.category,
+    ...t.architectureExplorer.nodes.interface,
+  },
+  {
+    id: 'application',
+    category: t.architectureExplorer.category,
+    ...t.architectureExplorer.nodes.application,
+  },
+  {
+    id: 'data',
+    category: t.architectureExplorer.category,
+    ...t.architectureExplorer.nodes.data,
+  },
+] satisfies readonly ArchitectureNode[];
+const architectureConnections = [
+  {
+    id: 'interface-application',
+    from: 'interface',
+    to: 'application',
+    label: t.architectureExplorer.connection,
+  },
+  {
+    id: 'application-data',
+    from: 'application',
+    to: 'data',
+    label: t.architectureExplorer.connection,
+  },
+] satisfies readonly ArchitectureConnection[];
 ---
 
 <BaseLayout
@@ -90,7 +126,19 @@ const pageTitle = `${projectEntry.data.title} — ${t.caseStudy.titleSuffix}`;
         aria-labelledby="system-heading"
       >
         <h2 id="system-heading">{t.caseStudy.sections.system.title}</h2>
-        <p class="measure">{t.caseStudy.sections.system.placeholder}</p>
+        <div>
+          <p class="measure">{t.caseStudy.sections.system.placeholder}</p>
+          <ArchitectureExplorer
+            id="case-study-architecture"
+            title={t.architectureExplorer.title}
+            description={t.architectureExplorer.description}
+            detailsLabel={t.architectureExplorer.detailsLabel}
+            connectionsLabel={t.architectureExplorer.connectionsLabel}
+            nodes={architectureNodes}
+            connections={architectureConnections}
+            defaultNodeId="interface"
+          />
+        </div>
       </section>
 
       <section class="shell-section" aria-labelledby="decisions-heading">
