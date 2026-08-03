@@ -8,6 +8,7 @@ import type { ProjectEditorialIdentity } from '../types/project';
 import {
   assertProjectLocaleParity,
   getProject,
+  getProjectEditorialEntry,
   requireProject,
   validateProjectContentIdentity,
 } from './projects';
@@ -55,6 +56,37 @@ describe('project data', () => {
     expect(() => requireProject('unknown-project')).toThrow(
       'Unknown project ID: unknown-project',
     );
+  });
+
+  it('retrieves editorial project content by stable ID and locale', () => {
+    const entries = [
+      {
+        data: {
+          projectId: 'devdata-generator',
+          locale: 'en' as const,
+          title: 'Temporary English title',
+          summary: 'Temporary English summary.',
+        },
+      },
+      {
+        data: {
+          projectId: 'devdata-generator',
+          locale: 'es' as const,
+          title: 'Título temporal en español',
+          summary: 'Resumen temporal en español.',
+        },
+      },
+    ];
+
+    expect(
+      getProjectEditorialEntry(entries, 'devdata-generator', 'es')?.data.title,
+    ).toBe('Título temporal en español');
+  });
+
+  it('returns undefined when localized editorial content is missing', () => {
+    expect(
+      getProjectEditorialEntry([], 'devdata-generator', 'en'),
+    ).toBeUndefined();
   });
 
   it('accepts exactly one editorial entry per supported locale', () => {

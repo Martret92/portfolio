@@ -1,0 +1,102 @@
+---
+import LanguageSwitcher from '@components/LanguageSwitcher.astro';
+import type { Locale } from '@i18n/config';
+import { getLocalizedPath } from '@i18n/routes';
+import { useTranslations } from '@i18n/ui';
+
+interface Props {
+  locale: Locale;
+  pathname: string;
+}
+
+const { locale, pathname } = Astro.props;
+const t = useTranslations(locale);
+const homePath = getLocalizedPath(locale);
+const isHome = pathname === homePath || pathname === `${homePath}/`;
+---
+
+<header class="site-header">
+  <div class="container site-header__inner">
+    <a class="site-identity" href={homePath}>
+      <span>{t.home.siteIdentity}</span>
+      <small>{t.home.siteIdentityStatus}</small>
+    </a>
+
+    <div class="site-header__navigation">
+      <nav aria-label={t.home.navigationLabel}>
+        <a href={homePath} aria-current={isHome ? 'page' : undefined}>
+          {t.home.navigation.home}
+        </a>
+        <a href={`${homePath}#featured-work`}>
+          {t.home.navigation.featuredWork}
+        </a>
+      </nav>
+
+      <LanguageSwitcher locale={locale} pathname={pathname} />
+    </div>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    border-block-end: var(--border-width) solid var(--color-border);
+  }
+
+  .site-header__inner,
+  .site-header__navigation,
+  nav {
+    display: flex;
+    align-items: center;
+  }
+
+  .site-header__inner {
+    min-block-size: 4.5rem;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--space-3) var(--space-6);
+    padding-block: var(--space-3);
+  }
+
+  .site-header__navigation {
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-5);
+  }
+
+  nav {
+    gap: var(--space-2);
+  }
+
+  a {
+    display: inline-flex;
+    min-block-size: var(--touch-target-min);
+    align-items: center;
+    padding-inline: var(--space-2);
+  }
+
+  .site-identity {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    color: var(--color-text);
+    font-family: var(--font-family-display);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-tight);
+    text-decoration: none;
+  }
+
+  .site-identity small {
+    color: var(--color-text-muted);
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-regular);
+    letter-spacing: var(--letter-spacing-wide);
+    text-transform: uppercase;
+  }
+
+  @media (width < 40rem) {
+    .site-header__navigation {
+      inline-size: 100%;
+      justify-content: space-between;
+    }
+  }
+</style>

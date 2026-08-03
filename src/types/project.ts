@@ -9,3 +9,12 @@ export interface ProjectEditorialIdentity {
   readonly projectId: string;
   readonly locale: Locale;
 }
+
+export interface ProjectEditorialData extends ProjectEditorialIdentity {
+  readonly title: string;
+  readonly summary: string;
+}
+
+export interface ProjectEditorialEntry {
+  readonly data: ProjectEditorialData;
+}
