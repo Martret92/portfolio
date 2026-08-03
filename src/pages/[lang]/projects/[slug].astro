@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 
 import SiteHeader from '@components/SiteHeader.astro';
+import ViewModeControl from '@components/ViewModeControl.astro';
 import { projects, type ProjectId } from '@content/projects';
 import { locales, type Locale } from '@i18n/config';
 import { getLocalizedPath } from '@i18n/routes';
@@ -47,7 +48,7 @@ const pageTitle = `${projectEntry.data.title} — ${t.caseStudy.titleSuffix}`;
 >
   <SiteHeader slot="header" locale={locale} pathname={Astro.url.pathname} />
 
-  <article class="container case-study">
+  <article class="container case-study" data-view-mode-scope>
     <header class="project-intro stack">
       <p class="eyebrow">{t.caseStudy.label}</p>
       <h1>{projectEntry.data.title}</h1>
@@ -63,9 +64,19 @@ const pageTitle = `${projectEntry.data.title} — ${t.caseStudy.titleSuffix}`;
         </p>
       </section>
 
+      <div class="view-mode-control">
+        <ViewModeControl
+          label={t.caseStudy.viewMode.label}
+          explanation={t.caseStudy.viewMode.explanation}
+          productLabel={t.caseStudy.sections.product.title}
+          systemLabel={t.caseStudy.sections.system.title}
+        />
+      </div>
+
       <section
         class="shell-section"
         data-density="product"
+        data-view-section="product"
         aria-labelledby="product-heading"
       >
         <h2 id="product-heading">{t.caseStudy.sections.product.title}</h2>
@@ -75,6 +86,7 @@ const pageTitle = `${projectEntry.data.title} — ${t.caseStudy.titleSuffix}`;
       <section
         class="shell-section"
         data-density="system"
+        data-view-section="system"
         aria-labelledby="system-heading"
       >
         <h2 id="system-heading">{t.caseStudy.sections.system.title}</h2>
@@ -149,9 +161,29 @@ const pageTitle = `${projectEntry.data.title} — ${t.caseStudy.titleSuffix}`;
     gap: var(--density-gap);
     padding-block: clamp(var(--space-6), 7vw, var(--space-8));
     border-block-end: var(--border-width) solid var(--color-border);
+    transition:
+      background-color var(--motion-duration-standard)
+        var(--motion-easing-standard),
+      box-shadow var(--motion-duration-standard) var(--motion-easing-standard),
+      color var(--motion-duration-standard) var(--motion-easing-standard);
   }
 
   .shell-section p {
+    color: var(--color-text-muted);
+  }
+
+  .view-mode-control {
+    padding-block: var(--space-7);
+    border-block-end: var(--border-width) solid var(--color-border);
+  }
+
+  [data-view-mode-enhanced='true'] .shell-section[data-view-state='selected'] {
+    padding-inline: var(--density-space-inline);
+    background: var(--color-surface-subtle);
+    box-shadow: inset var(--border-width-strong) 0 var(--color-border-strong);
+  }
+
+  [data-view-mode-enhanced='true'] .shell-section[data-view-state='dimmed'] {
     color: var(--color-text-muted);
   }
 

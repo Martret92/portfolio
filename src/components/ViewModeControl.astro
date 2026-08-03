@@ -1,0 +1,143 @@
+---
+interface Props {
+  label: string;
+  explanation: string;
+  productLabel: string;
+  systemLabel: string;
+}
+
+const { label, explanation, productLabel, systemLabel } = Astro.props;
+---
+
+<fieldset class="view-mode" data-view-mode-control>
+  <legend>{label}</legend>
+  <p>{explanation}</p>
+
+  <div class="view-mode__options">
+    <button type="button" data-view-mode="product" aria-pressed="true">
+      {productLabel}
+    </button>
+    <button type="button" data-view-mode="system" aria-pressed="false">
+      {systemLabel}
+    </button>
+  </div>
+</fieldset>
+
+<script>
+  const viewModes = ['product', 'system'] as const;
+  type ViewMode = (typeof viewModes)[number];
+
+  function isViewMode(value: string | undefined): value is ViewMode {
+    return viewModes.some((mode) => mode === value);
+  }
+
+  for (const control of document.querySelectorAll<HTMLElement>(
+    '[data-view-mode-control]',
+  )) {
+    const scope = control.closest<HTMLElement>('[data-view-mode-scope]');
+    const buttons =
+      control.querySelectorAll<HTMLButtonElement>('[data-view-mode]');
+
+    if (!scope) continue;
+
+    const selectMode = (selectedMode: ViewMode) => {
+      scope.dataset.selectedView = selectedMode;
+      scope.dataset.viewModeEnhanced = 'true';
+
+      for (const button of buttons) {
+        button.setAttribute(
+          'aria-pressed',
+          String(button.dataset.viewMode === selectedMode),
+        );
+      }
+
+      for (const section of scope.querySelectorAll<HTMLElement>(
+        '[data-view-section]',
+      )) {
+        section.dataset.viewState =
+          section.dataset.viewSection === selectedMode ? 'selected' : 'dimmed';
+      }
+
+      control.dataset.enhanced = 'true';
+    };
+
+    for (const button of buttons) {
+      button.addEventListener('click', () => {
+        if (isViewMode(button.dataset.viewMode)) {
+          selectMode(button.dataset.viewMode);
+        }
+      });
+    }
+
+    selectMode('product');
+  }
+</script>
+
+<style>
+  .view-mode {
+    display: none;
+    min-inline-size: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .view-mode[data-enhanced='true'] {
+    display: block;
+  }
+
+  legend {
+    padding: 0;
+    font-family: var(--font-family-display);
+    font-size: var(--font-size-heading-sm);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-tight);
+  }
+
+  p {
+    max-inline-size: var(--content-measure);
+    margin-block: var(--space-2) var(--space-4);
+    color: var(--color-text-muted);
+  }
+
+  .view-mode__options {
+    display: inline-flex;
+    max-inline-size: 100%;
+    padding: var(--space-1);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+  }
+
+  button {
+    border: 0;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    padding-inline: var(--space-4);
+    font-weight: var(--font-weight-medium);
+    transition:
+      background-color var(--motion-duration-fast) var(--motion-easing-standard),
+      color var(--motion-duration-fast) var(--motion-easing-standard),
+      box-shadow var(--motion-duration-fast) var(--motion-easing-standard);
+  }
+
+  button:hover {
+    background: var(--color-surface-subtle);
+  }
+
+  button[aria-pressed='true'] {
+    background: var(--color-selected);
+    box-shadow: var(--shadow-sm);
+    color: var(--color-text);
+  }
+
+  @media (width < 30rem) {
+    .view-mode__options {
+      display: flex;
+      inline-size: 100%;
+    }
+
+    button {
+      flex: 1;
+    }
+  }
+</style>
