@@ -1,6 +1,9 @@
 .inspectable-project {
   --inspection-transition: var(--motion-duration-standard)
     var(--motion-easing-standard);
+  --inspection-transition-fast: var(--motion-duration-fast)
+    var(--motion-easing-standard);
+  --inspection-perspective-transition: 240ms var(--motion-easing-standard);
 
   min-inline-size: 0;
 }
@@ -206,7 +209,7 @@
   transition:
     background-color var(--inspection-transition),
     border-color var(--inspection-transition),
-    padding var(--inspection-transition);
+    color var(--inspection-transition);
 }
 
 .inspectable-group[data-flow-position='primary-start'] {
@@ -286,7 +289,10 @@
   overflow: visible;
   color: var(--color-border-strong);
   pointer-events: none;
-  transition: color var(--inspection-transition);
+  opacity: 0.84;
+  transition:
+    color var(--inspection-transition-fast),
+    opacity var(--inspection-transition-fast);
 }
 
 .causal-connector path:not(marker path) {
@@ -296,7 +302,7 @@
   stroke-linecap: round;
   stroke-linejoin: round;
   vector-effect: non-scaling-stroke;
-  transition: stroke-width var(--inspection-transition);
+  transition: stroke-width var(--inspection-transition-fast);
 }
 
 .causal-connector marker path {
@@ -305,6 +311,7 @@
 
 .causal-connector[data-connection-state='active'] {
   color: var(--architecture-node-focus-border);
+  opacity: 1;
 }
 
 .causal-connector[data-connection-state='active'] path:not(marker path) {
@@ -400,6 +407,22 @@
   display: grid;
   gap: var(--space-3);
   padding-block-start: var(--space-3);
+}
+
+.inspectable-project[data-perspective='system'] .inspection-perspective__header,
+.inspectable-project[data-perspective='system'] .group-internals {
+  animation: inspection-system-reveal var(--inspection-perspective-transition)
+    both;
+}
+
+.inspectable-project[data-perspective='system'] .causal-connector {
+  animation: inspection-connection-reveal var(--motion-duration-fast)
+    var(--motion-easing-standard) both;
+}
+
+.inspectable-project[data-perspective='system'] .inspection-inspector--desktop {
+  animation: inspection-content-reveal var(--motion-duration-fast)
+    var(--motion-easing-standard) both;
 }
 
 .group-internals__nodes {
@@ -583,6 +606,37 @@
 .inspection-inspector > p:last-child {
   margin-block-start: var(--space-4);
   color: var(--color-text-muted);
+}
+
+.inspection-inspector__content {
+  animation: inspection-content-reveal var(--motion-duration-fast)
+    var(--motion-easing-standard) both;
+}
+
+@keyframes inspection-system-reveal {
+  from {
+    transform: translateY(var(--space-1));
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes inspection-connection-reveal {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes inspection-content-reveal {
+  from {
+    transform: translateY(0.125rem);
+  }
+
+  to {
+    transform: translateY(0);
+  }
 }
 
 .inspection-inspector--desktop {
@@ -1152,5 +1206,16 @@
   .inspectable-group__product,
   .system-node {
     transition-duration: 0.01ms;
+  }
+
+  .inspectable-project[data-perspective='system']
+    .inspection-perspective__header,
+  .inspectable-project[data-perspective='system'] .group-internals,
+  .inspectable-project[data-perspective='system'] .causal-connector,
+  .inspectable-project[data-perspective='system']
+    .inspection-inspector--desktop,
+  .inspection-inspector__content {
+    animation: none;
+    transform: none;
   }
 }

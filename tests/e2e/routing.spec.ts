@@ -83,6 +83,8 @@ for (const preview of homePreviews) {
     await page.goto(preview.path);
     const section = page.locator('[data-home-project-preview]');
 
+    await expect(section.locator('astro-island')).toHaveCount(0);
+
     await expect(
       section.getByText(preview.eyebrow, { exact: true }),
     ).toBeVisible();

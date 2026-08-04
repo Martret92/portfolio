@@ -355,7 +355,11 @@ function Inspector({
       {!selectedNode ? (
         <p data-inspector-empty>{model.labels.inspectorEmpty}</p>
       ) : (
-        <div data-inspector-node={selectedNode.id}>
+        <div
+          className="inspection-inspector__content"
+          data-inspector-node={selectedNode.id}
+          key={selectedNode.id}
+        >
           <h3>{selectedNode.label}</h3>
           <dl className="inspection-details">
             <div>
