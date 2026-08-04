@@ -18,7 +18,6 @@ module.exports = {
       chromePath: chromium.executablePath(),
       settings: {
         chromeFlags: '--headless --no-sandbox --disable-dev-shm-usage',
-        skipAudits: ['is-crawlable'],
       },
     },
     assert: {

@@ -2,13 +2,13 @@ import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
 
 const routes = [
-  '/',
   '/en',
   '/es',
   '/en/projects/devdata-generator',
   '/es/projects/devdata-generator',
   '/en/projects/duckyarena',
   '/es/projects/duckyarena',
+  '/404',
 ] as const;
 
 test('localized pages provide a keyboard bypass link', async ({ page }) => {

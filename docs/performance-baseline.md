@@ -8,6 +8,8 @@ each primary localized route using the local preview server:
 - `/es`
 - `/en/projects/devdata-generator`
 - `/es/projects/devdata-generator`
+- `/en/projects/duckyarena`
+- `/es/projects/duckyarena`
 
 ## Thresholds
 
@@ -16,10 +18,8 @@ of at least 0.90 and 0.95 respectively, accessibility of at least 0.95, and SEO
 of at least 0.90. Largest Contentful Paint must be at most 2.5 seconds,
 Cumulative Layout Shift at most 0.1, and Total Blocking Time at most 200 ms.
 
-The crawlability audit is temporarily excluded because every page intentionally
-uses development `noindex` metadata. The SEO category threshold remains 0.90;
-crawlability must be restored to the baseline when production indexing is
-enabled.
+The production baseline includes Lighthouse's crawlability audit. Localized
+pages are indexable and expose canonical and alternate-language metadata.
 
 These are repeatable lab measurements, not real-user Core Web Vitals. In
 particular, a static Lighthouse run cannot validate field Interaction to Next
@@ -54,6 +54,6 @@ scores and metric ranges:
 | `/en/projects/devdata-generator` | 1.00        | 1.00          | 0.96           | 1.00 | 900–960 ms | 0–0.0081  | 0 ms |
 | `/es/projects/devdata-generator` | 1.00        | 1.00          | 0.96           | 1.00 | 900–960 ms | 0         | 0 ms |
 
-Local results can be compared manually with the deployed site at
-<https://portfolio-98d.pages.dev>, but this document does not claim production
-field data.
+Local results can be compared manually with the production site at
+<https://jaimemartret.com>, but this document does not claim production field
+data.

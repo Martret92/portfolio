@@ -1,0 +1,71 @@
+---
+import '@styles/global.css';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Page not found — Jaime Martret</title>
+    <meta
+      name="description"
+      content="The requested portfolio page could not be found."
+    />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <main id="main-content" class="container not-found">
+      <p class="not-found__code">404</p>
+      <h1>Page not found / Página no encontrada</h1>
+      <p>
+        The requested page does not exist. / La página solicitada no existe.
+      </p>
+      <nav aria-label="Portfolio languages / Idiomas del portfolio">
+        <a href="/en" lang="en">English portfolio</a>
+        <a href="/es" lang="es">Portfolio en español</a>
+      </nav>
+    </main>
+  </body>
+</html>
+
+<style>
+  .not-found {
+    min-block-size: 100vh;
+    display: grid;
+    align-content: center;
+    justify-items: start;
+    gap: var(--space-5);
+    padding-block: var(--space-8);
+  }
+
+  .not-found__code,
+  h1,
+  p {
+    margin-block: 0;
+  }
+
+  .not-found__code {
+    color: var(--color-text-muted);
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-sm);
+  }
+
+  h1 {
+    max-inline-size: 18ch;
+    font-size: var(--font-size-heading-lg);
+  }
+
+  nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3) var(--space-5);
+  }
+
+  nav a {
+    min-block-size: var(--touch-target-min);
+    display: inline-flex;
+    align-items: center;
+    font-weight: var(--font-weight-medium);
+  }
+</style>

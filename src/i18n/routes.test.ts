@@ -4,6 +4,7 @@ import {
   getAlternateLocale,
   getAlternateLocalePath,
   getLocaleFromPathname,
+  getLocalizedAlternatePaths,
   getLocalizedPath,
 } from './routes';
 
@@ -37,5 +38,15 @@ describe('localized routes', () => {
     expect(getAlternateLocalePath('en', '/en/projects/devdata-generator')).toBe(
       '/es/projects/devdata-generator',
     );
+  });
+
+  it('builds localized and default alternate paths for the same page', () => {
+    expect(
+      getLocalizedAlternatePaths('/es/projects/devdata-generator'),
+    ).toEqual({
+      en: '/en/projects/devdata-generator',
+      es: '/es/projects/devdata-generator',
+      'x-default': '/en/projects/devdata-generator',
+    });
   });
 });

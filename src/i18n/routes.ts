@@ -30,3 +30,13 @@ export function getAlternateLocalePath(
 ): string {
   return getLocalizedPath(getAlternateLocale(locale), pathname);
 }
+
+export function getLocalizedAlternatePaths(
+  pathname: string,
+): Record<Locale | 'x-default', string> {
+  return {
+    en: getLocalizedPath('en', pathname),
+    es: getLocalizedPath('es', pathname),
+    'x-default': getLocalizedPath(defaultLocale, pathname),
+  };
+}

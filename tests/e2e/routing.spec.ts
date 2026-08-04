@@ -152,20 +152,14 @@ for (const home of professionalHomes) {
   });
 }
 
-test('root remains a static language entry', async ({ page }) => {
-  const response = await page.goto('/');
+test('root deterministically enters the default English locale', async ({
+  page,
+}) => {
+  await page.goto('/');
 
-  expect(response?.ok()).toBe(true);
-  await expect(
-    page.getByRole('heading', { level: 1, name: 'Temporary language entry' }),
-  ).toBeVisible();
-  await expect(page.getByRole('link', { name: 'English' })).toHaveAttribute(
-    'href',
-    '/en',
-  );
-  await expect(page.getByRole('link', { name: 'Español' })).toHaveAttribute(
-    'href',
-    '/es',
+  await expect(page).toHaveURL(/\/en\/?$/);
+  await expect(page.locator('body')).not.toContainText(
+    'Temporary language entry',
   );
 });
 
