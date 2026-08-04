@@ -38,9 +38,16 @@ const ui = {
       },
     },
     caseStudy: {
-      titleSuffix: 'Temporary case study',
-      label: 'Case-study shell',
+      metadata: {
+        title: 'DevData Generator — Data generation case study',
+        description:
+          'A browser-based data generation case study focused on one shared generated result, predictable invalidation and reusable JSON, CSV and SQL outputs.',
+      },
+      label: 'Featured project',
       backHome: 'Back to Home',
+      repositoryCta: 'View repository',
+      scopeNote:
+        'Runs entirely in the browser; no backend or database is required.',
       viewMode: {
         label: 'Choose a project perspective',
         explanation:
@@ -49,23 +56,22 @@ const ui = {
       sections: {
         overview: {
           title: 'Overview',
-          placeholder:
-            'Temporary overview placeholder. Project details will be added in a later milestone.',
+          copy: 'DevData Generator is a browser-based tool for configuring realistic fake datasets and reusing one generated result across table, JSON, CSV and SQL outputs.',
         },
         product: {
           title: 'Product view',
-          placeholder:
-            'Temporary Product View placeholder. No product claims are included yet.',
+          description:
+            'Configure a dataset once, then inspect and reuse the generated result.',
         },
         system: {
           title: 'System view',
-          placeholder:
-            'Temporary System View placeholder. Technical structure is intentionally deferred.',
+          description:
+            'Inspect how one validated configuration produces the shared generated result.',
         },
         decisions: {
           title: 'Technical decisions',
-          placeholder:
-            'Temporary decisions placeholder. Verified technical context will be added later.',
+          description:
+            'Explore why the generated result is shared and invalidated when configuration changes.',
         },
       },
     },
@@ -153,9 +159,16 @@ const ui = {
       },
     },
     caseStudy: {
-      titleSuffix: 'Caso de estudio temporal',
-      label: 'Estructura del caso de estudio',
+      metadata: {
+        title: 'DevData Generator — Caso de estudio de generación de datos',
+        description:
+          'Caso de estudio de generación de datos en el navegador centrado en un único resultado compartido, invalidación predecible y salidas reutilizables en JSON, CSV y SQL.',
+      },
+      label: 'Proyecto destacado',
       backHome: 'Volver al inicio',
+      repositoryCta: 'Ver repositorio',
+      scopeNote:
+        'Se ejecuta completamente en el navegador; no requiere backend ni base de datos.',
       viewMode: {
         label: 'Elegir una perspectiva del proyecto',
         explanation:
@@ -164,23 +177,22 @@ const ui = {
       sections: {
         overview: {
           title: 'Resumen',
-          placeholder:
-            'Marcador temporal del resumen. Los detalles del proyecto se añadirán en un hito posterior.',
+          copy: 'DevData Generator es una herramienta ejecutada en el navegador para configurar datasets ficticios realistas y reutilizar un único resultado generado en salidas de tabla, JSON, CSV y SQL.',
         },
         product: {
           title: 'Vista de producto',
-          placeholder:
-            'Marcador temporal de la Vista de producto. Todavía no se incluyen afirmaciones sobre el producto.',
+          description:
+            'Configura un dataset una vez y después inspecciona y reutiliza el resultado generado.',
         },
         system: {
           title: 'Vista de sistema',
-          placeholder:
-            'Marcador temporal de la Vista de sistema. La estructura técnica se reserva para más adelante.',
+          description:
+            'Inspecciona cómo una configuración validada produce el resultado generado compartido.',
         },
         decisions: {
           title: 'Decisiones técnicas',
-          placeholder:
-            'Marcador temporal de decisiones. El contexto técnico verificado se añadirá más adelante.',
+          description:
+            'Explora por qué se comparte el resultado generado y se invalida cuando cambia la configuración.',
         },
       },
     },

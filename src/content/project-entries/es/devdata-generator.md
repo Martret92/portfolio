@@ -1,8 +1,8 @@
 ---
 projectId: devdata-generator
 locale: es
-title: Marcador temporal de DevData Generator
-summary: Resumen temporal en español para validar la base de contenido.
+title: DevData Generator
+summary: Generador de datos ficticios ejecutado en el navegador que crea un único dataset reutilizable y expone el mismo resultado en tabla, JSON, CSV y SQL.
 ---
 
-Contenido temporal en español para el caso de estudio. Esta entrada se sustituirá en un hito posterior.
+DevData Generator es una herramienta ejecutada en el navegador para configurar datasets ficticios realistas y reutilizar un único resultado generado entre vistas previas y formatos de exportación.

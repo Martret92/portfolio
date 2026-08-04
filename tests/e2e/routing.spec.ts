@@ -13,11 +13,11 @@ const routes = [
   },
   {
     path: '/en/projects/devdata-generator',
-    heading: 'DevData Generator placeholder',
+    heading: 'DevData Generator',
   },
   {
     path: '/es/projects/devdata-generator',
-    heading: 'Marcador temporal de DevData Generator',
+    heading: 'DevData Generator',
   },
   {
     path: '/en/projects/duckyarena',
@@ -180,6 +180,60 @@ for (const route of routes) {
   });
 }
 
+const devDataProjectRoutes = [
+  {
+    path: '/en/projects/devdata-generator',
+    title: 'DevData Generator — Data generation case study',
+    description:
+      'A browser-based data generation case study focused on one shared generated result, predictable invalidation and reusable JSON, CSV and SQL outputs.',
+    overview: /browser-based tool for configuring realistic fake datasets/i,
+    repositoryCta: 'View repository',
+  },
+  {
+    path: '/es/projects/devdata-generator',
+    title: 'DevData Generator — Caso de estudio de generación de datos',
+    description:
+      'Caso de estudio de generación de datos en el navegador centrado en un único resultado compartido, invalidación predecible y salidas reutilizables en JSON, CSV y SQL.',
+    overview: /herramienta ejecutada en el navegador para configurar datasets/i,
+    repositoryCta: 'Ver repositorio',
+  },
+] as const;
+
+for (const route of devDataProjectRoutes) {
+  test(`${route.path} presents final DevData editorial content`, async ({
+    page,
+  }) => {
+    await page.goto(route.path);
+
+    await expect(page).toHaveTitle(route.title);
+    await expect(page.locator('meta[name="description"]')).toHaveAttribute(
+      'content',
+      route.description,
+    );
+    await expect(
+      page.getByRole('heading', { level: 1, name: 'DevData Generator' }),
+    ).toBeVisible();
+    const overview = page
+      .getByRole('heading', { name: /Overview|Resumen/ })
+      .locator('..');
+    await expect(overview).toBeVisible();
+    await expect(overview).toContainText(route.overview);
+
+    const repository = page.getByRole('link', {
+      name: route.repositoryCta,
+    });
+    await expect(repository).toHaveAttribute(
+      'href',
+      'https://github.com/Martret92/devdata-generator',
+    );
+    await expect(repository).toHaveAttribute('target', '_blank');
+    await expect(repository).toHaveAttribute('rel', 'noopener noreferrer');
+    await expect(page.locator('main')).not.toContainText(
+      /placeholder|temporary|marcador temporal|contenido temporal/i,
+    );
+  });
+}
+
 test('Home and project navigation form a complete localized flow', async ({
   page,
 }) => {
@@ -320,6 +374,26 @@ test('featured DevData preview has no mobile horizontal overflow', async ({
         document.documentElement.clientWidth,
     ),
   ).toBe(true);
+});
+
+test('Home preserves DevData as the primary project before DuckyArena', async ({
+  page,
+}) => {
+  await page.goto('/en');
+
+  const projects = page.locator(
+    '[data-home-project-preview], [data-duckyarena-home-preview]',
+  );
+  await expect(projects).toHaveCount(2);
+  expect(
+    await projects.evaluateAll((nodes) =>
+      nodes.map((node) =>
+        node.hasAttribute('data-home-project-preview')
+          ? 'devdata-generator'
+          : 'duckyarena',
+      ),
+    ),
+  ).toEqual(['devdata-generator', 'duckyarena']);
 });
 
 test('language switching preserves the project route', async ({ page }) => {
