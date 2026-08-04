@@ -22,3 +22,20 @@ const t = useTranslations(locale);
     {t.language.switchTo}
   </a>
 </nav>
+
+<style>
+  nav,
+  nav > :where(span, a) {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  nav {
+    gap: var(--space-2);
+  }
+
+  nav > :where(span, a) {
+    min-block-size: var(--touch-target-min);
+    padding-inline: var(--space-2);
+  }
+</style>

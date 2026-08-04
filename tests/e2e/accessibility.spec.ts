@@ -2,11 +2,44 @@ import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
 
 const routes = [
+  '/',
   '/en',
   '/es',
   '/en/projects/devdata-generator',
   '/es/projects/devdata-generator',
 ] as const;
+
+test('localized pages provide a keyboard bypass link', async ({ page }) => {
+  await page.goto('/en');
+  const skipLink = page.getByRole('link', { name: 'Skip to main content' });
+
+  await page.keyboard.press('Tab');
+  await expect(skipLink).toBeFocused();
+  await expect(skipLink).toBeVisible();
+  await page.keyboard.press('Enter');
+  await expect(page.locator('#main-content')).toBeFocused();
+});
+
+test('Home remains complete without JavaScript', async ({ browser }) => {
+  const context = await browser.newContext({ javaScriptEnabled: false });
+  const page = await context.newPage();
+
+  await page.goto('/en');
+  const preview = page.locator('[data-home-project-preview]');
+  await expect(preview.getByRole('img')).toBeVisible();
+  await expect(
+    preview.getByRole('list', { name: 'DevData system flow' }),
+  ).toBeAttached();
+  await expect(
+    preview.getByRole('link', { name: /Inspect the case study/ }),
+  ).toHaveAttribute('href', '/en/projects/devdata-generator');
+  await expect(page.getByRole('link', { name: 'Español' })).toHaveAttribute(
+    'href',
+    '/es',
+  );
+
+  await context.close();
+});
 
 async function expectNoAxeViolations(page: Page) {
   const results = await new AxeBuilder({ page }).analyze();

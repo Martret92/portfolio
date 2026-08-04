@@ -38,6 +38,7 @@ test('opens the same project flow and resets inspection on Product', async ({
   const inspectSystem = page.getByRole('button', { name: 'Inspect system' });
   await expect(inspectSystem).toBeVisible();
   await inspectSystem.click();
+  await expect(system).toBeFocused();
   await expect(groups).toHaveCount(5);
   await expect(
     page.locator('[data-product-group="generate"] [data-system-node]'),
@@ -197,6 +198,16 @@ test('reduced motion preserves perspective and inspection semantics', async ({
 test('remains usable at a narrow mobile viewport', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 812 });
   await page.getByRole('button', { name: 'System', exact: true }).click();
+  const sourceEvidence = page.locator(
+    '[data-inspection-enhanced] [data-evidence-artifact="generation-boundary"]',
+  );
+  await sourceEvidence.locator('summary').click();
+  await expect(sourceEvidence.getByText(/fakerES as faker/)).toBeVisible();
+  expect(
+    await sourceEvidence.evaluate(
+      (element) => element.scrollWidth <= element.clientWidth,
+    ),
+  ).toBe(true);
   await expect(page.locator('[data-causal-connector="preview"]')).toHaveCount(
     0,
   );

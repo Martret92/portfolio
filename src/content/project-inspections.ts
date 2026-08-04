@@ -326,7 +326,7 @@ const localized = {
       invalidation: 'Invalidates when configuration changes',
     },
     labels: {
-      perspectiveLegend: 'Inspect the project perspective',
+      perspectiveLegend: 'Project perspective',
       productPerspective: 'Product',
       systemPerspective: 'System',
       productHeading: 'How the product works',
@@ -540,7 +540,7 @@ const localized = {
       invalidation: 'Invalida al cambiar la configuración',
     },
     labels: {
-      perspectiveLegend: 'Inspeccionar la perspectiva del proyecto',
+      perspectiveLegend: 'Perspectiva del proyecto',
       productPerspective: 'Producto',
       systemPerspective: 'Sistema',
       productHeading: 'Cómo funciona el producto',

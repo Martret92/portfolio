@@ -25,6 +25,26 @@ body {
   font-size: var(--font-size-body);
 }
 
+.skip-link {
+  position: fixed;
+  inset-block-start: var(--space-2);
+  inset-inline-start: var(--space-2);
+  z-index: var(--z-index-overlay);
+  min-block-size: var(--touch-target-min);
+  display: inline-flex;
+  align-items: center;
+  padding-inline: var(--space-3);
+  border: var(--border-width-strong) solid var(--color-border-strong);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-weight: var(--font-weight-medium);
+  transform: translateY(calc(-100% - var(--space-4)));
+}
+
+.skip-link:focus-visible {
+  transform: translateY(0);
+}
+
 :where(h1, h2, h3) {
   font-family: var(--font-family-display);
   line-height: var(--line-height-tight);

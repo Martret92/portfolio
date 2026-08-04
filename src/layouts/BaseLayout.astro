@@ -1,5 +1,6 @@
 ---
 import type { Locale } from '@i18n/config';
+import { useTranslations } from '@i18n/ui';
 import '@styles/global.css';
 
 interface Props {
@@ -9,6 +10,7 @@ interface Props {
 }
 
 const { locale, title, description } = Astro.props;
+const t = useTranslations(locale);
 ---
 
 <!doctype html>
@@ -24,9 +26,12 @@ const { locale, title, description } = Astro.props;
   </head>
 
   <body>
+    <a class="skip-link" href="#main-content">
+      {t.accessibility.skipToContent}
+    </a>
     <slot name="header" />
 
-    <main>
+    <main id="main-content" tabindex="-1">
       <slot />
     </main>
 
