@@ -1,5 +1,6 @@
 ---
 import type { Locale } from '@i18n/config';
+import { getLocalizedAlternatePaths } from '@i18n/routes';
 import { useTranslations } from '@i18n/ui';
 import '@styles/global.css';
 
@@ -11,6 +12,16 @@ interface Props {
 
 const { locale, title, description } = Astro.props;
 const t = useTranslations(locale);
+const site = Astro.site;
+
+if (!site) {
+  throw new Error('Astro site must be configured for production metadata.');
+}
+
+const canonicalPath = Astro.url.pathname.replace(/\/$/, '');
+const canonicalUrl = new URL(canonicalPath, site);
+const alternatePaths = getLocalizedAlternatePaths(Astro.url.pathname);
+const socialImageUrl = new URL('/social/jaime-martret-portfolio-og.png', site);
 ---
 
 <!doctype html>
@@ -18,11 +29,29 @@ const t = useTranslations(locale);
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
-    <meta name="robots" content="noindex" />
 
     <title>{title}</title>
 
     {description && <meta name="description" content={description} />}
+    <link rel="canonical" href={canonicalUrl} />
+    {
+      Object.entries(alternatePaths).map(([hreflang, path]) => (
+        <link rel="alternate" hreflang={hreflang} href={new URL(path, site)} />
+      ))
+    }
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    {description && <meta property="og:description" content={description} />}
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={socialImageUrl} />
+    <meta property="og:site_name" content="Jaime Martret — Portfolio" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    {description && <meta name="twitter:description" content={description} />}
+    <meta name="twitter:image" content={socialImageUrl} />
   </head>
 
   <body>

@@ -1,6 +1,7 @@
 ---
-const englishPath = '/en';
-const spanishPath = '/es';
+const productionOrigin = Astro.site ?? new URL('https://jaimemartret.com');
+const englishUrl = new URL('/en', productionOrigin);
+const spanishUrl = new URL('/es', productionOrigin);
 ---
 
 <!doctype html>
@@ -8,18 +9,21 @@ const spanishPath = '/es';
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
-    <meta name="robots" content="noindex" />
-    <title>Temporary language entry</title>
+    <meta http-equiv="refresh" content="0;url=/en" />
+    <title>Jaime Martret — Professional Portfolio</title>
+    <link rel="canonical" href={englishUrl} />
+    <link rel="alternate" hreflang="en" href={englishUrl} />
+    <link rel="alternate" hreflang="es" href={spanishUrl} />
+    <link rel="alternate" hreflang="x-default" href={englishUrl} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   </head>
 
   <body>
     <main>
-      <h1>Temporary language entry</h1>
+      <h1>Jaime Martret — Professional Portfolio</h1>
+      <p>Continue to the English portfolio.</p>
 
-      <nav aria-label="Choose language">
-        <a href={englishPath} lang="en">English</a>
-        <a href={spanishPath} lang="es">Español</a>
-      </nav>
+      <a href="/en">Continue to English</a>
     </main>
   </body>
 </html>
