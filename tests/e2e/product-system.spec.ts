@@ -171,6 +171,29 @@ test('perspective and node controls support keyboard activation', async ({
   await expect(result).toBeFocused();
 });
 
+test('reduced motion preserves perspective and inspection semantics', async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+
+  await page.getByRole('button', { name: 'Inspect system' }).click();
+  const system = page.getByRole('button', { name: 'System', exact: true });
+  const result = page.getByRole('button', { name: /generatedData/ });
+
+  await expect(system).toHaveAttribute('aria-pressed', 'true');
+  await expect(result).toBeVisible();
+  await result.click();
+  await expect(result).toHaveAttribute('aria-pressed', 'true');
+  await expect(
+    page.locator(
+      '.inspection-inspector--desktop [data-inspector-node="generated-data"]',
+    ),
+  ).toBeVisible();
+  await expect(
+    page.locator('[data-causal-connector="result"]'),
+  ).toHaveAttribute('data-connection-state', 'active');
+});
+
 test('remains usable at a narrow mobile viewport', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 812 });
   await page.getByRole('button', { name: 'System', exact: true }).click();
