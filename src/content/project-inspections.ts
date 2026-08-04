@@ -26,7 +26,7 @@ const connections = [
     id: 'faker-generation',
     from: 'faker',
     to: 'generate-data',
-    type: 'flow',
+    type: 'dependency',
   },
   {
     id: 'generation-result',
@@ -135,19 +135,15 @@ const localized = {
       'generate-data': {
         label: 'generateData()',
         role: 'Creates the configured records using the generator associated with the selected template.',
-        consumes: ['Configuration state', 'Faker'],
       },
       faker: {
         label: 'Faker',
         role: 'Provides fake values used by generation.',
-        consumedBy: ['generateData()'],
       },
       'generated-data': {
         label: 'generatedData',
         role: 'Stores the current generated records as the shared result of one generation.',
-        producedBy: ['generateData()'],
-        consumedBy: ['Preview', 'Export'],
-        invalidatedWhen: [
+        invalidationTriggers: [
           'Template changes',
           'Selected fields change',
           'Quantity changes',
@@ -163,7 +159,6 @@ const localized = {
       preview: {
         label: 'Preview',
         role: 'Presents generatedData as Table or formatted JSON.',
-        consumes: ['generatedData'],
         implementationNotes: [
           'Table preview and JSON preview consume the same generatedData.',
         ],
@@ -172,13 +167,11 @@ const localized = {
       export: {
         label: 'Export',
         role: 'Routes generatedData into copy and download transformations.',
-        consumes: ['generatedData'],
         relatedDecisionIds: ['single-generated-result'],
       },
       serializers: {
         label: 'Output serializers',
         role: 'Transforms generatedData into JSON, CSV or SQL output.',
-        consumes: ['generatedData'],
         implementationNotes: [
           'JSON preview, copy and download reuse the same JSON serializer.',
           'CSV and SQL use dedicated serializers.',
@@ -189,7 +182,6 @@ const localized = {
       'browser-apis': {
         label: 'Browser APIs',
         role: 'Handles clipboard and file downloads in the browser.',
-        consumes: ['Serialized output'],
         implementationNotes: ['File download uses browser-native APIs.'],
       },
     },
@@ -215,6 +207,7 @@ const localized = {
     },
     connectionLabels: {
       flow: 'Data flow',
+      dependency: 'Dependency',
       invalidation: 'Invalidates when configuration changes',
     },
     labels: {
@@ -229,15 +222,25 @@ const localized = {
         'Open the product flow to inspect the state, generation boundary and downstream consumers beneath it.',
       exampleLabel: 'Illustrative configuration',
       inspectorHeading: 'Inspector',
-      inspectorEmpty: 'Select a node to inspect its role.',
+      inspectorEmpty: 'Select a node to inspect its role and relationships.',
       roleLabel: 'Role',
-      producedByLabel: 'Produced by',
-      consumesLabel: 'Consumes',
-      consumedByLabel: 'Consumed by',
-      invalidatedWhenLabel: 'Invalidated when',
+      relationshipsLabel: 'Relationships',
+      relationshipLabels: {
+        producedBy: 'Produced by',
+        produces: 'Produces',
+        consumedBy: 'Consumed by',
+        receivesFrom: 'Receives from',
+        dependsOn: 'Depends on',
+        usedBy: 'Used by',
+        invalidatedBy: 'Invalidated by',
+        invalidates: 'Invalidates',
+        flowsTo: 'Flows to',
+        relatedTo: 'Related to',
+      },
+      invalidationTriggersLabel: 'When',
       whyItMattersLabel: 'Why it matters',
       implementationNotesLabel: 'Implementation notes',
-      relatedDecisionsLabel: 'Related decisions',
+      relatedDecisionsLabel: 'Why this design?',
       topologyHeading: 'System flow',
       invalidationHeading: 'Separate invalidation rule',
       decisionsHeading: 'Related technical decisions',
@@ -298,19 +301,15 @@ const localized = {
       'generate-data': {
         label: 'generateData()',
         role: 'Crea los registros configurados usando el generador asociado a la plantilla seleccionada.',
-        consumes: ['Estado de configuración', 'Faker'],
       },
       faker: {
         label: 'Faker',
         role: 'Proporciona los valores ficticios usados durante la generación.',
-        consumedBy: ['generateData()'],
       },
       'generated-data': {
         label: 'generatedData',
         role: 'Guarda los registros actuales como resultado compartido de una generación.',
-        producedBy: ['generateData()'],
-        consumedBy: ['Vista previa', 'Exportación'],
-        invalidatedWhen: [
+        invalidationTriggers: [
           'Cambia la plantilla',
           'Cambian los campos seleccionados',
           'Cambia la cantidad',
@@ -326,7 +325,6 @@ const localized = {
       preview: {
         label: 'Vista previa',
         role: 'Presenta generatedData como tabla o JSON con formato.',
-        consumes: ['generatedData'],
         implementationNotes: [
           'La tabla y la vista JSON consumen el mismo generatedData.',
         ],
@@ -335,13 +333,11 @@ const localized = {
       export: {
         label: 'Exportación',
         role: 'Dirige generatedData hacia las transformaciones de copia y descarga.',
-        consumes: ['generatedData'],
         relatedDecisionIds: ['single-generated-result'],
       },
       serializers: {
         label: 'Serializadores de salida',
         role: 'Transforma generatedData en salida JSON, CSV o SQL.',
-        consumes: ['generatedData'],
         implementationNotes: [
           'La vista, copia y descarga JSON reutilizan el mismo serializador JSON.',
           'CSV y SQL usan serializadores dedicados.',
@@ -352,7 +348,6 @@ const localized = {
       'browser-apis': {
         label: 'APIs del navegador',
         role: 'Gestiona el portapapeles y las descargas de archivos en el navegador.',
-        consumes: ['Salida serializada'],
         implementationNotes: [
           'La descarga de archivos usa APIs nativas del navegador.',
         ],
@@ -383,6 +378,7 @@ const localized = {
     },
     connectionLabels: {
       flow: 'Flujo de datos',
+      dependency: 'Dependencia',
       invalidation: 'Invalida al cambiar la configuración',
     },
     labels: {
@@ -397,15 +393,26 @@ const localized = {
         'Abre el flujo de producto para inspeccionar el estado, el límite de generación y sus consumidores.',
       exampleLabel: 'Configuración ilustrativa',
       inspectorHeading: 'Inspector',
-      inspectorEmpty: 'Selecciona un nodo para inspeccionar su función.',
+      inspectorEmpty:
+        'Selecciona un nodo para inspeccionar su función y relaciones.',
       roleLabel: 'Función',
-      producedByLabel: 'Producido por',
-      consumesLabel: 'Consume',
-      consumedByLabel: 'Consumido por',
-      invalidatedWhenLabel: 'Se invalida cuando',
+      relationshipsLabel: 'Relaciones',
+      relationshipLabels: {
+        producedBy: 'Producido por',
+        produces: 'Produce',
+        consumedBy: 'Usado por',
+        receivesFrom: 'Recibe de',
+        dependsOn: 'Depende de',
+        usedBy: 'Usado por',
+        invalidatedBy: 'Invalidado por',
+        invalidates: 'Invalida',
+        flowsTo: 'Fluye hacia',
+        relatedTo: 'Relacionado con',
+      },
+      invalidationTriggersLabel: 'Cuándo',
       whyItMattersLabel: 'Por qué importa',
       implementationNotesLabel: 'Notas de implementación',
-      relatedDecisionsLabel: 'Decisiones relacionadas',
+      relatedDecisionsLabel: '¿Por qué este diseño?',
       topologyHeading: 'Flujo del sistema',
       invalidationHeading: 'Regla de invalidación separada',
       decisionsHeading: 'Decisiones técnicas relacionadas',

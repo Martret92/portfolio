@@ -1,6 +1,9 @@
 import type {
   ProductSystemMapping,
   ProjectInspectionModel,
+  NodeRelationship,
+  RelationshipGroup,
+  RelationshipSemantic,
   SystemConnection,
   SystemNode,
 } from '../types/inspection';
@@ -133,4 +136,71 @@ export function getMappedProductId(
 ): string | undefined {
   return mappings.find((mapping) => mapping.systemNodeIds.includes(nodeId))
     ?.productId;
+}
+
+export function getNodeRelationships(
+  connections: readonly SystemConnection[],
+  nodeId: string,
+): readonly NodeRelationship[] {
+  const relationships: NodeRelationship[] = [];
+  for (const connection of connections) {
+    if (connection.from === nodeId) {
+      relationships.push({
+        connection,
+        direction: 'outgoing',
+        targetNodeId: connection.to,
+      });
+    }
+    if (connection.to === nodeId) {
+      relationships.push({
+        connection,
+        direction: 'incoming',
+        targetNodeId: connection.from,
+      });
+    }
+  }
+  return relationships;
+}
+
+function getRelationshipSemantic(
+  relationship: NodeRelationship,
+  nodes: readonly SystemNode[],
+): RelationshipSemantic {
+  const { connection, direction } = relationship;
+  const source = getSystemNode(nodes, connection.from);
+  const target = getSystemNode(nodes, connection.to);
+
+  if (connection.type === 'dependency') {
+    return direction === 'incoming' ? 'dependsOn' : 'usedBy';
+  }
+  if (connection.type === 'invalidation') {
+    return direction === 'incoming' ? 'invalidatedBy' : 'invalidates';
+  }
+  if (source?.kind === 'process' && target?.kind === 'state') {
+    return direction === 'incoming' ? 'producedBy' : 'produces';
+  }
+  if (source?.kind === 'state' && target?.kind === 'consumer') {
+    return direction === 'incoming' ? 'receivesFrom' : 'consumedBy';
+  }
+  if (direction === 'incoming') return 'receivesFrom';
+  if (direction === 'outgoing') return 'flowsTo';
+  return 'relatedTo';
+}
+
+export function getRelationshipGroups(
+  connections: readonly SystemConnection[],
+  nodes: readonly SystemNode[],
+  nodeId: string,
+): readonly RelationshipGroup[] {
+  const groups = new Map<RelationshipSemantic, NodeRelationship[]>();
+  for (const relationship of getNodeRelationships(connections, nodeId)) {
+    const semantic = getRelationshipSemantic(relationship, nodes);
+    const values = groups.get(semantic) ?? [];
+    values.push(relationship);
+    groups.set(semantic, values);
+  }
+  return [...groups].map(([semantic, relationships]) => ({
+    semantic,
+    relationships,
+  }));
 }
