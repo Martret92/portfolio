@@ -27,11 +27,9 @@ test('enhanced project interaction state has no axe violations', async ({
   page,
 }) => {
   await page.goto('/en/projects/devdata-generator');
-  await page.getByRole('button', { name: 'System view' }).click();
-  await page
-    .getByRole('button', { name: 'Placeholder layer Application' })
-    .click();
-  await page.locator('#temporary-decision-boundary > summary').click();
+  await page.getByRole('button', { name: 'System', exact: true }).click();
+  await page.getByRole('button', { name: /generatedData/ }).click();
+  await page.locator('#single-generated-result > summary').click();
 
   await expectNoAxeViolations(page);
 });
@@ -44,72 +42,41 @@ test('project content remains usable without JavaScript', async ({
 
   await page.goto('/en/projects/devdata-generator');
 
-  await expect(page.locator('[data-view-mode-control]')).toBeHidden();
+  await expect(page.locator('[data-inspection-enhanced]')).toBeHidden();
+  const fallback = page.locator('[data-inspection-fallback]');
   await expect(
-    page.getByRole('region', { name: 'Product view' }),
-  ).toBeVisible();
-  await expect(page.getByRole('region', { name: 'System view' })).toBeVisible();
-
-  const nodeControls = await page.locator('[data-node-control]').all();
-  expect(nodeControls).toHaveLength(3);
-  for (const control of nodeControls) {
-    await expect(control).toBeHidden();
-  }
-  await expect(page.locator('.architecture-details')).toBeHidden();
-
-  const explorer = page.locator('[data-architecture-explorer]');
-  const staticNodes = [
-    {
-      id: 'interface',
-      label: 'Interface',
-      description:
-        'Temporary placeholder for an entry point in a generic system.',
-    },
-    {
-      id: 'application',
-      label: 'Application',
-      description: 'Temporary placeholder for a generic application component.',
-    },
-    {
-      id: 'data',
-      label: 'Data',
-      description: 'Temporary placeholder for a generic data component.',
-    },
-  ] as const;
-
-  for (const node of staticNodes) {
-    const staticNode = explorer.locator(
-      `[data-architecture-node="${node.id}"]`,
-    );
-
-    await expect(
-      staticNode.getByRole('heading', { level: 4, name: node.label }),
-    ).toBeVisible();
-    await expect(
-      staticNode.getByText(node.description, { exact: true }),
-    ).toBeVisible();
-  }
-
-  await expect(
-    page.getByRole('heading', { level: 4, name: 'Temporary connections' }),
+    fallback.getByRole('heading', { name: 'How the product works' }),
   ).toBeVisible();
   await expect(
-    explorer.getByRole('listitem').filter({
-      hasText: 'Interface — Temporary structural connection — Application',
-    }),
+    fallback.getByRole('heading', { name: 'How the same flow is structured' }),
+  ).toBeVisible();
+  await expect(fallback.getByRole('button')).toHaveCount(0);
+  await expect(
+    fallback.getByRole('heading', { name: 'generatedData' }),
   ).toBeVisible();
   await expect(
-    explorer.getByRole('listitem').filter({
-      hasText: 'Application — Temporary structural connection — Data',
-    }),
+    fallback.getByText(
+      'All visible and downloadable outputs represent the same generation.',
+    ),
+  ).toBeVisible();
+  await expect(
+    fallback.getByRole('heading', { name: 'System flow' }),
+  ).toBeVisible();
+  await expect(
+    fallback
+      .getByRole('listitem')
+      .filter({ hasText: 'Configuration state→Validation' }),
+  ).toBeVisible();
+  await expect(
+    fallback.getByText(/Configuration state.*Invalidates/),
   ).toBeVisible();
 
-  const decision = page.locator('#temporary-decision-boundary');
+  const decision = page.locator('#static-single-generated-result');
   await decision.locator('summary').click();
   await expect(decision).toHaveAttribute('open', '');
   await expect(
     decision.getByText(
-      'This is provisional demonstration content. A verified project decision will replace it after project inspection.',
+      'Generate once, store the result in generatedData, and let downstream consumers reuse it.',
       { exact: true },
     ),
   ).toBeVisible();

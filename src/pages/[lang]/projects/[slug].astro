@@ -1,21 +1,15 @@
 ---
 import { getCollection } from 'astro:content';
 
-import ArchitectureExplorer from '@components/ArchitectureExplorer.astro';
-import DecisionDisclosure from '@components/DecisionDisclosure.astro';
 import SiteHeader from '@components/SiteHeader.astro';
-import ViewModeControl from '@components/ViewModeControl.astro';
+import { getProjectInspectionModel } from '@content/project-inspections';
 import { projects, type ProjectId } from '@content/projects';
 import { locales, type Locale } from '@i18n/config';
 import { getLocalizedPath } from '@i18n/routes';
 import { useTranslations } from '@i18n/ui';
 import BaseLayout from '@layouts/BaseLayout.astro';
 import { getProjectEditorialEntry } from '@lib/projects';
-import type {
-  ArchitectureConnection,
-  ArchitectureNode,
-} from '../../../types/architecture';
-import type { TechnicalDecision } from '../../../types/decision';
+import InspectableProjectStage from '../../../islands/InspectableProjectStage';
 
 export function getStaticPaths() {
   return locales.flatMap((locale) =>
@@ -46,55 +40,7 @@ if (!projectEntry) {
 
 const homePath = getLocalizedPath(locale);
 const pageTitle = `${projectEntry.data.title} — ${t.caseStudy.titleSuffix}`;
-const architectureNodes = [
-  {
-    id: 'interface',
-    category: t.architectureExplorer.category,
-    ...t.architectureExplorer.nodes.interface,
-  },
-  {
-    id: 'application',
-    category: t.architectureExplorer.category,
-    ...t.architectureExplorer.nodes.application,
-  },
-  {
-    id: 'data',
-    category: t.architectureExplorer.category,
-    ...t.architectureExplorer.nodes.data,
-  },
-] satisfies readonly ArchitectureNode[];
-const architectureConnections = [
-  {
-    id: 'interface-application',
-    from: 'interface',
-    to: 'application',
-    label: t.architectureExplorer.connection,
-  },
-  {
-    id: 'application-data',
-    from: 'application',
-    to: 'data',
-    label: t.architectureExplorer.connection,
-  },
-] satisfies readonly ArchitectureConnection[];
-const temporaryDecisions = [
-  {
-    id: 'temporary-decision-boundary',
-    title: t.decisionDisclosure.items.boundary.title,
-    summary: t.decisionDisclosure.items.boundary.summary,
-    detail: t.decisionDisclosure.items.boundary.detail,
-    tradeoff: {
-      label: t.decisionDisclosure.items.boundary.tradeoffLabel,
-      value: t.decisionDisclosure.items.boundary.tradeoffValue,
-    },
-  },
-  {
-    id: 'temporary-decision-alternative',
-    title: t.decisionDisclosure.items.alternative.title,
-    summary: t.decisionDisclosure.items.alternative.summary,
-    detail: t.decisionDisclosure.items.alternative.detail,
-  },
-] satisfies readonly TechnicalDecision[];
+const inspectionModel = getProjectInspectionModel(projectId, locale);
 ---
 
 <BaseLayout
@@ -120,59 +66,7 @@ const temporaryDecisions = [
         </p>
       </section>
 
-      <div class="view-mode-control">
-        <ViewModeControl
-          label={t.caseStudy.viewMode.label}
-          explanation={t.caseStudy.viewMode.explanation}
-          productLabel={t.caseStudy.sections.product.title}
-          systemLabel={t.caseStudy.sections.system.title}
-        />
-      </div>
-
-      <section
-        class="shell-section"
-        data-density="product"
-        data-view-section="product"
-        aria-labelledby="product-heading"
-      >
-        <h2 id="product-heading">{t.caseStudy.sections.product.title}</h2>
-        <p class="measure">{t.caseStudy.sections.product.placeholder}</p>
-      </section>
-
-      <section
-        class="shell-section"
-        data-density="system"
-        data-view-section="system"
-        aria-labelledby="system-heading"
-      >
-        <h2 id="system-heading">{t.caseStudy.sections.system.title}</h2>
-        <div>
-          <p class="measure">{t.caseStudy.sections.system.placeholder}</p>
-          <ArchitectureExplorer
-            id="case-study-architecture"
-            title={t.architectureExplorer.title}
-            description={t.architectureExplorer.description}
-            detailsLabel={t.architectureExplorer.detailsLabel}
-            connectionsLabel={t.architectureExplorer.connectionsLabel}
-            nodes={architectureNodes}
-            connections={architectureConnections}
-            defaultNodeId="interface"
-          />
-        </div>
-      </section>
-
-      <section class="shell-section" aria-labelledby="decisions-heading">
-        <h2 id="decisions-heading">{t.caseStudy.sections.decisions.title}</h2>
-        <div>
-          <p class="measure">
-            {t.caseStudy.sections.decisions.placeholder}
-          </p>
-          <DecisionDisclosure
-            heading={t.decisionDisclosure.heading}
-            decisions={temporaryDecisions}
-          />
-        </div>
-      </section>
+      <InspectableProjectStage model={inspectionModel} client:load />
     </div>
   </article>
 </BaseLayout>
@@ -231,41 +125,11 @@ const temporaryDecisions = [
   }
 
   .shell-section {
-    display: grid;
-    gap: var(--density-gap);
     padding-block: clamp(var(--space-6), 7vw, var(--space-8));
     border-block-end: var(--border-width) solid var(--color-border);
-    transition:
-      background-color var(--motion-duration-standard)
-        var(--motion-easing-standard),
-      box-shadow var(--motion-duration-standard) var(--motion-easing-standard),
-      color var(--motion-duration-standard) var(--motion-easing-standard);
   }
 
   .shell-section p {
     color: var(--color-text-muted);
-  }
-
-  .view-mode-control {
-    padding-block: var(--space-7);
-    border-block-end: var(--border-width) solid var(--color-border);
-  }
-
-  [data-view-mode-enhanced='true'] .shell-section[data-view-state='selected'] {
-    padding-inline: var(--density-space-inline);
-    background: var(--color-surface-subtle);
-    box-shadow: inset var(--border-width-strong) 0 var(--color-border-strong);
-  }
-
-  [data-view-mode-enhanced='true'] .shell-section[data-view-state='dimmed'] {
-    color: var(--color-text-muted);
-  }
-
-  @media (width >= 48rem) {
-    .shell-section {
-      grid-template-columns: minmax(10rem, 1fr) minmax(0, 2fr);
-      gap: var(--space-7);
-      align-items: start;
-    }
   }
 </style>
