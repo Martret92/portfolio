@@ -1,8 +1,8 @@
 ---
 import LanguageSwitcher from '@components/LanguageSwitcher.astro';
+import { getProfessionalProfile } from '@content/professional-profile';
 import type { Locale } from '@i18n/config';
 import { getLocalizedPath } from '@i18n/routes';
-import { useTranslations } from '@i18n/ui';
 
 interface Props {
   locale: Locale;
@@ -10,7 +10,7 @@ interface Props {
 }
 
 const { locale, pathname } = Astro.props;
-const t = useTranslations(locale);
+const profile = getProfessionalProfile(locale);
 const homePath = getLocalizedPath(locale);
 const isHome = pathname === homePath || pathname === `${homePath}/`;
 ---
@@ -18,18 +18,19 @@ const isHome = pathname === homePath || pathname === `${homePath}/`;
 <header class="site-header">
   <div class="container site-header__inner">
     <a class="site-identity" href={homePath}>
-      <span>{t.home.siteIdentity}</span>
-      <small>{t.home.siteIdentityStatus}</small>
+      {profile.identity}
     </a>
 
     <div class="site-header__navigation">
-      <nav aria-label={t.home.navigationLabel}>
+      <nav aria-label={profile.navigationLabel}>
         <a href={homePath} aria-current={isHome ? 'page' : undefined}>
-          {t.home.navigation.home}
+          {profile.navigation.home}
         </a>
         <a href={`${homePath}#featured-work`}>
-          {t.home.navigation.featuredWork}
+          {profile.navigation.work}
         </a>
+        <a href={`${homePath}#about`}>{profile.navigation.about}</a>
+        <a href={`${homePath}#contact`}>{profile.navigation.contact}</a>
       </nav>
 
       <LanguageSwitcher locale={locale} pathname={pathname} />
@@ -82,15 +83,6 @@ const isHome = pathname === homePath || pathname === `${homePath}/`;
     font-weight: var(--font-weight-bold);
     line-height: var(--line-height-tight);
     text-decoration: none;
-  }
-
-  .site-identity small {
-    color: var(--color-text-muted);
-    font-family: var(--font-family-mono);
-    font-size: var(--font-size-xs);
-    font-weight: var(--font-weight-regular);
-    letter-spacing: var(--letter-spacing-wide);
-    text-transform: uppercase;
   }
 
   @media (width < 40rem) {
