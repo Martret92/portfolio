@@ -33,6 +33,24 @@ test('Home remains complete without JavaScript', async ({ browser }) => {
   await expect(
     preview.getByRole('link', { name: /Inspect the case study/ }),
   ).toHaveAttribute('href', '/en/projects/devdata-generator');
+  await expect(page.getByRole('heading', { name: 'About' })).toBeVisible();
+  await expect(
+    page.getByRole('heading', { name: 'Technical capabilities' }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole('heading', { name: 'Previous professional experience' }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole('heading', { name: 'Education and certification' }),
+  ).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Contact' })).toBeVisible();
+  await expect(
+    page.getByRole('link', { name: 'jaime.martret@gmail.com' }),
+  ).toHaveAttribute('href', 'mailto:jaime.martret@gmail.com');
+  await expect(page.getByRole('link', { name: 'Download CV' })).toHaveAttribute(
+    'href',
+    '/jaime-martret-full-stack-cv.pdf',
+  );
   await expect(page.getByRole('link', { name: 'Español' })).toHaveAttribute(
     'href',
     '/es',
