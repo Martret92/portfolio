@@ -6,6 +6,7 @@ import {
   useRef,
   useState,
   type CSSProperties,
+  type ReactNode,
 } from 'react';
 
 import {
@@ -18,11 +19,14 @@ import {
 } from '../lib/inspection';
 import type {
   InspectionDecision,
+  InspectionEvidence,
+  OutputEvidence,
   Perspective,
   ProductElement,
   ProjectInspectionModel,
   SystemConnection,
   SystemNode,
+  SourceEvidence,
 } from '../types/inspection';
 
 import '../styles/inspectable-project.css';
@@ -36,6 +40,127 @@ interface InspectorProps extends Props {
   readonly className?: string;
   readonly onNavigateNode: (nodeId: string) => void;
   readonly onNavigateDecision: (decisionId: string) => void;
+}
+
+function ProductVisualFrame({
+  model,
+  onInspectSystem,
+}: Props & { readonly onInspectSystem?: () => void }) {
+  return (
+    <figure className="product-visual" data-product-visual>
+      <picture>
+        <source srcSet={model.productVisual.optimizedSrc} type="image/jpeg" />
+        <img
+          src={model.productVisual.src}
+          width={model.productVisual.width}
+          height={model.productVisual.height}
+          alt={model.productVisual.alt}
+          fetchPriority="high"
+        />
+      </picture>
+      <figcaption>{model.productVisual.caption}</figcaption>
+      {onInspectSystem ? (
+        <button
+          type="button"
+          className="product-visual__inspect"
+          onClick={onInspectSystem}
+          data-inspect-system
+        >
+          <span aria-hidden="true">→</span>
+          {model.labels.inspectSystemLabel}
+        </button>
+      ) : null}
+    </figure>
+  );
+}
+
+type CausalConnectorKind = 'forward' | 'branch';
+
+function CausalConnector({
+  kind,
+  productId,
+  connectionIds,
+  activeConnectionIds,
+  idPrefix,
+}: {
+  readonly kind: CausalConnectorKind;
+  readonly productId: string;
+  readonly connectionIds: readonly string[];
+  readonly activeConnectionIds: ReadonlySet<string>;
+  readonly idPrefix: string;
+}) {
+  const active = connectionIds.some((id) => activeConnectionIds.has(id));
+  const markerId = `${idPrefix}-${productId}-flow-arrow`;
+
+  return (
+    <svg
+      className={`causal-connector causal-connector--${kind}`}
+      viewBox={kind === 'branch' ? '0 0 180 60' : '0 0 100 100'}
+      preserveAspectRatio="none"
+      aria-hidden="true"
+      focusable="false"
+      data-causal-connector={productId}
+      data-connection-state={active ? 'active' : 'default'}
+      data-connection-ids={connectionIds.join(' ')}
+    >
+      <defs>
+        <marker
+          id={markerId}
+          viewBox="0 0 8 8"
+          refX="7"
+          refY="4"
+          markerWidth="8"
+          markerHeight="8"
+          orient="auto"
+        >
+          <path d="M0 0 8 4 0 8Z" />
+        </marker>
+      </defs>
+      {kind === 'branch' ? (
+        <>
+          <path
+            className="causal-connector__desktop"
+            d="M129 2V20H42V52"
+            markerEnd={`url(#${markerId})`}
+            data-connection-id={connectionIds[0]}
+          />
+          <path
+            className="causal-connector__desktop"
+            d="M129 20V52"
+            markerEnd={`url(#${markerId})`}
+            data-connection-id={connectionIds[1]}
+          />
+          <path
+            className="causal-connector__mobile"
+            d="M50 2V20L25 50V90"
+            markerEnd={`url(#${markerId})`}
+            data-connection-id={connectionIds[0]}
+          />
+          <path
+            className="causal-connector__mobile"
+            d="M50 20L75 50V90"
+            markerEnd={`url(#${markerId})`}
+            data-connection-id={connectionIds[1]}
+          />
+        </>
+      ) : (
+        <>
+          <path
+            className="causal-connector__desktop"
+            d="M2 50H90"
+            markerEnd={`url(#${markerId})`}
+            data-connection-id={connectionIds[0]}
+          />
+          <path
+            className="causal-connector__mobile"
+            d="M50 2V90"
+            markerEnd={`url(#${markerId})`}
+            data-connection-id={connectionIds[0]}
+          />
+        </>
+      )}
+    </svg>
+  );
 }
 
 function DetailList({
@@ -58,6 +183,96 @@ function DetailList({
         </ul>
       </dd>
     </div>
+  );
+}
+
+function ArtifactFrame({
+  model,
+  evidence,
+  children,
+}: Props & {
+  readonly evidence: InspectionEvidence;
+  readonly children: ReactNode;
+}) {
+  return (
+    <figure
+      className="evidence-artifact"
+      data-evidence-artifact={evidence.id}
+      data-evidence-type={evidence.type}
+    >
+      <figcaption>
+        <span>{model.labels.evidenceTypeLabels[evidence.type]}</span>
+        <code>{evidence.provenance}</code>
+        <strong>{evidence.title}</strong>
+      </figcaption>
+      <div className="evidence-artifact__content">{children}</div>
+      <p className="evidence-artifact__annotation">{evidence.annotation}</p>
+    </figure>
+  );
+}
+
+function SourceArtifact({
+  model,
+  evidence,
+}: Props & { readonly evidence: SourceEvidence }) {
+  return (
+    <details
+      className="source-artifact"
+      data-evidence-artifact={evidence.id}
+      data-evidence-type={evidence.type}
+    >
+      <summary>
+        <span>{model.labels.evidenceTypeLabels.source}</span>
+        <code>{evidence.provenance}</code>
+        <strong>{evidence.title}</strong>
+        <small>{model.labels.viewEvidenceLabel}</small>
+      </summary>
+      <div className="source-artifact__body">
+        {evidence.snippets.map((snippet) => (
+          <div className="source-excerpt" key={snippet.startLine}>
+            <span aria-hidden="true">{snippet.startLine}</span>
+            <pre>
+              <code>{snippet.code}</code>
+            </pre>
+          </div>
+        ))}
+        <p className="evidence-artifact__annotation">{evidence.annotation}</p>
+      </div>
+    </details>
+  );
+}
+
+function OutputArtifact({
+  model,
+  evidence,
+}: Props & { readonly evidence: OutputEvidence }) {
+  return (
+    <ArtifactFrame model={model} evidence={evidence}>
+      <p className="evidence-artifact__illustrative">
+        {evidence.illustrativeLabel}
+      </p>
+      <div className="output-formats">
+        {evidence.formats.map((format) => (
+          <section key={format.id}>
+            <h4>{format.label}</h4>
+            <pre>
+              <code>{format.content}</code>
+            </pre>
+          </section>
+        ))}
+      </div>
+    </ArtifactFrame>
+  );
+}
+
+function EvidenceArtifact({
+  model,
+  evidence,
+}: Props & { readonly evidence: InspectionEvidence }) {
+  return evidence.type === 'source' ? (
+    <SourceArtifact model={model} evidence={evidence} />
+  ) : (
+    <OutputArtifact model={model} evidence={evidence} />
   );
 }
 
@@ -338,6 +553,29 @@ function InspectableGroup({
   const containsSelection = selectedNodeId
     ? nodeIdSet.has(selectedNodeId)
     : false;
+  const containsConnectedNode = nodes.some((node) =>
+    connectedNodeIds.has(node.id),
+  );
+  const hasActiveOutgoingConnection = model.connections.some(
+    (connection) =>
+      activeConnectionIds.has(connection.id) &&
+      nodeIdSet.has(connection.from) &&
+      !nodeIdSet.has(connection.to),
+  );
+  const causalConnector =
+    product.id === 'configure'
+      ? {
+          kind: 'forward' as const,
+          connectionIds: ['configuration-validation'],
+        }
+      : product.id === 'generate'
+        ? { kind: 'forward' as const, connectionIds: ['generation-result'] }
+        : product.id === 'result'
+          ? {
+              kind: 'branch' as const,
+              connectionIds: ['result-preview', 'result-export'],
+            }
+          : undefined;
   const headingId = `${idPrefix}-group-${product.id}`;
 
   return (
@@ -347,9 +585,21 @@ function InspectableGroup({
       data-flow-position={product.layoutPosition}
       data-group-mode={perspective}
       data-contains-selection={String(containsSelection)}
+      data-contains-connected={String(containsConnectedNode)}
+      data-active-outgoing={String(hasActiveOutgoingConnection)}
+      data-focal={String(product.id === 'result')}
       style={{ '--flow-index': index + 1 } as CSSProperties}
       aria-labelledby={headingId}
     >
+      {perspective === 'system' && causalConnector ? (
+        <CausalConnector
+          kind={causalConnector.kind}
+          productId={product.id}
+          connectionIds={causalConnector.connectionIds}
+          activeConnectionIds={activeConnectionIds}
+          idPrefix={idPrefix}
+        />
+      ) : null}
       <header className="inspectable-group__product">
         <span className="product-element__step">0{index + 1}</span>
         <h3 id={headingId}>{product.label}</h3>
@@ -388,6 +638,22 @@ function InspectableGroup({
           onNavigateNode={onNavigateNode}
           onNavigateDecision={onNavigateDecision}
         />
+      ) : null}
+
+      {perspective === 'system' ? (
+        <div className="group-evidence">
+          {model.evidence
+            .filter(
+              ({ placementProductId }) => placementProductId === product.id,
+            )
+            .map((evidence) => (
+              <EvidenceArtifact
+                key={evidence.id}
+                model={model}
+                evidence={evidence}
+              />
+            ))}
+        </div>
       ) : null}
     </section>
   );
@@ -469,6 +735,7 @@ function PersistentProjectStage({
   onSelectNode,
   onNavigateNode,
   onNavigateDecision,
+  onInspectSystem,
   registerNode,
   idPrefix,
 }: Props & {
@@ -477,6 +744,7 @@ function PersistentProjectStage({
   readonly onSelectNode: (nodeId: string) => void;
   readonly onNavigateNode: (nodeId: string) => void;
   readonly onNavigateDecision: (decisionId: string) => void;
+  readonly onInspectSystem: () => void;
   readonly registerNode: (
     nodeId: string,
     element: HTMLButtonElement | null,
@@ -528,6 +796,10 @@ function PersistentProjectStage({
           </p>
         ) : null}
       </header>
+
+      {perspective === 'product' ? (
+        <ProductVisualFrame model={model} onInspectSystem={onInspectSystem} />
+      ) : null}
 
       <div className="project-workspace">
         <div className="persistent-groups">
@@ -590,9 +862,13 @@ function Decisions({
         <p>{model.labels.decisionsIntroduction}</p>
       </header>
       <div className="inspection-decisions__items">
-        {model.decisions.map((decision) => (
+        {model.decisions.map((decision, index) => (
           <details key={decision.id} id={`${idPrefix}${decision.id}`}>
             <summary ref={(element) => registerSummary?.(decision.id, element)}>
+              <span className="decision-index">
+                {model.labels.decisionItemLabel}{' '}
+                {String(index + 1).padStart(2, '0')}
+              </span>
               <span>
                 <strong>{decision.title}</strong>
                 <small>{decision.summary}</small>
@@ -639,6 +915,7 @@ function StaticFallback({
           <h2 id={productHeadingId}>{model.labels.productHeading}</h2>
           <p>{model.labels.productIntroduction}</p>
         </header>
+        <ProductVisualFrame model={model} />
         <div className="static-product-groups">
           {model.productElements.map((product) => (
             <article key={product.id}>
@@ -696,6 +973,17 @@ function StaticFallback({
                   );
                 },
               )}
+              {model.evidence
+                .filter(
+                  ({ placementProductId }) => placementProductId === product.id,
+                )
+                .map((evidence) => (
+                  <EvidenceArtifact
+                    key={evidence.id}
+                    model={model}
+                    evidence={evidence}
+                  />
+                ))}
             </section>
           ))}
         </div>
@@ -830,6 +1118,7 @@ export default function InspectableProjectStage({ model }: Props) {
             onSelectNode={setSelectedNodeId}
             onNavigateNode={navigateToNode}
             onNavigateDecision={navigateToDecision}
+            onInspectSystem={() => selectPerspective('system')}
             registerNode={registerNode}
             idPrefix={idPrefix}
           />
