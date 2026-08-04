@@ -34,6 +34,20 @@ test('enhanced project interaction state has no axe violations', async ({
   await expectNoAxeViolations(page);
 });
 
+test('Spanish relationship navigation state has no axe violations', async ({
+  page,
+}) => {
+  await page.goto('/es/projects/devdata-generator');
+  await page.getByRole('button', { name: 'Sistema', exact: true }).click();
+  await page.getByRole('button', { name: /generatedData/ }).click();
+  await page
+    .locator('.inspection-inspector--desktop')
+    .getByRole('button', { name: /Exportación/ })
+    .click();
+
+  await expectNoAxeViolations(page);
+});
+
 test('project content remains usable without JavaScript', async ({
   browser,
 }) => {
@@ -68,7 +82,9 @@ test('project content remains usable without JavaScript', async ({
       .filter({ hasText: 'Configuration state→Validation' }),
   ).toBeVisible();
   await expect(
-    fallback.getByText(/Configuration state.*Invalidates/),
+    fallback
+      .locator('.system-invalidation')
+      .getByText(/Configuration state.*Invalidates/),
   ).toBeVisible();
 
   const decision = page.locator('#static-single-generated-result');

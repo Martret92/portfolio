@@ -6,6 +6,8 @@ import {
   getConnectedSystemNodeIds,
   getMappedProductId,
   getMappedSystemNodeIds,
+  getNodeRelationships,
+  getRelationshipGroups,
   validateProjectInspectionModel,
 } from './inspection';
 import type { ProjectInspectionModel } from '../types/inspection';
@@ -32,6 +34,9 @@ describe('project inspection model', () => {
     expect(getMappedProductId(model.mappings, 'generated-data')).toBe('result');
     expect(model.systemNodes[0]).not.toHaveProperty('productCounterpart');
     expect(model.systemNodes[0]?.inspection).not.toHaveProperty('label');
+    expect(model.systemNodes[0]?.inspection).not.toHaveProperty('producedBy');
+    expect(model.systemNodes[0]?.inspection).not.toHaveProperty('consumes');
+    expect(model.systemNodes[0]?.inspection).not.toHaveProperty('consumedBy');
   });
 
   it.each([
@@ -102,6 +107,60 @@ describe('project inspection model', () => {
         'configuration-invalidates-result',
       ],
     );
+  });
+
+  it('derives directional flow, dependency, and invalidation relationships', () => {
+    const generated = getNodeRelationships(model.connections, 'generated-data');
+    expect(
+      generated.map(({ connection, direction, targetNodeId }) => [
+        connection.type,
+        direction,
+        targetNodeId,
+      ]),
+    ).toEqual([
+      ['flow', 'incoming', 'generate-data'],
+      ['flow', 'outgoing', 'preview'],
+      ['flow', 'outgoing', 'export'],
+      ['invalidation', 'incoming', 'configuration-state'],
+    ]);
+
+    expect(
+      getNodeRelationships(model.connections, 'generate-data').find(
+        ({ connection }) => connection.id === 'faker-generation',
+      ),
+    ).toMatchObject({
+      direction: 'incoming',
+      targetNodeId: 'faker',
+      connection: { type: 'dependency' },
+    });
+  });
+
+  it('presents verified relationships with directional semantics', () => {
+    const groups = getRelationshipGroups(
+      model.connections,
+      model.systemNodes,
+      'generated-data',
+    );
+    expect(
+      Object.fromEntries(
+        groups.map(({ semantic, relationships }) => [
+          semantic,
+          relationships.map(({ targetNodeId }) => targetNodeId),
+        ]),
+      ),
+    ).toEqual({
+      producedBy: ['generate-data'],
+      consumedBy: ['preview', 'export'],
+      invalidatedBy: ['configuration-state'],
+    });
+
+    expect(
+      getRelationshipGroups(
+        model.connections,
+        model.systemNodes,
+        'generate-data',
+      ).find(({ semantic }) => semantic === 'dependsOn')?.relationships,
+    ).toEqual([expect.objectContaining({ targetNodeId: 'faker' })]);
   });
 
   it('requires every node to map to exactly one product', () => {

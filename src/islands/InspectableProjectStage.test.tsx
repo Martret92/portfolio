@@ -61,7 +61,7 @@ describe('InspectableProjectStage', () => {
       within(reuse!).getByRole('button', { name: /Browser APIs/ }),
     ).toBeVisible();
     expect(
-      screen.getByText('Select a node to inspect its role.'),
+      screen.getByText('Select a node to inspect its role and relationships.'),
     ).toBeVisible();
   });
 
@@ -106,11 +106,74 @@ describe('InspectableProjectStage', () => {
       '.inspection-inspector--desktop',
     );
     expect(
-      within(resetInspector!).getByText('Select a node to inspect its role.'),
+      within(resetInspector!).getByText(
+        'Select a node to inspect its role and relationships.',
+      ),
     ).toBeVisible();
     expect(
       container.querySelector('[data-system-node][aria-pressed="true"]'),
     ).toBeNull();
+  });
+
+  it('follows directional relationships and synchronizes node focus', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<InspectableProjectStage model={model} />);
+    await user.click(await screen.findByRole('button', { name: 'System' }));
+    await user.click(screen.getByRole('button', { name: /generatedData/ }));
+
+    const inspector = container.querySelector<HTMLElement>(
+      '.inspection-inspector--desktop',
+    )!;
+    expect(within(inspector).getByText('Produced by')).toBeVisible();
+    expect(within(inspector).getByText('Consumed by')).toBeVisible();
+    expect(within(inspector).getByText('Invalidated by')).toBeVisible();
+    expect(
+      within(inspector).getByRole('button', { name: /generateData/ }),
+    ).toBeVisible();
+    expect(
+      within(inspector).getByRole('button', { name: /Preview/ }),
+    ).toBeVisible();
+
+    await user.click(within(inspector).getByRole('button', { name: /Export/ }));
+    const exportNode = container.querySelector<HTMLButtonElement>(
+      '[data-system-node="export"]',
+    )!;
+    await waitFor(() => expect(exportNode).toHaveFocus());
+    expect(exportNode).toHaveAttribute('aria-pressed', 'true');
+    expect(
+      within(inspector).getByRole('heading', { name: 'Export' }),
+    ).toBeVisible();
+
+    await user.click(screen.getByRole('button', { name: /generateData/ }));
+    expect(within(inspector).getByText('Depends on')).toBeVisible();
+    await user.click(within(inspector).getByRole('button', { name: /Faker/ }));
+    const fakerNode = container.querySelector<HTMLButtonElement>(
+      '[data-system-node="faker"]',
+    )!;
+    await waitFor(() => expect(fakerNode).toHaveFocus());
+    expect(fakerNode).toHaveAttribute('aria-pressed', 'true');
+  });
+
+  it('opens and focuses an explicitly requested technical decision', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<InspectableProjectStage model={model} />);
+    await user.click(await screen.findByRole('button', { name: 'System' }));
+    await user.click(screen.getByRole('button', { name: /generatedData/ }));
+    const inspector = container.querySelector<HTMLElement>(
+      '.inspection-inspector--desktop',
+    )!;
+    await user.click(
+      within(inspector).getByRole('button', {
+        name: /Why one shared generated result/,
+      }),
+    );
+
+    const decision = container.querySelector<HTMLDetailsElement>(
+      '#single-generated-result',
+    )!;
+    const summary = decision.querySelector('summary');
+    expect(decision.open).toBe(true);
+    expect(summary).toHaveFocus();
   });
 
   it('supports keyboard activation and pressed semantics', async () => {

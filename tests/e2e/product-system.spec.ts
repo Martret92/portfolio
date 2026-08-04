@@ -26,7 +26,7 @@ test('opens the same project flow and resets inspection on Product', async ({
   ).toHaveCount(3);
   await expect(system).toHaveAttribute('aria-pressed', 'true');
   await expect(
-    page.getByText('Select a node to inspect its role.'),
+    page.getByText('Select a node to inspect its role and relationships.'),
   ).toBeVisible();
 
   await page.getByRole('button', { name: /generatedData/ }).click();
@@ -40,7 +40,7 @@ test('opens the same project flow and resets inspection on Product', async ({
   await product.click();
   await system.click();
   await expect(
-    page.getByText('Select a node to inspect its role.'),
+    page.getByText('Select a node to inspect its role and relationships.'),
   ).toBeVisible();
 });
 
@@ -70,6 +70,20 @@ test('remains usable at a narrow mobile viewport', async ({ page }) => {
     'data-contains-selection',
     'true',
   );
+  await page
+    .locator('[data-product-group="result"] .inspection-inspector--mobile')
+    .getByRole('button', { name: /Export/ })
+    .click();
+  await expect(page.locator('[data-system-node="export"]')).toBeFocused();
+  await expect(page.locator('[data-product-group="export"]')).toHaveAttribute(
+    'data-contains-selection',
+    'true',
+  );
+  await expect(
+    page.locator(
+      '[data-product-group="export"] .inspection-inspector--mobile [data-inspector-node="export"]',
+    ),
+  ).toBeVisible();
   const overflow = await page.evaluate(
     () =>
       document.documentElement.scrollWidth >

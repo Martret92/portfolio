@@ -1,10 +1,19 @@
-import { useEffect, useId, useMemo, useState, type CSSProperties } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+  type CSSProperties,
+} from 'react';
 
 import {
   getActiveConnectionIds,
   getConnectedSystemNodeIds,
   getMappedProductId,
   getMappedSystemNodeIds,
+  getRelationshipGroups,
   getSystemNode,
 } from '../lib/inspection';
 import type {
@@ -25,6 +34,8 @@ interface Props {
 interface InspectorProps extends Props {
   readonly selectedNode: SystemNode | undefined;
   readonly className?: string;
+  readonly onNavigateNode: (nodeId: string) => void;
+  readonly onNavigateDecision: (decisionId: string) => void;
 }
 
 function DetailList({
@@ -50,10 +61,78 @@ function DetailList({
   );
 }
 
-function Inspector({ model, selectedNode, className }: InspectorProps) {
+function StaticRelationshipDetails({
+  model,
+  node,
+}: Props & { readonly node: SystemNode }) {
+  const groups = getRelationshipGroups(
+    model.connections,
+    model.systemNodes,
+    node.id,
+  );
+  if (!groups.length) return null;
+
+  return (
+    <div>
+      <dt>{model.labels.relationshipsLabel}</dt>
+      <dd>
+        {groups.map((group) => (
+          <section key={group.semantic}>
+            <h5>{model.labels.relationshipLabels[group.semantic]}</h5>
+            <ul>
+              {group.relationships.map((relationship) => (
+                <li key={relationship.connection.id}>
+                  {
+                    getSystemNode(model.systemNodes, relationship.targetNodeId)
+                      ?.label
+                  }
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))}
+      </dd>
+    </div>
+  );
+}
+
+function RelationshipTarget({
+  node,
+  onActivate,
+}: {
+  readonly node: SystemNode;
+  readonly onActivate: (nodeId: string) => void;
+}) {
+  return (
+    <button
+      type="button"
+      className="relationship-target"
+      onClick={() => onActivate(node.id)}
+      data-relationship-target={node.id}
+    >
+      <span aria-hidden="true">→</span>
+      {node.label}
+    </button>
+  );
+}
+
+function Inspector({
+  model,
+  selectedNode,
+  className,
+  onNavigateNode,
+  onNavigateDecision,
+}: InspectorProps) {
   const relatedDecisions = selectedNode?.inspection.relatedDecisionIds
     ?.map((id) => model.decisions.find((decision) => decision.id === id))
     .filter((decision): decision is InspectionDecision => Boolean(decision));
+  const relationshipGroups = selectedNode
+    ? getRelationshipGroups(
+        model.connections,
+        model.systemNodes,
+        selectedNode.id,
+      )
+    : [];
 
   return (
     <aside className={`inspection-inspector ${className ?? ''}`} data-inspector>
@@ -68,21 +147,37 @@ function Inspector({ model, selectedNode, className }: InspectorProps) {
               <dt>{model.labels.roleLabel}</dt>
               <dd>{selectedNode.inspection.role}</dd>
             </div>
+            {relationshipGroups.length ? (
+              <div className="inspection-relationships">
+                <dt>{model.labels.relationshipsLabel}</dt>
+                <dd>
+                  {relationshipGroups.map((group) => (
+                    <section key={group.semantic}>
+                      <h4>{model.labels.relationshipLabels[group.semantic]}</h4>
+                      <ul>
+                        {group.relationships.map((relationship) => {
+                          const target = getSystemNode(
+                            model.systemNodes,
+                            relationship.targetNodeId,
+                          );
+                          return target ? (
+                            <li key={relationship.connection.id}>
+                              <RelationshipTarget
+                                node={target}
+                                onActivate={onNavigateNode}
+                              />
+                            </li>
+                          ) : null;
+                        })}
+                      </ul>
+                    </section>
+                  ))}
+                </dd>
+              </div>
+            ) : null}
             <DetailList
-              label={model.labels.producedByLabel}
-              values={selectedNode.inspection.producedBy}
-            />
-            <DetailList
-              label={model.labels.consumesLabel}
-              values={selectedNode.inspection.consumes}
-            />
-            <DetailList
-              label={model.labels.consumedByLabel}
-              values={selectedNode.inspection.consumedBy}
-            />
-            <DetailList
-              label={model.labels.invalidatedWhenLabel}
-              values={selectedNode.inspection.invalidatedWhen}
+              label={model.labels.invalidationTriggersLabel}
+              values={selectedNode.inspection.invalidationTriggers}
             />
             <DetailList
               label={model.labels.whyItMattersLabel}
@@ -99,7 +194,15 @@ function Inspector({ model, selectedNode, className }: InspectorProps) {
                   <ul>
                     {relatedDecisions.map((decision) => (
                       <li key={decision.id}>
-                        <a href={`#${decision.id}`}>{decision.title}</a>
+                        <button
+                          type="button"
+                          className="decision-target"
+                          onClick={() => onNavigateDecision(decision.id)}
+                          data-decision-target={decision.id}
+                        >
+                          <span aria-hidden="true">→</span>
+                          {decision.title}
+                        </button>
                       </li>
                     ))}
                   </ul>
@@ -119,11 +222,16 @@ function SystemNodeControl({
   selectedNodeId,
   connectedNodeIds,
   onSelectNode,
+  registerNode,
 }: Props & {
   readonly node: SystemNode;
   readonly selectedNodeId: string | null;
   readonly connectedNodeIds: ReadonlySet<string>;
   readonly onSelectNode: (nodeId: string) => void;
+  readonly registerNode: (
+    nodeId: string,
+    element: HTMLButtonElement | null,
+  ) => void;
 }) {
   const state =
     node.id === selectedNodeId
@@ -142,6 +250,7 @@ function SystemNodeControl({
       onClick={() => onSelectNode(node.id)}
       data-system-node={node.id}
       data-node-state={state}
+      ref={(element) => registerNode(node.id, element)}
     >
       <span>{model.labels.kindLabels[node.kind]}</span>
       <strong>{node.label}</strong>
@@ -168,14 +277,20 @@ function LocalTopology({
         <li
           key={connection.id}
           data-local-connection={connection.id}
+          data-connection-type={connection.type}
           data-connection-state={
             activeConnectionIds.has(connection.id) ? 'active' : 'default'
           }
         >
           <span>{getSystemNode(nodes, connection.from)?.label}</span>
-          <span className="visually-hidden">{connection.label}</span>
+          {connection.type !== 'dependency' ? (
+            <span className="visually-hidden">{connection.label}</span>
+          ) : null}
           <span aria-hidden="true">→</span>
           <span>{getSystemNode(nodes, connection.to)?.label}</span>
+          {connection.type === 'dependency' ? (
+            <small className="local-topology__type">{connection.label}</small>
+          ) : null}
         </li>
       ))}
     </ul>
@@ -191,6 +306,9 @@ function InspectableGroup({
   connectedNodeIds,
   activeConnectionIds,
   onSelectNode,
+  onNavigateNode,
+  onNavigateDecision,
+  registerNode,
   idPrefix,
 }: Props & {
   readonly product: ProductElement;
@@ -200,6 +318,12 @@ function InspectableGroup({
   readonly connectedNodeIds: ReadonlySet<string>;
   readonly activeConnectionIds: ReadonlySet<string>;
   readonly onSelectNode: (nodeId: string) => void;
+  readonly onNavigateNode: (nodeId: string) => void;
+  readonly onNavigateDecision: (decisionId: string) => void;
+  readonly registerNode: (
+    nodeId: string,
+    element: HTMLButtonElement | null,
+  ) => void;
   readonly idPrefix: string;
 }) {
   const nodeIds = getMappedSystemNodeIds(model.mappings, product.id);
@@ -209,7 +333,7 @@ function InspectableGroup({
   const nodeIdSet = new Set(nodeIds);
   const localConnections = model.connections.filter(
     ({ from, to, type }) =>
-      type === 'flow' && nodeIdSet.has(from) && nodeIdSet.has(to),
+      type !== 'invalidation' && nodeIdSet.has(from) && nodeIdSet.has(to),
   );
   const containsSelection = selectedNodeId
     ? nodeIdSet.has(selectedNodeId)
@@ -243,6 +367,7 @@ function InspectableGroup({
                 selectedNodeId={selectedNodeId}
                 connectedNodeIds={connectedNodeIds}
                 onSelectNode={onSelectNode}
+                registerNode={registerNode}
               />
             ))}
           </div>
@@ -260,6 +385,8 @@ function InspectableGroup({
           model={model}
           selectedNode={getSystemNode(model.systemNodes, selectedNodeId)}
           className="inspection-inspector--mobile"
+          onNavigateNode={onNavigateNode}
+          onNavigateDecision={onNavigateDecision}
         />
       ) : null}
     </section>
@@ -340,11 +467,20 @@ function PersistentProjectStage({
   perspective,
   selectedNodeId,
   onSelectNode,
+  onNavigateNode,
+  onNavigateDecision,
+  registerNode,
   idPrefix,
 }: Props & {
   readonly perspective: Perspective;
   readonly selectedNodeId: string | null;
   readonly onSelectNode: (nodeId: string) => void;
+  readonly onNavigateNode: (nodeId: string) => void;
+  readonly onNavigateDecision: (decisionId: string) => void;
+  readonly registerNode: (
+    nodeId: string,
+    element: HTMLButtonElement | null,
+  ) => void;
   readonly idPrefix: string;
 }) {
   const connectedNodeIds = useMemo(
@@ -406,6 +542,9 @@ function PersistentProjectStage({
               connectedNodeIds={connectedNodeIds}
               activeConnectionIds={activeConnectionIds}
               onSelectNode={onSelectNode}
+              onNavigateNode={onNavigateNode}
+              onNavigateDecision={onNavigateDecision}
+              registerNode={registerNode}
               idPrefix={idPrefix}
             />
           ))}
@@ -423,6 +562,8 @@ function PersistentProjectStage({
             model={model}
             selectedNode={selectedNode}
             className="inspection-inspector--desktop"
+            onNavigateNode={onNavigateNode}
+            onNavigateDecision={onNavigateDecision}
           />
         ) : null}
       </div>
@@ -433,7 +574,14 @@ function PersistentProjectStage({
 function Decisions({
   model,
   idPrefix = '',
-}: Props & { readonly idPrefix?: string }) {
+  registerSummary,
+}: Props & {
+  readonly idPrefix?: string;
+  readonly registerSummary?: (
+    decisionId: string,
+    element: HTMLElement | null,
+  ) => void;
+}) {
   const headingId = `${idPrefix}inspection-decisions-heading`;
   return (
     <section className="inspection-decisions" aria-labelledby={headingId}>
@@ -444,7 +592,7 @@ function Decisions({
       <div className="inspection-decisions__items">
         {model.decisions.map((decision) => (
           <details key={decision.id} id={`${idPrefix}${decision.id}`}>
-            <summary>
+            <summary ref={(element) => registerSummary?.(decision.id, element)}>
               <span>
                 <strong>{decision.title}</strong>
                 <small>{decision.summary}</small>
@@ -530,21 +678,10 @@ function StaticFallback({
                       <h4>{node.label}</h4>
                       <p>{node.inspection.role}</p>
                       <dl className="inspection-details">
+                        <StaticRelationshipDetails model={model} node={node} />
                         <DetailList
-                          label={model.labels.producedByLabel}
-                          values={node.inspection.producedBy}
-                        />
-                        <DetailList
-                          label={model.labels.consumesLabel}
-                          values={node.inspection.consumes}
-                        />
-                        <DetailList
-                          label={model.labels.consumedByLabel}
-                          values={node.inspection.consumedBy}
-                        />
-                        <DetailList
-                          label={model.labels.invalidatedWhenLabel}
-                          values={node.inspection.invalidatedWhen}
+                          label={model.labels.invalidationTriggersLabel}
+                          values={node.inspection.invalidationTriggers}
                         />
                         <DetailList
                           label={model.labels.whyItMattersLabel}
@@ -566,7 +703,7 @@ function StaticFallback({
           <h3 id={flowHeadingId}>{model.labels.topologyHeading}</h3>
           <ol>
             {model.connections
-              .filter(({ type }) => type === 'flow')
+              .filter(({ type }) => type !== 'invalidation')
               .map((connection) => (
                 <li key={connection.id}>
                   <strong>
@@ -611,6 +748,8 @@ export default function InspectableProjectStage({ model }: Props) {
   const [enhanced, setEnhanced] = useState(false);
   const [perspective, setPerspective] = useState<Perspective>('product');
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
+  const nodeRefs = useRef(new Map<string, HTMLButtonElement>());
+  const decisionSummaryRefs = useRef(new Map<string, HTMLElement>());
   const reactId = useId().replaceAll(':', '');
   const idPrefix = `inspection-${reactId}`;
 
@@ -620,6 +759,36 @@ export default function InspectableProjectStage({ model }: Props) {
     setPerspective(nextPerspective);
     if (nextPerspective === 'product') setSelectedNodeId(null);
   };
+
+  const registerNode = useCallback(
+    (nodeId: string, element: HTMLButtonElement | null) => {
+      if (element) nodeRefs.current.set(nodeId, element);
+      else nodeRefs.current.delete(nodeId);
+    },
+    [],
+  );
+
+  const registerDecisionSummary = useCallback(
+    (decisionId: string, element: HTMLElement | null) => {
+      if (element) decisionSummaryRefs.current.set(decisionId, element);
+      else decisionSummaryRefs.current.delete(decisionId);
+    },
+    [],
+  );
+
+  const navigateToNode = useCallback((nodeId: string) => {
+    setSelectedNodeId(nodeId);
+    requestAnimationFrame(() => nodeRefs.current.get(nodeId)?.focus());
+  }, []);
+
+  const navigateToDecision = useCallback((decisionId: string) => {
+    const summary = decisionSummaryRefs.current.get(decisionId);
+    const details = summary?.closest('details');
+    if (!summary || !details) return;
+    details.open = true;
+    summary.focus();
+    summary.scrollIntoView?.({ block: 'nearest' });
+  }, []);
 
   return (
     <div
@@ -659,11 +828,14 @@ export default function InspectableProjectStage({ model }: Props) {
             perspective={perspective}
             selectedNodeId={selectedNodeId}
             onSelectNode={setSelectedNodeId}
+            onNavigateNode={navigateToNode}
+            onNavigateDecision={navigateToDecision}
+            registerNode={registerNode}
             idPrefix={idPrefix}
           />
         </div>
 
-        <Decisions model={model} />
+        <Decisions model={model} registerSummary={registerDecisionSummary} />
       </div>
     </div>
   );

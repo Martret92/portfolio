@@ -14,10 +14,7 @@ export interface ProductElement {
 
 export interface SystemNodeInspection {
   readonly role: string;
-  readonly producedBy?: readonly string[];
-  readonly consumes?: readonly string[];
-  readonly consumedBy?: readonly string[];
-  readonly invalidatedWhen?: readonly string[];
+  readonly invalidationTriggers?: readonly string[];
   readonly whyItMatters?: readonly string[];
   readonly implementationNotes?: readonly string[];
   readonly relatedDecisionIds?: readonly string[];
@@ -42,7 +39,32 @@ export interface SystemConnection {
   readonly from: string;
   readonly to: string;
   readonly label: string;
-  readonly type: 'flow' | 'invalidation';
+  readonly type: 'flow' | 'dependency' | 'invalidation';
+}
+
+export type RelationshipDirection = 'incoming' | 'outgoing';
+
+export interface NodeRelationship {
+  readonly connection: SystemConnection;
+  readonly direction: RelationshipDirection;
+  readonly targetNodeId: string;
+}
+
+export type RelationshipSemantic =
+  | 'producedBy'
+  | 'produces'
+  | 'consumedBy'
+  | 'receivesFrom'
+  | 'dependsOn'
+  | 'usedBy'
+  | 'invalidatedBy'
+  | 'invalidates'
+  | 'flowsTo'
+  | 'relatedTo';
+
+export interface RelationshipGroup {
+  readonly semantic: RelationshipSemantic;
+  readonly relationships: readonly NodeRelationship[];
 }
 
 export interface ProductSystemMapping {
@@ -71,10 +93,9 @@ export interface ProjectInspectionLabels {
   readonly inspectorHeading: string;
   readonly inspectorEmpty: string;
   readonly roleLabel: string;
-  readonly producedByLabel: string;
-  readonly consumesLabel: string;
-  readonly consumedByLabel: string;
-  readonly invalidatedWhenLabel: string;
+  readonly relationshipsLabel: string;
+  readonly relationshipLabels: Readonly<Record<RelationshipSemantic, string>>;
+  readonly invalidationTriggersLabel: string;
   readonly whyItMattersLabel: string;
   readonly implementationNotesLabel: string;
   readonly relatedDecisionsLabel: string;
