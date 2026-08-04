@@ -19,6 +19,16 @@ const routes = [
     path: '/es/projects/devdata-generator',
     heading: 'Marcador temporal de DevData Generator',
   },
+  {
+    path: '/en/projects/duckyarena',
+    heading:
+      'Evolving a collaborative game backend into a more structured full stack system.',
+  },
+  {
+    path: '/es/projects/duckyarena',
+    heading:
+      'Evolucionando un backend colaborativo hacia un sistema full stack más estructurado.',
+  },
 ] as const;
 
 const professionalHomes = [
@@ -319,4 +329,102 @@ test('language switching preserves the project route', async ({ page }) => {
 
   await page.getByRole('link', { name: 'English' }).click();
   await expect(page).toHaveURL(/\/en\/projects\/devdata-generator\/?$/);
+});
+
+const duckyArenaRoutes = [
+  {
+    path: '/en',
+    projectPath: '/en/projects/duckyarena',
+    cta: 'Explore case study',
+    collaboration: /three-person educational project/,
+    contribution: 'My contribution',
+    alternate: 'Español',
+    alternateProjectPath: /\/es\/projects\/duckyarena\/?$/,
+    alternateBack: 'Volver al inicio',
+    alternateHomePath: /\/es\/?$/,
+  },
+  {
+    path: '/es',
+    projectPath: '/es/projects/duckyarena',
+    cta: 'Explorar caso de estudio',
+    collaboration: /proyecto educativo colaborativo de tres personas/,
+    contribution: 'Mi contribución',
+    alternate: 'English',
+    alternateProjectPath: /\/en\/projects\/duckyarena\/?$/,
+    alternateBack: 'Back to Home',
+    alternateHomePath: /\/en\/?$/,
+  },
+] as const;
+
+for (const route of duckyArenaRoutes) {
+  test(`${route.path} links to the localized DuckyArena story`, async ({
+    page,
+  }) => {
+    await page.goto(route.path);
+    const preview = page.locator('[data-duckyarena-home-preview]');
+    await expect(
+      preview.getByRole('heading', { name: 'DuckyArena' }),
+    ).toBeVisible();
+    await expect(preview.getByRole('list')).toContainText('PostgreSQL');
+    await expect(
+      preview.getByRole('link', { name: new RegExp(route.cta) }),
+    ).toHaveAttribute('href', route.projectPath);
+
+    await page.goto(route.projectPath);
+    const caseStudy = page.locator('[data-duckyarena-case-study]');
+    await expect(caseStudy).toContainText(route.collaboration);
+    await expect(
+      caseStudy.getByRole('heading', { name: route.contribution }),
+    ).toBeVisible();
+
+    const repositoryLinks = caseStudy.getByRole('link', {
+      name: /View repository|Ver repositorio/,
+    });
+    await expect(repositoryLinks).toHaveCount(2);
+    for (const link of await repositoryLinks.all()) {
+      await expect(link).toHaveAttribute(
+        'href',
+        'https://github.com/Martret92/DuckyArena',
+      );
+    }
+    await expect(
+      caseStudy.locator('a[href*="DuckyArena-legacy"], a[href*="Isildu"]'),
+    ).toHaveCount(0);
+
+    await expect(caseStudy).toContainText(/Authentication|autenticación/i);
+    await expect(caseStudy).toContainText(
+      /broader frontend integration|integración más amplia del frontend/i,
+    );
+    await expect(caseStudy).toContainText(
+      /automated tests|tests automatizados/i,
+    );
+    await expect(caseStudy).toContainText(/CI.*pending|CI siguen pendientes/i);
+    await expect(caseStudy).not.toContainText(
+      /individual project|built the entire backend|production-ready/i,
+    );
+
+    await page.getByRole('link', { name: route.alternate }).click();
+    await expect(page).toHaveURL(route.alternateProjectPath);
+
+    await page.getByRole('link', { name: route.alternateBack }).click();
+    await expect(page).toHaveURL(route.alternateHomePath);
+  });
+}
+
+test('DuckyArena remains readable without mobile overflow', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.goto('/en/projects/duckyarena');
+
+  await expect(
+    page.getByRole('heading', { name: 'System architecture' }),
+  ).toBeVisible();
+  expect(
+    await page.evaluate(
+      () =>
+        document.documentElement.scrollWidth <=
+        document.documentElement.clientWidth,
+    ),
+  ).toBe(true);
 });
