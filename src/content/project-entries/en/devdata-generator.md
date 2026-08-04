@@ -1,8 +1,8 @@
 ---
 projectId: devdata-generator
 locale: en
-title: DevData Generator placeholder
-summary: Temporary English project summary for validating the content foundation.
+title: DevData Generator
+summary: Browser-based fake data generator that creates one reusable dataset and exposes the same result through table, JSON, CSV and SQL outputs.
 ---
 
-Temporary English case-study content. This entry will be replaced in a later milestone.
+DevData Generator is a browser-based tool for configuring realistic fake datasets and reusing one generated result across preview and export formats.

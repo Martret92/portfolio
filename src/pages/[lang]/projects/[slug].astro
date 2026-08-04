@@ -47,10 +47,10 @@ const duckyArenaContent = isDuckyArena
   : undefined;
 const pageTitle = duckyArenaContent
   ? duckyArenaContent.metadata.title
-  : `${projectEntry.data.title} — ${t.caseStudy.titleSuffix}`;
+  : t.caseStudy.metadata.title;
 const pageDescription = duckyArenaContent
   ? duckyArenaContent.metadata.description
-  : projectEntry.data.summary;
+  : t.caseStudy.metadata.description;
 const inspectionModel = isDuckyArena
   ? undefined
   : getProjectInspectionModel(projectId, locale);
@@ -68,15 +68,23 @@ const inspectionModel = isDuckyArena
           <p class="eyebrow">{t.caseStudy.label}</p>
           <h1>{projectEntry.data.title}</h1>
           <p class="measure project-summary">{projectEntry.data.summary}</p>
-          <a class="back-link" href={homePath}>
-            {t.caseStudy.backHome}
-          </a>
+          <p class="measure project-scope">{t.caseStudy.scopeNote}</p>
+          <div class="project-actions">
+            <a href={homePath}>{t.caseStudy.backHome}</a>
+            <a
+              href="https://github.com/Martret92/devdata-generator"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {t.caseStudy.repositoryCta}
+            </a>
+          </div>
         </header>
 
         <div class="case-study__sections">
           <section class="shell-section" aria-labelledby="overview-heading">
             <h2 id="overview-heading">{t.caseStudy.sections.overview.title}</h2>
-            <p class="measure">{t.caseStudy.sections.overview.placeholder}</p>
+            <p class="measure">{t.caseStudy.sections.overview.copy}</p>
           </section>
 
           {inspectionModel && (
@@ -129,12 +137,22 @@ const inspectionModel = isDuckyArena
     font-size: var(--font-size-lead);
   }
 
-  .back-link {
+  .project-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3) var(--space-5);
+  }
+
+  .project-actions a {
     inline-size: fit-content;
     min-block-size: var(--touch-target-min);
     display: inline-flex;
     align-items: center;
     font-weight: var(--font-weight-medium);
+  }
+
+  .project-scope {
+    color: var(--color-text-muted);
   }
 
   .case-study__sections {
