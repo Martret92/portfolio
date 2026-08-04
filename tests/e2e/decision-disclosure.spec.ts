@@ -2,36 +2,27 @@ import { expect, test } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/en/projects/devdata-generator');
+  await page.getByRole('button', { name: 'System', exact: true }).click();
 });
 
-test('allows multiple native decision disclosures to remain open', async ({
+test('keeps verified native decisions independently operable', async ({
   page,
 }) => {
-  const first = page.locator('#temporary-decision-boundary');
-  const second = page.locator('#temporary-decision-alternative');
-  const firstSummary = first.locator('summary');
-  const secondSummary = second.locator('summary');
-
+  const first = page.locator('#single-generated-result');
+  const second = page.locator('#invalidate-stale-result');
   await expect(first).not.toHaveAttribute('open', '');
-  await expect(second).not.toHaveAttribute('open', '');
-
-  await firstSummary.click();
-  await expect(first).toHaveAttribute('open', '');
-
-  await secondSummary.click();
+  await first.locator('summary').click();
+  await second.locator('summary').click();
   await expect(first).toHaveAttribute('open', '');
   await expect(second).toHaveAttribute('open', '');
-
-  await firstSummary.click();
+  await first.locator('summary').click();
   await expect(first).not.toHaveAttribute('open', '');
   await expect(second).toHaveAttribute('open', '');
 });
 
 test('native disclosure supports keyboard activation', async ({ page }) => {
-  const decision = page.locator('#temporary-decision-boundary');
-  const summary = decision.locator('summary');
-
-  await summary.focus();
+  const decision = page.locator('#single-generated-result');
+  await decision.locator('summary').focus();
   await page.keyboard.press('Enter');
   await expect(decision).toHaveAttribute('open', '');
 });
