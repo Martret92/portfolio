@@ -7,6 +7,8 @@ const routes = [
   '/es',
   '/en/projects/devdata-generator',
   '/es/projects/devdata-generator',
+  '/en/projects/duckyarena',
+  '/es/projects/duckyarena',
 ] as const;
 
 test('localized pages provide a keyboard bypass link', async ({ page }) => {

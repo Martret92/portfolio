@@ -1,8 +1,10 @@
 ---
 import { getCollection } from 'astro:content';
 
+import DuckyArenaCaseStudy from '@components/DuckyArenaCaseStudy.astro';
 import SiteHeader from '@components/SiteHeader.astro';
 import { getProjectInspectionModel } from '@content/project-inspections';
+import { getDuckyArenaContent } from '@content/projects/duckyarena';
 import { projects, type ProjectId } from '@content/projects';
 import { locales, type Locale } from '@i18n/config';
 import { getLocalizedPath } from '@i18n/routes';
@@ -39,36 +41,51 @@ if (!projectEntry) {
 }
 
 const homePath = getLocalizedPath(locale);
-const pageTitle = `${projectEntry.data.title} — ${t.caseStudy.titleSuffix}`;
-const inspectionModel = getProjectInspectionModel(projectId, locale);
+const isDuckyArena = projectId === 'duckyarena';
+const duckyArenaContent = isDuckyArena
+  ? getDuckyArenaContent(locale)
+  : undefined;
+const pageTitle = duckyArenaContent
+  ? duckyArenaContent.metadata.title
+  : `${projectEntry.data.title} — ${t.caseStudy.titleSuffix}`;
+const pageDescription = duckyArenaContent
+  ? duckyArenaContent.metadata.description
+  : projectEntry.data.summary;
+const inspectionModel = isDuckyArena
+  ? undefined
+  : getProjectInspectionModel(projectId, locale);
 ---
 
-<BaseLayout
-  locale={locale}
-  title={pageTitle}
-  description={projectEntry.data.summary}
->
+<BaseLayout locale={locale} title={pageTitle} description={pageDescription}>
   <SiteHeader slot="header" locale={locale} pathname={Astro.url.pathname} />
 
-  <article class="container case-study" data-view-mode-scope>
-    <header class="project-intro stack">
-      <p class="eyebrow">{t.caseStudy.label}</p>
-      <h1>{projectEntry.data.title}</h1>
-      <p class="measure project-summary">{projectEntry.data.summary}</p>
-      <a class="back-link" href={homePath}>{t.caseStudy.backHome}</a>
-    </header>
+  {
+    duckyArenaContent ? (
+      <DuckyArenaCaseStudy content={duckyArenaContent} homePath={homePath} />
+    ) : (
+      <article class="container case-study" data-view-mode-scope>
+        <header class="project-intro stack">
+          <p class="eyebrow">{t.caseStudy.label}</p>
+          <h1>{projectEntry.data.title}</h1>
+          <p class="measure project-summary">{projectEntry.data.summary}</p>
+          <a class="back-link" href={homePath}>
+            {t.caseStudy.backHome}
+          </a>
+        </header>
 
-    <div class="case-study__sections">
-      <section class="shell-section" aria-labelledby="overview-heading">
-        <h2 id="overview-heading">{t.caseStudy.sections.overview.title}</h2>
-        <p class="measure">
-          {t.caseStudy.sections.overview.placeholder}
-        </p>
-      </section>
+        <div class="case-study__sections">
+          <section class="shell-section" aria-labelledby="overview-heading">
+            <h2 id="overview-heading">{t.caseStudy.sections.overview.title}</h2>
+            <p class="measure">{t.caseStudy.sections.overview.placeholder}</p>
+          </section>
 
-      <InspectableProjectStage model={inspectionModel} client:load />
-    </div>
-  </article>
+          {inspectionModel && (
+            <InspectableProjectStage model={inspectionModel} client:load />
+          )}
+        </div>
+      </article>
+    )
+  }
 </BaseLayout>
 
 <style>

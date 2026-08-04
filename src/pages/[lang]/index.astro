@@ -1,7 +1,9 @@
 ---
 import HomeProjectPreview from '@components/HomeProjectPreview.astro';
+import DuckyArenaHomePreview from '@components/DuckyArenaHomePreview.astro';
 import SiteHeader from '@components/SiteHeader.astro';
 import { getProjectInspectionModel } from '@content/project-inspections';
+import { getDuckyArenaContent } from '@content/projects/duckyarena';
 import {
   getProfessionalProfile,
   professionalLinks,
@@ -28,11 +30,17 @@ const { locale } = Astro.props;
 const t = useTranslations(locale);
 const profile = getProfessionalProfile(locale);
 const project = requireProject('devdata-generator');
+const duckyArenaProject = requireProject('duckyarena');
+const duckyArenaContent = getDuckyArenaContent(locale);
 const projectInspection = getProjectInspectionModel(
   'devdata-generator',
   locale,
 );
 const projectPath = getLocalizedPath(locale, `/projects/${project.slug}`);
+const duckyArenaPath = getLocalizedPath(
+  locale,
+  `/projects/${duckyArenaProject.slug}`,
+);
 ---
 
 <BaseLayout
@@ -60,6 +68,8 @@ const projectPath = getLocalizedPath(locale, `/projects/${project.slug}`);
       href={projectPath}
       productVisual={projectInspection.productVisual}
     />
+
+    <DuckyArenaHomePreview content={duckyArenaContent} href={duckyArenaPath} />
 
     <section id="about" class="profile-section" aria-labelledby="about-heading">
       <div class="section-heading">

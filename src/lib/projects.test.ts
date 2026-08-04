@@ -49,6 +49,10 @@ describe('project data', () => {
       id: 'devdata-generator',
       slug: 'devdata-generator',
     });
+    expect(getProject('duckyarena')).toEqual({
+      id: 'duckyarena',
+      slug: 'duckyarena',
+    });
   });
 
   it('rejects invalid project IDs', () => {
