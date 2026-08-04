@@ -13,6 +13,23 @@ const routes = [
   },
 ] as const;
 
+test('root remains a static language entry', async ({ page }) => {
+  const response = await page.goto('/');
+
+  expect(response?.ok()).toBe(true);
+  await expect(
+    page.getByRole('heading', { level: 1, name: 'Temporary language entry' }),
+  ).toBeVisible();
+  await expect(page.getByRole('link', { name: 'English' })).toHaveAttribute(
+    'href',
+    '/en',
+  );
+  await expect(page.getByRole('link', { name: 'Español' })).toHaveAttribute(
+    'href',
+    '/es',
+  );
+});
+
 for (const route of routes) {
   test(`${route.path} renders successfully`, async ({ page }) => {
     const response = await page.goto(route.path);
@@ -33,6 +50,19 @@ test('Home and project navigation form a complete localized flow', async ({
 
   await page.getByRole('link', { name: 'Back to Home' }).click();
   await expect(page).toHaveURL(/\/en\/?$/);
+});
+
+test('Spanish Home and project navigation remain localized', async ({
+  page,
+}) => {
+  await page.goto('/es');
+  await page
+    .getByRole('link', { name: /Inspeccionar el caso de estudio/ })
+    .click();
+  await expect(page).toHaveURL(/\/es\/projects\/devdata-generator\/?$/);
+
+  await page.getByRole('link', { name: 'Volver al inicio' }).click();
+  await expect(page).toHaveURL(/\/es\/?$/);
 });
 
 const homePreviews = [

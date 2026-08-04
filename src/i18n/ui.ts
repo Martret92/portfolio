@@ -2,6 +2,9 @@ import type { Locale } from './config';
 
 const ui = {
   en: {
+    accessibility: {
+      skipToContent: 'Skip to main content',
+    },
     language: {
       navigationLabel: 'Language selection',
       switchTo: 'Español',
@@ -132,6 +135,9 @@ const ui = {
     },
   },
   es: {
+    accessibility: {
+      skipToContent: 'Saltar al contenido principal',
+    },
     language: {
       navigationLabel: 'Selección de idioma',
       switchTo: 'English',

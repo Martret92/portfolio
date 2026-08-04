@@ -1042,6 +1042,7 @@ export default function InspectableProjectStage({ model }: Props) {
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
   const nodeRefs = useRef(new Map<string, HTMLButtonElement>());
   const decisionSummaryRefs = useRef(new Map<string, HTMLElement>());
+  const systemPerspectiveRef = useRef<HTMLButtonElement>(null);
   const reactId = useId().replaceAll(':', '');
   const idPrefix = `inspection-${reactId}`;
 
@@ -1050,6 +1051,11 @@ export default function InspectableProjectStage({ model }: Props) {
   const selectPerspective = (nextPerspective: Perspective) => {
     setPerspective(nextPerspective);
     if (nextPerspective === 'product') setSelectedNodeId(null);
+  };
+
+  const inspectSystem = () => {
+    selectPerspective('system');
+    systemPerspectiveRef.current?.focus();
   };
 
   const registerNode = useCallback(
@@ -1108,6 +1114,7 @@ export default function InspectableProjectStage({ model }: Props) {
               aria-pressed={perspective === 'system'}
               onClick={() => selectPerspective('system')}
               data-perspective-control="system"
+              ref={systemPerspectiveRef}
             >
               {model.labels.systemPerspective}
             </button>
@@ -1122,7 +1129,7 @@ export default function InspectableProjectStage({ model }: Props) {
             onSelectNode={setSelectedNodeId}
             onNavigateNode={navigateToNode}
             onNavigateDecision={navigateToDecision}
-            onInspectSystem={() => selectPerspective('system')}
+            onInspectSystem={inspectSystem}
             registerNode={registerNode}
             idPrefix={idPrefix}
           />
