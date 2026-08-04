@@ -31,6 +31,25 @@ const ui = {
       projectCta: 'Explore featured work',
       featuredWorkLabel: 'Featured work',
       projectLink: 'View DevData Generator project route',
+      featuredProject: {
+        eyebrow: 'Featured project',
+        title: 'DevData Generator',
+        summary:
+          'Configure realistic datasets once, inspect one generated result and reuse it across table, JSON, CSV and SQL.',
+        productLabel: 'Product',
+        productSummary:
+          'Choose a template, fields and quantity, then generate a reusable dataset.',
+        systemLabel: 'System',
+        systemSummary:
+          'One validated configuration produces one shared generatedData result for every preview and export path.',
+        topologyLabel: 'DevData system flow',
+        configureLabel: 'Configure',
+        generateLabel: 'Generate',
+        resultLabel: 'generatedData',
+        previewLabel: 'Preview',
+        exportLabel: 'Export',
+        cta: 'Inspect the case study',
+      },
       footer: 'Temporary portfolio foundation.',
     },
     caseStudy: {
@@ -142,6 +161,25 @@ const ui = {
       projectCta: 'Explorar trabajo destacado',
       featuredWorkLabel: 'Trabajo destacado',
       projectLink: 'Ver la ruta del proyecto DevData Generator',
+      featuredProject: {
+        eyebrow: 'Proyecto destacado',
+        title: 'DevData Generator',
+        summary:
+          'Configura datasets realistas una vez, inspecciona un único resultado generado y reutilízalo en tabla, JSON, CSV y SQL.',
+        productLabel: 'Producto',
+        productSummary:
+          'Elige una plantilla, los campos y la cantidad, y genera un dataset reutilizable.',
+        systemLabel: 'Sistema',
+        systemSummary:
+          'Una configuración validada produce un único resultado generatedData compartido por todas las vistas y exportaciones.',
+        topologyLabel: 'Flujo del sistema de DevData',
+        configureLabel: 'Configurar',
+        generateLabel: 'Generar',
+        resultLabel: 'generatedData',
+        previewLabel: 'Vista previa',
+        exportLabel: 'Exportar',
+        cta: 'Inspeccionar el caso de estudio',
+      },
       footer: 'Base temporal del portfolio.',
     },
     caseStudy: {

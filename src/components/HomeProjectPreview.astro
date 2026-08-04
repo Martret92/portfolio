@@ -1,0 +1,367 @@
+---
+import type { ProductVisual } from '../types/inspection';
+
+interface PreviewCopy {
+  eyebrow: string;
+  title: string;
+  summary: string;
+  productLabel: string;
+  productSummary: string;
+  systemLabel: string;
+  systemSummary: string;
+  topologyLabel: string;
+  configureLabel: string;
+  generateLabel: string;
+  resultLabel: string;
+  previewLabel: string;
+  exportLabel: string;
+  cta: string;
+}
+
+interface Props {
+  copy: PreviewCopy;
+  href: string;
+  productVisual: ProductVisual;
+}
+
+const { copy, href, productVisual } = Astro.props;
+---
+
+<section
+  id="featured-work"
+  class="featured-preview"
+  aria-labelledby="featured-heading"
+  data-home-project-preview
+>
+  <header class="featured-preview__header">
+    <p class="featured-preview__eyebrow">{copy.eyebrow}</p>
+    <h2 id="featured-heading">{copy.title}</h2>
+    <p>{copy.summary}</p>
+  </header>
+
+  <div class="featured-preview__composition">
+    <figure class="product-capture">
+      <img
+        src={productVisual.optimizedSrc}
+        width={productVisual.width}
+        height={productVisual.height}
+        alt={productVisual.alt}
+        loading="lazy"
+        decoding="async"
+      />
+      <figcaption>{productVisual.caption}</figcaption>
+    </figure>
+
+    <div class="featured-preview__reading">
+      <section class="preview-layer preview-layer--product">
+        <p>{copy.productLabel}</p>
+        <h3>{copy.productSummary}</h3>
+      </section>
+
+      <section class="preview-layer preview-layer--system">
+        <p>{copy.systemLabel}</p>
+        <h3>{copy.systemSummary}</h3>
+
+        <div class="signature-topology" data-home-topology>
+          <div class="signature-topology__visual" aria-hidden="true">
+            <span class="signature-node signature-node--configure">
+              {copy.configureLabel}
+            </span>
+            <span class="signature-node signature-node--generate">
+              {copy.generateLabel}
+            </span>
+            <code class="signature-node signature-node--result">
+              {copy.resultLabel}
+            </code>
+            <span class="signature-node signature-node--preview">
+              {copy.previewLabel}
+            </span>
+            <span class="signature-node signature-node--export">
+              {copy.exportLabel}
+            </span>
+
+            <svg
+              viewBox="0 0 100 100"
+              preserveAspectRatio="none"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <defs>
+                <marker
+                  id="home-signature-arrow"
+                  viewBox="0 0 8 8"
+                  refX="7"
+                  refY="4"
+                  markerWidth="6"
+                  markerHeight="6"
+                  orient="auto"
+                >
+                  <path d="M0 0 8 4 0 8Z"></path>
+                </marker>
+              </defs>
+              <path class="topology-desktop" d="M20 23H34"></path>
+              <path class="topology-desktop" d="M53 23H67"></path>
+              <path class="topology-desktop" d="M82 34V48H61V66"></path>
+              <path class="topology-desktop" d="M82 48H87V66"></path>
+              <path class="topology-mobile" d="M50 15V25"></path>
+              <path class="topology-mobile" d="M50 38V48"></path>
+              <path class="topology-mobile" d="M50 61V70H23V83"></path>
+              <path class="topology-mobile" d="M50 70H77V83"></path>
+            </svg>
+          </div>
+
+          <ol class="visually-hidden" aria-label={copy.topologyLabel}>
+            <li>{copy.configureLabel} → {copy.generateLabel}</li>
+            <li>{copy.generateLabel} → {copy.resultLabel}</li>
+            <li>{copy.resultLabel} → {copy.previewLabel}</li>
+            <li>{copy.resultLabel} → {copy.exportLabel}</li>
+          </ol>
+        </div>
+      </section>
+
+      <a class="featured-preview__cta" href={href}>{copy.cta} →</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .featured-preview {
+    padding-block: clamp(var(--space-7), 8vw, var(--space-9));
+    border-block-start: var(--border-width) solid var(--color-border);
+  }
+
+  .featured-preview__header {
+    max-inline-size: 54rem;
+    display: grid;
+    gap: var(--space-3);
+    margin-block-end: clamp(var(--space-6), 6vw, var(--space-8));
+  }
+
+  .featured-preview__eyebrow,
+  .preview-layer > p {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+    letter-spacing: var(--letter-spacing-wide);
+    text-transform: uppercase;
+  }
+
+  .featured-preview h2,
+  .featured-preview h3,
+  .featured-preview p,
+  .product-capture {
+    margin-block: 0;
+  }
+
+  .featured-preview h2 {
+    font-size: var(--font-size-heading-md);
+  }
+
+  .featured-preview__header > p:last-child {
+    max-inline-size: var(--content-measure);
+    color: var(--color-text-muted);
+    font-size: var(--font-size-lead);
+  }
+
+  .featured-preview__composition {
+    display: grid;
+    gap: clamp(var(--space-6), 6vw, var(--space-8));
+    align-items: start;
+  }
+
+  .product-capture {
+    min-inline-size: 0;
+  }
+
+  .product-capture img {
+    display: block;
+    inline-size: 100%;
+    block-size: auto;
+    border-block: var(--border-width) solid var(--color-border);
+  }
+
+  .product-capture figcaption {
+    max-inline-size: var(--content-measure);
+    margin-block-start: var(--space-3);
+    padding-inline-start: var(--space-3);
+    border-inline-start: var(--border-width-strong) solid var(--color-border);
+    color: var(--color-text-muted);
+    font-size: var(--font-size-sm);
+  }
+
+  .featured-preview__reading {
+    min-inline-size: 0;
+    display: grid;
+    gap: var(--space-6);
+  }
+
+  .preview-layer {
+    display: grid;
+    gap: var(--space-3);
+    padding-inline-start: var(--space-4);
+    border-inline-start: var(--border-width) solid var(--color-border);
+  }
+
+  .preview-layer--product {
+    padding-block: var(--space-2);
+    border-inline-start-width: var(--border-width-strong);
+    border-inline-start-color: var(--color-border-strong);
+  }
+
+  .preview-layer h3 {
+    color: var(--color-text-muted);
+    font-family: var(--font-family-body);
+    font-size: var(--font-size-body);
+    font-weight: var(--font-weight-regular);
+    line-height: var(--line-height-loose);
+  }
+
+  .preview-layer--product h3 {
+    color: var(--color-text);
+    font-size: var(--font-size-lead);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .signature-topology {
+    margin-block-start: var(--space-2);
+  }
+
+  .signature-topology__visual {
+    min-block-size: 15rem;
+    position: relative;
+  }
+
+  .signature-topology svg {
+    position: absolute;
+    inset: 0;
+    inline-size: 100%;
+    block-size: 100%;
+    overflow: visible;
+    pointer-events: none;
+  }
+
+  .signature-topology svg path:not(marker path) {
+    fill: none;
+    stroke: var(--architecture-connection);
+    stroke-width: 1.3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    vector-effect: non-scaling-stroke;
+    marker-end: url('#home-signature-arrow');
+  }
+
+  .signature-topology marker path {
+    fill: var(--architecture-connection);
+  }
+
+  .signature-node {
+    position: absolute;
+    z-index: var(--z-index-raised);
+    min-inline-size: 0;
+    padding-block-start: var(--space-2);
+    border-block-start: var(--border-width) solid var(--color-border);
+    background: var(--color-canvas);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .signature-node--configure {
+    inset-block-start: 5%;
+    inset-inline-start: 0;
+    inline-size: 20%;
+  }
+
+  .signature-node--generate {
+    inset-block-start: 5%;
+    inset-inline-start: 34%;
+    inline-size: 20%;
+  }
+
+  .signature-node--result {
+    inset-block-start: 5%;
+    inset-inline-start: 67%;
+    inline-size: 30%;
+    font-size: var(--font-size-body);
+    font-weight: var(--font-weight-bold);
+  }
+
+  .signature-node--preview {
+    inset-block-start: 66%;
+    inset-inline-start: 49%;
+    inline-size: 24%;
+  }
+
+  .signature-node--export {
+    inset-block-start: 66%;
+    inset-inline-start: 78%;
+    inline-size: 22%;
+  }
+
+  .topology-mobile {
+    display: none;
+  }
+
+  .featured-preview__cta {
+    inline-size: fit-content;
+    min-block-size: var(--touch-target-min);
+    display: inline-flex;
+    align-items: center;
+    padding-inline-start: var(--space-3);
+    border-inline-start: var(--border-width-strong) solid
+      var(--architecture-node-focus-border);
+    font-weight: var(--font-weight-medium);
+  }
+
+  @media (width >= 64rem) {
+    .featured-preview__composition {
+      grid-template-columns: minmax(0, 1.65fr) minmax(20rem, 0.85fr);
+    }
+  }
+
+  @media (width < 48rem) {
+    .signature-topology__visual {
+      min-block-size: 21rem;
+    }
+
+    .topology-desktop {
+      display: none;
+    }
+
+    .topology-mobile {
+      display: block;
+    }
+
+    .signature-node--configure,
+    .signature-node--generate,
+    .signature-node--result {
+      inset-inline-start: 25%;
+      inline-size: 50%;
+    }
+
+    .signature-node--configure {
+      inset-block-start: 2%;
+    }
+
+    .signature-node--generate {
+      inset-block-start: 25%;
+    }
+
+    .signature-node--result {
+      inset-block-start: 48%;
+    }
+
+    .signature-node--preview {
+      inset-block-start: 83%;
+      inset-inline-start: 0;
+      inline-size: 46%;
+    }
+
+    .signature-node--export {
+      inset-block-start: 83%;
+      inset-inline-start: 54%;
+      inline-size: 46%;
+    }
+  }
+</style>
