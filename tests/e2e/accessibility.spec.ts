@@ -61,10 +61,35 @@ test('project content remains usable without JavaScript', async ({
   await expect(
     fallback.getByRole('heading', { name: 'How the product works' }),
   ).toBeVisible();
+  const fallbackProductVisual = fallback.locator('[data-product-visual] img');
+  await expect(fallbackProductVisual).toBeVisible();
+  await expect(fallbackProductVisual).toHaveAttribute('alt', /Users template/);
   await expect(
     fallback.getByRole('heading', { name: 'How the same flow is structured' }),
   ).toBeVisible();
   await expect(fallback.getByRole('button')).toHaveCount(0);
+  await expect(fallback.locator('[data-evidence-artifact]')).toHaveCount(3);
+  await expect(fallback.getByText('src/utils/generateData.js')).toBeVisible();
+  await expect(fallback.getByText('src/App.jsx')).toBeVisible();
+  const fallbackSource = fallback.locator(
+    '[data-evidence-artifact="generation-boundary"]',
+  );
+  await expect(fallbackSource).not.toHaveAttribute('open', '');
+  await fallbackSource.locator('summary').click();
+  await expect(fallbackSource).toHaveAttribute('open', '');
+  await expect(fallbackSource.getByText(/fakerES as faker/)).toBeVisible();
+  const fallbackOutput = fallback.locator(
+    '[data-evidence-artifact="multiple-output-representations"]',
+  );
+  await expect(
+    fallbackOutput.getByRole('heading', { name: 'JSON' }),
+  ).toBeVisible();
+  await expect(
+    fallbackOutput.getByRole('heading', { name: 'CSV' }),
+  ).toBeVisible();
+  await expect(
+    fallbackOutput.getByRole('heading', { name: 'SQL' }),
+  ).toBeVisible();
   await expect(
     fallback.getByRole('heading', { name: 'generatedData' }),
   ).toBeVisible();

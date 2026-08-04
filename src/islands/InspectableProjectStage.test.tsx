@@ -22,10 +22,32 @@ describe('InspectableProjectStage', () => {
     );
 
     expect(product).toHaveAttribute('aria-pressed', 'true');
+    const productVisual = container.querySelector<HTMLImageElement>(
+      '.inspection-enhanced [data-product-visual] img',
+    );
+    expect(productVisual).toHaveAttribute(
+      'src',
+      '/images/projects/devdata/devdata-product-overview.png',
+    );
+    expect(
+      container.querySelector(
+        '.inspection-enhanced [data-product-visual] source',
+      ),
+    ).toHaveAttribute(
+      'srcset',
+      '/images/projects/devdata/devdata-product-overview.jpg',
+    );
+    expect(productVisual).toHaveAttribute('width', '1440');
+    expect(productVisual).toHaveAttribute('height', '1205');
+    expect(productVisual).toHaveAttribute('alt', model.productVisual.alt);
+    const inspectSystem = screen.getByRole('button', {
+      name: model.labels.inspectSystemLabel,
+    });
+    expect(inspectSystem).toBeVisible();
     expect(container.querySelectorAll('[data-group-internals]')).toHaveLength(
       0,
     );
-    await user.click(system);
+    await user.click(inspectSystem);
     expect(system).toHaveAttribute('aria-pressed', 'true');
 
     for (const id of groupIds) {
@@ -63,6 +85,36 @@ describe('InspectableProjectStage', () => {
     expect(
       screen.getByText('Select a node to inspect its role and relationships.'),
     ).toBeVisible();
+    const sourceEvidence = container.querySelector<HTMLDetailsElement>(
+      '[data-evidence-artifact="generation-boundary"]',
+    );
+    expect(sourceEvidence).not.toHaveAttribute('open');
+    expect(
+      within(sourceEvidence!).getByText('src/utils/generateData.js'),
+    ).toBeVisible();
+    expect(
+      container.querySelector(
+        '[data-evidence-artifact="multiple-output-representations"]',
+      ),
+    ).toBeVisible();
+    expect(container.querySelectorAll('[data-causal-connector]')).toHaveLength(
+      3,
+    );
+    expect(
+      container.querySelector('[data-causal-connector="preview"]'),
+    ).toBeNull();
+    const responsiveBranches = container.querySelectorAll(
+      '[data-causal-connector="result"] .causal-connector__mobile',
+    );
+    expect(responsiveBranches).toHaveLength(2);
+    expect(responsiveBranches[0]).toHaveAttribute(
+      'data-connection-id',
+      'result-preview',
+    );
+    expect(responsiveBranches[1]).toHaveAttribute(
+      'data-connection-id',
+      'result-export',
+    );
   });
 
   it('updates local inspection and resets it through Product', async () => {
@@ -81,7 +133,19 @@ describe('InspectableProjectStage', () => {
       '.inspection-inspector--desktop',
     );
     expect(mobileInspector).not.toBeNull();
+    const evidence = resultGroup?.querySelector('.group-evidence');
+    expect(evidence).not.toBeNull();
+    expect(
+      mobileInspector!.compareDocumentPosition(evidence!) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
     expect(resultGroup?.getAttribute('data-contains-selection')).toBe('true');
+    expect(
+      container.querySelector('[data-causal-connector="generate"]'),
+    ).toHaveAttribute('data-connection-state', 'active');
+    expect(
+      container.querySelector('[data-causal-connector="result"]'),
+    ).toHaveAttribute('data-connection-state', 'active');
     expect(
       within(desktopInspector!).getByRole('heading', { name: 'generatedData' }),
     ).toBeVisible();

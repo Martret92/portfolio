@@ -4,6 +4,7 @@ import type { ProjectId } from './projects';
 import type {
   ProductSystemMapping,
   ProjectInspectionModel,
+  InspectionEvidence,
   SystemConnection,
   SystemNode,
   SystemNodeInspection,
@@ -94,6 +95,90 @@ const decisionIds = [
   'single-generated-result',
   'invalidate-stale-result',
 ] as const;
+const evidenceIds = [
+  'generation-boundary',
+  'configuration-invalidation',
+  'multiple-output-representations',
+] as const;
+
+const evidenceTechnicalContent = {
+  'generation-boundary': {
+    snippets: [
+      {
+        startLine: 1,
+        code: "import { fakerES as faker } from '@faker-js/faker'",
+      },
+      {
+        startLine: 144,
+        code: `export function generateData({
+  templateId,
+  selectedFields,
+  numberRecords,
+}) {
+  const generateRecord = recordGenerators[templateId]
+
+  return Array.from({ length: numberRecords }, (_, index) =>
+    generateRecord(selectedFields, index),
+  )
+}`,
+      },
+    ],
+  },
+  'configuration-invalidation': {
+    snippets: [
+      {
+        startLine: 91,
+        code: `setSelectedTemplate(templateId)
+setSelectedFields(newTemplate.fields.map((field) => field.id))
+setGeneratedData([])`,
+      },
+      {
+        startLine: 96,
+        code: `const handleFieldChange = (fieldId) => {
+  setSelectedFields((currentFields) =>
+    currentFields.includes(fieldId)
+      ? currentFields.filter((id) => id !== fieldId)
+      : [...currentFields, fieldId],
+  )
+  setGeneratedData([])
+}`,
+      },
+      {
+        startLine: 105,
+        code: `const handleNumberRecordsChange = (value) => {
+  setNumberRecords(value)
+  setGeneratedData([])
+}`,
+      },
+    ],
+  },
+  'multiple-output-representations': {
+    formats: [
+      {
+        id: 'json',
+        label: 'JSON',
+        content: `[
+  {
+    "nombre": "Ana Torres",
+    "email": "ana.torres@example.com"
+  }
+]`,
+      },
+      {
+        id: 'csv',
+        label: 'CSV',
+        content: `"nombre";"email"
+"Ana Torres";"ana.torres@example.com"`,
+      },
+      {
+        id: 'sql',
+        label: 'SQL',
+        content:
+          "INSERT INTO usuarios (nombre, email) VALUES ('Ana Torres', 'ana.torres@example.com');",
+      },
+    ],
+  },
+} as const;
 
 const localized = {
   en: {
@@ -205,6 +290,36 @@ const localized = {
           'The UI returns to the empty, result-needed state until the user generates again.',
       },
     },
+    evidence: {
+      'generation-boundary': {
+        type: 'source',
+        placementProductId: 'generate',
+        relatedNodeIds: ['generate-data', 'faker'],
+        provenance: 'src/utils/generateData.js',
+        title: 'Generation stays behind one utility boundary',
+        annotation:
+          'The utility imports Faker, selects the configured record generator and creates the requested records through generateData().',
+      },
+      'configuration-invalidation': {
+        type: 'source',
+        placementProductId: 'result',
+        relatedNodeIds: ['configuration-state', 'generated-data'],
+        provenance: 'src/App.jsx',
+        title: 'Configuration changes clear the shared result',
+        annotation:
+          'Template, selected-field and quantity handlers each clear generatedData after changing configuration.',
+      },
+      'multiple-output-representations': {
+        type: 'output',
+        placementProductId: 'export',
+        relatedNodeIds: ['generated-data', 'export', 'serializers'],
+        provenance: 'Illustrative Users record',
+        title: 'One result, three serialized representations',
+        annotation:
+          'The same illustrative record is shown as JSON, semicolon-delimited CSV and a downloadable SQL INSERT statement.',
+        illustrativeLabel: 'Illustrative data, not a recorded execution',
+      },
+    },
     connectionLabels: {
       flow: 'Data flow',
       dependency: 'Dependency',
@@ -217,6 +332,7 @@ const localized = {
       productHeading: 'How the product works',
       productIntroduction:
         'A compact view of configuring, generating, inspecting and reusing one dataset.',
+      inspectSystemLabel: 'Inspect system',
       systemHeading: 'How the same flow is structured',
       systemIntroduction:
         'Open the product flow to inspect the state, generation boundary and downstream consumers beneath it.',
@@ -246,9 +362,12 @@ const localized = {
       decisionsHeading: 'Related technical decisions',
       decisionsIntroduction:
         'Open either verified decision when its context is useful.',
+      decisionItemLabel: 'Decision',
       decisionContextLabel: 'Context',
       decisionLabel: 'Decision',
       consequenceLabel: 'Consequence',
+      evidenceTypeLabels: { source: 'Source', output: 'Output' },
+      viewEvidenceLabel: 'View evidence',
       kindLabels: {
         input: 'Input state',
         process: 'Process',
@@ -259,7 +378,16 @@ const localized = {
         platform: 'Platform',
       },
     },
-    example: ['Users', '10 records', '6 fields'],
+    example: ['Users', '3 records', '4 fields'],
+    productVisual: {
+      src: '/images/projects/devdata/devdata-product-overview.png',
+      optimizedSrc: '/images/projects/devdata/devdata-product-overview.jpg',
+      width: 1440,
+      height: 1205,
+      alt: 'DevData Generator configured with the Users template and three generated records shown in a table.',
+      caption:
+        'The real DevData interface connects dataset configuration, generation, preview and export in one workflow.',
+    },
   },
   es: {
     productElements: {
@@ -376,6 +504,36 @@ const localized = {
           'La interfaz vuelve al estado vacío, pendiente de generar, hasta una nueva generación.',
       },
     },
+    evidence: {
+      'generation-boundary': {
+        type: 'source',
+        placementProductId: 'generate',
+        relatedNodeIds: ['generate-data', 'faker'],
+        provenance: 'src/utils/generateData.js',
+        title: 'La generación queda tras un único límite de utilidad',
+        annotation:
+          'La utilidad importa Faker, elige el generador de registros configurado y crea los registros solicitados mediante generateData().',
+      },
+      'configuration-invalidation': {
+        type: 'source',
+        placementProductId: 'result',
+        relatedNodeIds: ['configuration-state', 'generated-data'],
+        provenance: 'src/App.jsx',
+        title: 'Los cambios de configuración borran el resultado compartido',
+        annotation:
+          'Los manejadores de plantilla, campos seleccionados y cantidad borran generatedData tras cambiar la configuración.',
+      },
+      'multiple-output-representations': {
+        type: 'output',
+        placementProductId: 'export',
+        relatedNodeIds: ['generated-data', 'export', 'serializers'],
+        provenance: 'Registro de Usuarios ilustrativo',
+        title: 'Un resultado, tres representaciones serializadas',
+        annotation:
+          'El mismo registro ilustrativo se muestra como JSON, CSV delimitado por punto y coma y una sentencia INSERT SQL descargable.',
+        illustrativeLabel: 'Datos ilustrativos, no una ejecución registrada',
+      },
+    },
     connectionLabels: {
       flow: 'Flujo de datos',
       dependency: 'Dependencia',
@@ -388,6 +546,7 @@ const localized = {
       productHeading: 'Cómo funciona el producto',
       productIntroduction:
         'Una vista compacta de cómo configurar, generar, inspeccionar y reutilizar un dataset.',
+      inspectSystemLabel: 'Inspeccionar sistema',
       systemHeading: 'Cómo se estructura el mismo flujo',
       systemIntroduction:
         'Abre el flujo de producto para inspeccionar el estado, el límite de generación y sus consumidores.',
@@ -418,9 +577,12 @@ const localized = {
       decisionsHeading: 'Decisiones técnicas relacionadas',
       decisionsIntroduction:
         'Abre cualquiera de las decisiones verificadas cuando necesites su contexto.',
+      decisionItemLabel: 'Decisión',
       decisionContextLabel: 'Contexto',
       decisionLabel: 'Decisión',
       consequenceLabel: 'Consecuencia',
+      evidenceTypeLabels: { source: 'Fuente', output: 'Salida' },
+      viewEvidenceLabel: 'Ver evidencia',
       kindLabels: {
         input: 'Estado de entrada',
         process: 'Proceso',
@@ -431,7 +593,16 @@ const localized = {
         platform: 'Plataforma',
       },
     },
-    example: ['Usuarios', '10 registros', '6 campos'],
+    example: ['Usuarios', '3 registros', '4 campos'],
+    productVisual: {
+      src: '/images/projects/devdata/devdata-product-overview.png',
+      optimizedSrc: '/images/projects/devdata/devdata-product-overview.jpg',
+      width: 1440,
+      height: 1205,
+      alt: 'DevData Generator configurado con la plantilla Usuarios y tres registros generados mostrados en una tabla.',
+      caption:
+        'La interfaz real de DevData conecta la configuración del dataset, la generación, la vista previa y la exportación en un mismo flujo.',
+    },
   },
 } as const;
 
@@ -479,6 +650,20 @@ function createModel(locale: Locale): ProjectInspectionModel {
     id,
     ...content.decisions[id],
   }));
+  const evidence: readonly InspectionEvidence[] = evidenceIds.map((id) => {
+    if (id === 'multiple-output-representations') {
+      return {
+        id,
+        ...content.evidence[id],
+        ...evidenceTechnicalContent[id],
+      };
+    }
+    return {
+      id,
+      ...content.evidence[id],
+      ...evidenceTechnicalContent[id],
+    };
+  });
   const model: ProjectInspectionModel = {
     projectId: 'devdata-generator',
     productElements,
@@ -486,6 +671,8 @@ function createModel(locale: Locale): ProjectInspectionModel {
     connections: localizedConnections,
     mappings,
     decisions,
+    evidence,
+    productVisual: content.productVisual,
     example: content.example,
     labels: content.labels,
   };

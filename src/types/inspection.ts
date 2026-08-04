@@ -12,6 +12,15 @@ export interface ProductElement {
     | 'secondary-end';
 }
 
+export interface ProductVisual {
+  readonly src: string;
+  readonly optimizedSrc: string;
+  readonly width: number;
+  readonly height: number;
+  readonly alt: string;
+  readonly caption: string;
+}
+
 export interface SystemNodeInspection {
   readonly role: string;
   readonly invalidationTriggers?: readonly string[];
@@ -81,12 +90,46 @@ export interface InspectionDecision {
   readonly consequence: string;
 }
 
+export interface SourceEvidenceSnippet {
+  readonly startLine: number;
+  readonly code: string;
+}
+
+interface EvidenceBase {
+  readonly id: string;
+  readonly relatedNodeIds: readonly string[];
+  readonly placementProductId: string;
+  readonly provenance: string;
+  readonly title: string;
+  readonly annotation: string;
+}
+
+export interface SourceEvidence extends EvidenceBase {
+  readonly type: 'source';
+  readonly snippets: readonly SourceEvidenceSnippet[];
+}
+
+export interface OutputEvidenceFormat {
+  readonly id: 'json' | 'csv' | 'sql';
+  readonly label: string;
+  readonly content: string;
+}
+
+export interface OutputEvidence extends EvidenceBase {
+  readonly type: 'output';
+  readonly illustrativeLabel: string;
+  readonly formats: readonly OutputEvidenceFormat[];
+}
+
+export type InspectionEvidence = SourceEvidence | OutputEvidence;
+
 export interface ProjectInspectionLabels {
   readonly perspectiveLegend: string;
   readonly productPerspective: string;
   readonly systemPerspective: string;
   readonly productHeading: string;
   readonly productIntroduction: string;
+  readonly inspectSystemLabel: string;
   readonly systemHeading: string;
   readonly systemIntroduction: string;
   readonly exampleLabel: string;
@@ -103,9 +146,14 @@ export interface ProjectInspectionLabels {
   readonly invalidationHeading: string;
   readonly decisionsHeading: string;
   readonly decisionsIntroduction: string;
+  readonly decisionItemLabel: string;
   readonly decisionContextLabel: string;
   readonly decisionLabel: string;
   readonly consequenceLabel: string;
+  readonly evidenceTypeLabels: Readonly<
+    Record<InspectionEvidence['type'], string>
+  >;
+  readonly viewEvidenceLabel: string;
   readonly kindLabels: Readonly<Record<SystemNode['kind'], string>>;
 }
 
@@ -116,6 +164,8 @@ export interface ProjectInspectionModel {
   readonly connections: readonly SystemConnection[];
   readonly mappings: readonly ProductSystemMapping[];
   readonly decisions: readonly InspectionDecision[];
+  readonly evidence: readonly InspectionEvidence[];
+  readonly productVisual: ProductVisual;
   readonly example: readonly string[];
   readonly labels: ProjectInspectionLabels;
 }

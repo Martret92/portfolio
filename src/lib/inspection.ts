@@ -24,6 +24,7 @@ export function validateProjectInspectionModel(
   assertUniqueIds(model.systemNodes, 'System node');
   assertUniqueIds(model.connections, 'System connection');
   assertUniqueIds(model.decisions, 'Decision');
+  assertUniqueIds(model.evidence, 'Evidence');
 
   const productIds = new Set(model.productElements.map(({ id }) => id));
   const nodeIds = new Set(model.systemNodes.map(({ id }) => id));
@@ -76,6 +77,36 @@ export function validateProjectInspectionModel(
       if (!decisionIds.has(decisionId)) {
         throw new Error(
           `System node ${node.id} references unknown decision ${decisionId}`,
+        );
+      }
+    }
+  }
+
+  for (const evidence of model.evidence) {
+    if (!productIds.has(evidence.placementProductId)) {
+      throw new Error(
+        `Evidence ${evidence.id} references unknown product ${evidence.placementProductId}`,
+      );
+    }
+    for (const nodeId of evidence.relatedNodeIds) {
+      if (!nodeIds.has(nodeId)) {
+        throw new Error(
+          `Evidence ${evidence.id} references unknown node ${nodeId}`,
+        );
+      }
+    }
+    if (evidence.type === 'source' && !evidence.snippets.length) {
+      throw new Error(`Source evidence ${evidence.id} requires a snippet`);
+    }
+    if (evidence.type === 'output') {
+      const formats = new Set(evidence.formats.map(({ id }) => id));
+      if (
+        !['json', 'csv', 'sql'].every((format) =>
+          formats.has(format as 'json' | 'csv' | 'sql'),
+        )
+      ) {
+        throw new Error(
+          `Output evidence ${evidence.id} requires JSON, CSV and SQL`,
         );
       }
     }

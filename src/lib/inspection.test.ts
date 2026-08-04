@@ -39,6 +39,55 @@ describe('project inspection model', () => {
     expect(model.systemNodes[0]?.inspection).not.toHaveProperty('consumedBy');
   });
 
+  it('contains exactly the three verified V1 evidence artifacts', () => {
+    expect(model.evidence).toHaveLength(3);
+    expect(model.evidence.map(({ id }) => id)).toEqual([
+      'generation-boundary',
+      'configuration-invalidation',
+      'multiple-output-representations',
+    ]);
+    expect(
+      model.evidence
+        .filter(({ type }) => type === 'source')
+        .map(({ provenance }) => provenance),
+    ).toEqual(['src/utils/generateData.js', 'src/App.jsx']);
+    const output = model.evidence.find(
+      ({ id }) => id === 'multiple-output-representations',
+    );
+    expect(output).toMatchObject({
+      type: 'output',
+      illustrativeLabel: 'Illustrative data, not a recorded execution',
+    });
+    if (output?.type === 'output') {
+      expect(output.formats.map(({ id }) => id)).toEqual([
+        'json',
+        'csv',
+        'sql',
+      ]);
+      for (const format of output.formats) {
+        expect(format.content).toContain('Ana Torres');
+        expect(format.content).toContain('ana.torres@example.com');
+      }
+    }
+  });
+
+  it('defines one localized authentic Product visual with intrinsic dimensions', () => {
+    expect(model.productVisual).toEqual({
+      src: '/images/projects/devdata/devdata-product-overview.png',
+      optimizedSrc: '/images/projects/devdata/devdata-product-overview.jpg',
+      width: 1440,
+      height: 1205,
+      alt: 'DevData Generator configured with the Users template and three generated records shown in a table.',
+      caption:
+        'The real DevData interface connects dataset configuration, generation, preview and export in one workflow.',
+    });
+
+    const spanish = getProjectInspectionModel('devdata-generator', 'es');
+    expect(spanish.productVisual.src).toBe(model.productVisual.src);
+    expect(spanish.productVisual.alt).toContain('tres registros generados');
+    expect(spanish.productVisual.caption).toContain('interfaz real de DevData');
+  });
+
   it.each([
     [
       'Product element',
@@ -92,6 +141,28 @@ describe('project inspection model', () => {
         }),
       ),
     ).toThrow('unknown decision');
+  });
+
+  it('rejects invalid evidence references and incomplete output evidence', () => {
+    expect(() =>
+      validateProjectInspectionModel(
+        change({
+          evidence: [
+            { ...model.evidence[0]!, relatedNodeIds: ['missing-node'] },
+          ],
+        }),
+      ),
+    ).toThrow('references unknown node');
+
+    const output = model.evidence.find(({ type }) => type === 'output');
+    if (!output || output.type !== 'output') throw new Error('Missing output');
+    expect(() =>
+      validateProjectInspectionModel(
+        change({
+          evidence: [{ ...output, formats: output.formats.slice(0, 2) }],
+        }),
+      ),
+    ).toThrow('requires JSON, CSV and SQL');
   });
 
   it('derives connected nodes and active connections from selection', () => {
