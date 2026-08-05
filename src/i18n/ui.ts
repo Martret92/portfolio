@@ -22,19 +22,19 @@ const ui = {
         title: 'DevData Generator',
         summary:
           'Configure realistic datasets once, inspect one generated result and reuse it across table, JSON, CSV and SQL.',
-        productLabel: 'Product',
-        productSummary:
+        workflowLabel: 'Workflow',
+        workflowSummary:
           'Choose a template, fields and quantity, then generate a reusable dataset.',
-        systemLabel: 'System',
-        systemSummary:
+        resultLabel: 'Shared result',
+        resultSummary:
           'One validated configuration produces one shared generatedData result for every preview and export path.',
         topologyLabel: 'DevData system flow',
         configureLabel: 'Configure',
         generateLabel: 'Generate',
-        resultLabel: 'generatedData',
+        generatedDataLabel: 'generatedData',
         previewLabel: 'Preview',
         exportLabel: 'Export',
-        cta: 'Inspect the case study',
+        cta: 'Explore case study',
       },
     },
     caseStudy: {
@@ -73,6 +73,49 @@ const ui = {
           description:
             'Explore why the generated result is shared and invalidated when configuration changes.',
         },
+      },
+      editorial: {
+        howItWorks: {
+          title: 'How it works',
+          copy: 'A validated configuration crosses one generation boundary, then the shared result branches into preview and export paths.',
+          validateLabel: 'Validate',
+          dependencyLabel: 'Faker dependency',
+          previewDetail: 'Table / JSON',
+          exportDetail: 'JSON / CSV / SQL',
+          topologyLabel:
+            'Configure flows to Validate, then Generate, then generatedData. generatedData branches to Preview and Export. Faker is a dependency of Generate.',
+        },
+        sharedResult: {
+          title: 'One generated result',
+          copy: 'One generation produces one reusable generatedData result. Table preview, JSON preview, clipboard copy and every download reuse those same records.',
+          usesLabel: 'The same result is used by',
+          uses: [
+            'Table preview',
+            'JSON preview',
+            'Clipboard copy',
+            'Downloads and exports',
+          ],
+        },
+        invalidation: {
+          title: 'Predictable invalidation',
+          copy: 'Changing the dataset configuration clears the previous generated result so stale records are not presented as current.',
+          triggersLabel: 'generatedData is cleared when',
+        },
+        outputs: {
+          title: 'Output formats',
+          copy: 'The same generatedData is serialized into three reusable representations.',
+        },
+        architecture: {
+          title: 'Browser-only architecture',
+          copy: 'React coordinates the workflow in the browser. The generation utility uses Faker, then serializers and browser-native APIs transform and deliver the shared result.',
+          reactLabel: 'React',
+          generationLabel: 'Generation utility + Faker',
+          deliveryLabel: 'Serializers + Browser APIs',
+          boundaryNote: 'No backend or database is required.',
+          sqlNote: 'SQL is generated as downloadable text; it is not executed.',
+        },
+        sourceLabel: 'Verified source',
+        illustrativeOutputLabel: 'Illustrative output',
       },
     },
     architectureExplorer: {
@@ -143,19 +186,19 @@ const ui = {
         title: 'DevData Generator',
         summary:
           'Configura datasets realistas una vez, inspecciona un único resultado generado y reutilízalo en tabla, JSON, CSV y SQL.',
-        productLabel: 'Producto',
-        productSummary:
+        workflowLabel: 'Flujo',
+        workflowSummary:
           'Elige una plantilla, los campos y la cantidad, y genera un dataset reutilizable.',
-        systemLabel: 'Sistema',
-        systemSummary:
+        resultLabel: 'Resultado compartido',
+        resultSummary:
           'Una configuración validada produce un único resultado generatedData compartido por todas las vistas y exportaciones.',
         topologyLabel: 'Flujo del sistema de DevData',
         configureLabel: 'Configurar',
         generateLabel: 'Generar',
-        resultLabel: 'generatedData',
+        generatedDataLabel: 'generatedData',
         previewLabel: 'Vista previa',
         exportLabel: 'Exportar',
-        cta: 'Inspeccionar el caso de estudio',
+        cta: 'Explorar caso de estudio',
       },
     },
     caseStudy: {
@@ -194,6 +237,49 @@ const ui = {
           description:
             'Explora por qué se comparte el resultado generado y se invalida cuando cambia la configuración.',
         },
+      },
+      editorial: {
+        howItWorks: {
+          title: 'Cómo funciona',
+          copy: 'Una configuración validada cruza un único límite de generación y el resultado compartido se ramifica hacia las vistas previas y las exportaciones.',
+          validateLabel: 'Validar',
+          dependencyLabel: 'Dependencia de Faker',
+          previewDetail: 'Tabla / JSON',
+          exportDetail: 'JSON / CSV / SQL',
+          topologyLabel:
+            'Configurar fluye hacia Validar, después Generar y finalmente generatedData. generatedData se ramifica hacia Vista previa y Exportar. Faker es una dependencia de Generar.',
+        },
+        sharedResult: {
+          title: 'Un único resultado generado',
+          copy: 'Una generación produce un único resultado generatedData reutilizable. La vista de tabla, la vista JSON, la copia al portapapeles y todas las descargas reutilizan esos mismos registros.',
+          usesLabel: 'El mismo resultado se utiliza en',
+          uses: [
+            'Vista de tabla',
+            'Vista JSON',
+            'Copia al portapapeles',
+            'Descargas y exportaciones',
+          ],
+        },
+        invalidation: {
+          title: 'Invalidación predecible',
+          copy: 'Cambiar la configuración del dataset borra el resultado generado anterior para que los registros obsoletos no se presenten como actuales.',
+          triggersLabel: 'generatedData se borra cuando cambian',
+        },
+        outputs: {
+          title: 'Formatos de salida',
+          copy: 'El mismo generatedData se serializa en tres representaciones reutilizables.',
+        },
+        architecture: {
+          title: 'Arquitectura solo en el navegador',
+          copy: 'React coordina el flujo en el navegador. La utilidad de generación usa Faker y, después, los serializadores y las APIs nativas del navegador transforman y entregan el resultado compartido.',
+          reactLabel: 'React',
+          generationLabel: 'Utilidad de generación + Faker',
+          deliveryLabel: 'Serializadores + APIs del navegador',
+          boundaryNote: 'No requiere backend ni base de datos.',
+          sqlNote: 'SQL se genera como texto descargable; no se ejecuta.',
+        },
+        sourceLabel: 'Fuente verificada',
+        illustrativeOutputLabel: 'Salida ilustrativa',
       },
     },
     architectureExplorer: {

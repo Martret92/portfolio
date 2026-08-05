@@ -1,5 +1,3 @@
-export type Perspective = 'product' | 'system';
-
 export interface ProductElement {
   readonly id: string;
   readonly label: string;
@@ -51,14 +49,6 @@ export interface SystemConnection {
   readonly type: 'flow' | 'dependency' | 'invalidation';
 }
 
-export type RelationshipDirection = 'incoming' | 'outgoing';
-
-export interface NodeRelationship {
-  readonly connection: SystemConnection;
-  readonly direction: RelationshipDirection;
-  readonly targetNodeId: string;
-}
-
 export type RelationshipSemantic =
   | 'producedBy'
   | 'produces'
@@ -70,11 +60,6 @@ export type RelationshipSemantic =
   | 'invalidates'
   | 'flowsTo'
   | 'relatedTo';
-
-export interface RelationshipGroup {
-  readonly semantic: RelationshipSemantic;
-  readonly relationships: readonly NodeRelationship[];
-}
 
 export interface ProductSystemMapping {
   readonly productId: string;

@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 
 import DuckyArenaCaseStudy from '@components/DuckyArenaCaseStudy.astro';
+import DevDataCaseStudy from '@components/DevDataCaseStudy.astro';
 import SiteHeader from '@components/SiteHeader.astro';
 import { getProjectInspectionModel } from '@content/project-inspections';
 import { getDuckyArenaContent } from '@content/projects/duckyarena';
@@ -11,7 +12,6 @@ import { getLocalizedPath } from '@i18n/routes';
 import { useTranslations } from '@i18n/ui';
 import BaseLayout from '@layouts/BaseLayout.astro';
 import { getProjectEditorialEntry } from '@lib/projects';
-import InspectableProjectStage from '../../../islands/InspectableProjectStage';
 
 export function getStaticPaths() {
   return locales.flatMap((locale) =>
@@ -63,108 +63,15 @@ const inspectionModel = isDuckyArena
     duckyArenaContent ? (
       <DuckyArenaCaseStudy content={duckyArenaContent} homePath={homePath} />
     ) : (
-      <article class="container case-study" data-view-mode-scope>
-        <header class="project-intro stack">
-          <p class="eyebrow">{t.caseStudy.label}</p>
-          <h1>{projectEntry.data.title}</h1>
-          <p class="measure project-summary">{projectEntry.data.summary}</p>
-          <p class="measure project-scope">{t.caseStudy.scopeNote}</p>
-          <div class="project-actions">
-            <a href={homePath}>{t.caseStudy.backHome}</a>
-            <a
-              href="https://github.com/Martret92/devdata-generator"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {t.caseStudy.repositoryCta}
-            </a>
-          </div>
-        </header>
-
-        <div class="case-study__sections">
-          <section class="shell-section" aria-labelledby="overview-heading">
-            <h2 id="overview-heading">{t.caseStudy.sections.overview.title}</h2>
-            <p class="measure">{t.caseStudy.sections.overview.copy}</p>
-          </section>
-
-          {inspectionModel && (
-            <InspectableProjectStage model={inspectionModel} client:load />
-          )}
-        </div>
-      </article>
+      inspectionModel && (
+        <DevDataCaseStudy
+          title={projectEntry.data.title}
+          summary={projectEntry.data.summary}
+          homePath={homePath}
+          copy={t.caseStudy}
+          model={inspectionModel}
+        />
+      )
     )
   }
 </BaseLayout>
-
-<style>
-  .case-study {
-    padding-block: clamp(var(--space-7), 10vw, var(--space-9));
-  }
-
-  .project-intro {
-    --stack-space: var(--space-5);
-
-    max-inline-size: 58rem;
-    padding-block-end: clamp(var(--space-8), 12vw, 8rem);
-  }
-
-  .eyebrow,
-  h1,
-  h2,
-  p {
-    margin-block: 0;
-  }
-
-  .eyebrow {
-    color: var(--color-text-muted);
-    font-family: var(--font-family-mono);
-    font-size: var(--font-size-xs);
-    font-weight: var(--font-weight-medium);
-    letter-spacing: var(--letter-spacing-wide);
-    text-transform: uppercase;
-  }
-
-  h1 {
-    font-size: var(--font-size-heading-lg);
-  }
-
-  h2 {
-    font-size: var(--font-size-heading-sm);
-  }
-
-  .project-summary {
-    color: var(--color-text-muted);
-    font-size: var(--font-size-lead);
-  }
-
-  .project-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-3) var(--space-5);
-  }
-
-  .project-actions a {
-    inline-size: fit-content;
-    min-block-size: var(--touch-target-min);
-    display: inline-flex;
-    align-items: center;
-    font-weight: var(--font-weight-medium);
-  }
-
-  .project-scope {
-    color: var(--color-text-muted);
-  }
-
-  .case-study__sections {
-    border-block-start: var(--border-width) solid var(--color-border);
-  }
-
-  .shell-section {
-    padding-block: clamp(var(--space-6), 7vw, var(--space-8));
-    border-block-end: var(--border-width) solid var(--color-border);
-  }
-
-  .shell-section p {
-    color: var(--color-text-muted);
-  }
-</style>

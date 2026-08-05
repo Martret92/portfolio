@@ -5,14 +5,14 @@ interface PreviewCopy {
   eyebrow: string;
   title: string;
   summary: string;
-  productLabel: string;
-  productSummary: string;
-  systemLabel: string;
-  systemSummary: string;
+  workflowLabel: string;
+  workflowSummary: string;
+  resultLabel: string;
+  resultSummary: string;
   topologyLabel: string;
   configureLabel: string;
   generateLabel: string;
-  resultLabel: string;
+  generatedDataLabel: string;
   previewLabel: string;
   exportLabel: string;
   cta: string;
@@ -54,13 +54,13 @@ const { copy, href, productVisual } = Astro.props;
 
     <div class="featured-preview__reading">
       <section class="preview-layer preview-layer--product">
-        <p>{copy.productLabel}</p>
-        <h3>{copy.productSummary}</h3>
+        <p>{copy.workflowLabel}</p>
+        <h3>{copy.workflowSummary}</h3>
       </section>
 
       <section class="preview-layer preview-layer--system">
-        <p>{copy.systemLabel}</p>
-        <h3>{copy.systemSummary}</h3>
+        <p>{copy.resultLabel}</p>
+        <h3>{copy.resultSummary}</h3>
 
         <div class="signature-topology" data-home-topology>
           <div class="signature-topology__visual" aria-hidden="true">
@@ -71,7 +71,7 @@ const { copy, href, productVisual } = Astro.props;
               {copy.generateLabel}
             </span>
             <code class="signature-node signature-node--result">
-              {copy.resultLabel}
+              {copy.generatedDataLabel}
             </code>
             <span class="signature-node signature-node--preview">
               {copy.previewLabel}
@@ -112,9 +112,9 @@ const { copy, href, productVisual } = Astro.props;
 
           <ol class="visually-hidden" aria-label={copy.topologyLabel}>
             <li>{copy.configureLabel} → {copy.generateLabel}</li>
-            <li>{copy.generateLabel} → {copy.resultLabel}</li>
-            <li>{copy.resultLabel} → {copy.previewLabel}</li>
-            <li>{copy.resultLabel} → {copy.exportLabel}</li>
+            <li>{copy.generateLabel} → {copy.generatedDataLabel}</li>
+            <li>{copy.generatedDataLabel} → {copy.previewLabel}</li>
+            <li>{copy.generatedDataLabel} → {copy.exportLabel}</li>
           </ol>
         </div>
       </section>
