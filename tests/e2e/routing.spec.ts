@@ -209,19 +209,22 @@ for (const route of devDataProjectRoutes) {
     ).toBeVisible();
     const overview = page
       .getByRole('heading', { name: /Overview|Resumen/ })
-      .locator('..');
+      .locator('xpath=ancestor::section[1]');
     await expect(overview).toBeVisible();
     await expect(overview).toContainText(route.overview);
 
     const repository = page.getByRole('link', {
       name: route.repositoryCta,
     });
-    await expect(repository).toHaveAttribute(
-      'href',
-      'https://github.com/Martret92/devdata-generator',
-    );
-    await expect(repository).toHaveAttribute('target', '_blank');
-    await expect(repository).toHaveAttribute('rel', 'noopener noreferrer');
+    await expect(repository).toHaveCount(2);
+    for (const link of await repository.all()) {
+      await expect(link).toHaveAttribute(
+        'href',
+        'https://github.com/Martret92/devdata-generator',
+      );
+      await expect(link).toHaveAttribute('target', '_blank');
+      await expect(link).toHaveAttribute('rel', 'noopener noreferrer');
+    }
     await expect(page.locator('main')).not.toContainText(
       /placeholder|temporary|marcador temporal|contenido temporal/i,
     );
@@ -232,7 +235,10 @@ test('Home and project navigation form a complete localized flow', async ({
   page,
 }) => {
   await page.goto('/en');
-  await page.getByRole('link', { name: /Inspect the case study/ }).click();
+  await page
+    .locator('[data-home-project-preview]')
+    .getByRole('link', { name: /Explore case study/ })
+    .click();
   await expect(page).toHaveURL(/\/en\/projects\/devdata-generator\/?$/);
 
   await page.getByRole('link', { name: 'Back to Home' }).click();
@@ -244,7 +250,8 @@ test('Spanish Home and project navigation remain localized', async ({
 }) => {
   await page.goto('/es');
   await page
-    .getByRole('link', { name: /Inspeccionar el caso de estudio/ })
+    .locator('[data-home-project-preview]')
+    .getByRole('link', { name: /Explorar caso de estudio/ })
     .click();
   await expect(page).toHaveURL(/\/es\/projects\/devdata-generator\/?$/);
 
@@ -258,18 +265,18 @@ const homePreviews = [
     eyebrow: 'Featured project',
     summary:
       'Configure realistic datasets once, inspect one generated result and reuse it across table, JSON, CSV and SQL.',
-    productLabel: 'Product',
-    productSummary:
+    workflowLabel: 'Workflow',
+    workflowSummary:
       'Choose a template, fields and quantity, then generate a reusable dataset.',
-    systemLabel: 'System',
-    systemSummary:
+    resultLabel: 'Shared result',
+    resultSummary:
       'One validated configuration produces one shared generatedData result for every preview and export path.',
     topologyLabel: 'DevData system flow',
     configureLabel: 'Configure',
     generateLabel: 'Generate',
     previewLabel: 'Preview',
     exportLabel: 'Export',
-    cta: 'Inspect the case study',
+    cta: 'Explore case study',
     alt: /Users template and three generated records/,
   },
   {
@@ -277,18 +284,18 @@ const homePreviews = [
     eyebrow: 'Proyecto destacado',
     summary:
       'Configura datasets realistas una vez, inspecciona un único resultado generado y reutilízalo en tabla, JSON, CSV y SQL.',
-    productLabel: 'Producto',
-    productSummary:
+    workflowLabel: 'Flujo',
+    workflowSummary:
       'Elige una plantilla, los campos y la cantidad, y genera un dataset reutilizable.',
-    systemLabel: 'Sistema',
-    systemSummary:
+    resultLabel: 'Resultado compartido',
+    resultSummary:
       'Una configuración validada produce un único resultado generatedData compartido por todas las vistas y exportaciones.',
     topologyLabel: 'Flujo del sistema de DevData',
     configureLabel: 'Configurar',
     generateLabel: 'Generar',
     previewLabel: 'Vista previa',
     exportLabel: 'Exportar',
-    cta: 'Inspeccionar el caso de estudio',
+    cta: 'Explorar caso de estudio',
     alt: /plantilla Usuarios y tres registros generados/,
   },
 ] as const;
@@ -312,16 +319,16 @@ for (const preview of homePreviews) {
       section.getByText(preview.summary, { exact: true }),
     ).toBeVisible();
     await expect(
-      section.getByText(preview.productLabel, { exact: true }),
+      section.getByText(preview.workflowLabel, { exact: true }),
     ).toBeVisible();
     await expect(
-      section.getByRole('heading', { level: 3, name: preview.productSummary }),
+      section.getByRole('heading', { level: 3, name: preview.workflowSummary }),
     ).toBeVisible();
     await expect(
-      section.getByText(preview.systemLabel, { exact: true }),
+      section.getByText(preview.resultLabel, { exact: true }),
     ).toBeVisible();
     await expect(
-      section.getByRole('heading', { level: 3, name: preview.systemSummary }),
+      section.getByRole('heading', { level: 3, name: preview.resultSummary }),
     ).toBeVisible();
 
     const productImage = section.getByRole('img', { name: preview.alt });

@@ -17,7 +17,7 @@ The portfolio follows a static-first approach: overview first, optional inspecti
 
 ## Architecture
 
-Astro owns routing, localization, content, layouts and static rendering. TypeScript uses Astro's strictest baseline. React is limited to the DevData inspection island, where compound Product/System and node-selection state requires client interaction. Home and the DuckyArena case study remain static Astro/HTML/CSS.
+Astro owns routing, localization, content, layouts and static rendering. TypeScript uses Astro's strictest baseline. Home and both project case studies use static Astro/HTML/CSS.
 
 Localized pages are generated at build time for English and Spanish. Shared project routes use stable untranslated slugs.
 
@@ -27,7 +27,6 @@ See [the static-first architecture decision](docs/adr/0001-static-first-astro-re
 
 - Astro 7
 - TypeScript
-- React 19
 - HTML and CSS
 - Node.js 24
 - pnpm 11
@@ -105,7 +104,6 @@ Merges to `main` produce the Cloudflare Pages production deployment. Pull reques
 - `src/pages/` — localized static routes, project routes and 404
 - `src/layouts/` — shared document layout and production metadata
 - `src/components/` — static Astro presentation components
-- `src/islands/` — the DevData React inspection island
 - `src/content/` — localized professional and project content
 - `src/i18n/` — locale configuration, translations and route helpers
 - `src/lib/` — validation and UI-independent logic

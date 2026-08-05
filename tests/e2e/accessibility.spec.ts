@@ -33,7 +33,7 @@ test('Home remains complete without JavaScript', async ({ browser }) => {
     preview.getByRole('list', { name: 'DevData system flow' }),
   ).toBeAttached();
   await expect(
-    preview.getByRole('link', { name: /Inspect the case study/ }),
+    preview.getByRole('link', { name: /Explore case study/ }),
   ).toHaveAttribute('href', '/en/projects/devdata-generator');
   await expect(page.getByRole('heading', { name: 'About' })).toBeVisible();
   await expect(
@@ -63,7 +63,6 @@ test('Home remains complete without JavaScript', async ({ browser }) => {
 
 async function expectNoAxeViolations(page: Page) {
   const results = await new AxeBuilder({ page }).analyze();
-
   expect(results.violations).toEqual([]);
 }
 
@@ -76,31 +75,6 @@ for (const route of routes) {
   });
 }
 
-test('enhanced project interaction state has no axe violations', async ({
-  page,
-}) => {
-  await page.goto('/en/projects/devdata-generator');
-  await page.getByRole('button', { name: 'System', exact: true }).click();
-  await page.getByRole('button', { name: /generatedData/ }).click();
-  await page.locator('#single-generated-result > summary').click();
-
-  await expectNoAxeViolations(page);
-});
-
-test('Spanish relationship navigation state has no axe violations', async ({
-  page,
-}) => {
-  await page.goto('/es/projects/devdata-generator');
-  await page.getByRole('button', { name: 'Sistema', exact: true }).click();
-  await page.getByRole('button', { name: /generatedData/ }).click();
-  await page
-    .locator('.inspection-inspector--desktop')
-    .getByRole('button', { name: /Exportación/ })
-    .click();
-
-  await expectNoAxeViolations(page);
-});
-
 test('project content remains usable without JavaScript', async ({
   browser,
 }) => {
@@ -108,72 +82,27 @@ test('project content remains usable without JavaScript', async ({
   const page = await context.newPage();
 
   await page.goto('/en/projects/devdata-generator');
-
-  await expect(page.locator('[data-inspection-enhanced]')).toBeHidden();
-  const fallback = page.locator('[data-inspection-fallback]');
+  const caseStudy = page.locator('[data-devdata-case-study]');
   await expect(
-    fallback.getByRole('heading', { name: 'How the product works' }),
+    caseStudy.getByRole('heading', { name: 'Overview' }),
   ).toBeVisible();
-  const fallbackProductVisual = fallback.locator('[data-product-visual] img');
-  await expect(fallbackProductVisual).toBeVisible();
-  await expect(fallbackProductVisual).toHaveAttribute('alt', /Users template/);
-  await expect(
-    fallback.getByRole('heading', { name: 'How the same flow is structured' }),
-  ).toBeVisible();
-  await expect(fallback.getByRole('button')).toHaveCount(0);
-  await expect(fallback.locator('[data-evidence-artifact]')).toHaveCount(3);
-  await expect(fallback.getByText('src/utils/generateData.js')).toBeVisible();
-  await expect(fallback.getByText('src/App.jsx')).toBeVisible();
-  const fallbackSource = fallback.locator(
-    '[data-evidence-artifact="generation-boundary"]',
-  );
-  await expect(fallbackSource).not.toHaveAttribute('open', '');
-  await fallbackSource.locator('summary').click();
-  await expect(fallbackSource).toHaveAttribute('open', '');
-  await expect(fallbackSource.getByText(/fakerES as faker/)).toBeVisible();
-  const fallbackOutput = fallback.locator(
-    '[data-evidence-artifact="multiple-output-representations"]',
+  await expect(caseStudy.getByRole('img')).toBeVisible();
+  await expect(caseStudy.getByRole('img')).toHaveAttribute(
+    'alt',
+    /Users template/,
   );
   await expect(
-    fallbackOutput.getByRole('heading', { name: 'JSON' }),
+    caseStudy.getByRole('heading', { name: 'How it works' }),
   ).toBeVisible();
-  await expect(
-    fallbackOutput.getByRole('heading', { name: 'CSV' }),
-  ).toBeVisible();
-  await expect(
-    fallbackOutput.getByRole('heading', { name: 'SQL' }),
-  ).toBeVisible();
-  await expect(
-    fallback.getByRole('heading', { name: 'generatedData' }),
-  ).toBeVisible();
-  await expect(
-    fallback.getByText(
-      'All visible and downloadable outputs represent the same generation.',
-    ),
-  ).toBeVisible();
-  await expect(
-    fallback.getByRole('heading', { name: 'System flow' }),
-  ).toBeVisible();
-  await expect(
-    fallback
-      .getByRole('listitem')
-      .filter({ hasText: 'Configuration state→Validation' }),
-  ).toBeVisible();
-  await expect(
-    fallback
-      .locator('.system-invalidation')
-      .getByText(/Configuration state.*Invalidates/),
-  ).toBeVisible();
-
-  const decision = page.locator('#static-single-generated-result');
-  await decision.locator('summary').click();
-  await expect(decision).toHaveAttribute('open', '');
-  await expect(
-    decision.getByText(
-      'Generate once, store the result in generatedData, and let downstream consumers reuse it.',
-      { exact: true },
-    ),
-  ).toBeVisible();
+  await expect(caseStudy.getByRole('button')).toHaveCount(0);
+  await expect(caseStudy.getByText('src/App.jsx')).toBeVisible();
+  for (const format of ['JSON', 'CSV', 'SQL']) {
+    await expect(
+      caseStudy.getByRole('heading', { level: 3, name: format }),
+    ).toBeVisible();
+  }
+  await expect(caseStudy).toContainText('generatedData');
+  await expect(caseStudy).toContainText('No backend or database is required.');
 
   await context.close();
 });

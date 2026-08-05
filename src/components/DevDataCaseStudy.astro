@@ -1,0 +1,612 @@
+---
+import type {
+  OutputEvidence,
+  ProjectInspectionModel,
+  SourceEvidence,
+} from '../types/inspection';
+
+interface EditorialCopy {
+  howItWorks: {
+    title: string;
+    copy: string;
+    validateLabel: string;
+    dependencyLabel: string;
+    previewDetail: string;
+    exportDetail: string;
+    topologyLabel: string;
+  };
+  sharedResult: {
+    title: string;
+    copy: string;
+    usesLabel: string;
+    uses: readonly string[];
+  };
+  invalidation: {
+    title: string;
+    copy: string;
+    triggersLabel: string;
+  };
+  outputs: { title: string; copy: string };
+  architecture: {
+    title: string;
+    copy: string;
+    reactLabel: string;
+    generationLabel: string;
+    deliveryLabel: string;
+    boundaryNote: string;
+    sqlNote: string;
+  };
+  sourceLabel: string;
+  illustrativeOutputLabel: string;
+}
+
+interface Copy {
+  label: string;
+  backHome: string;
+  repositoryCta: string;
+  scopeNote: string;
+  sections: { overview: { title: string; copy: string } };
+  editorial: EditorialCopy;
+}
+
+interface Props {
+  title: string;
+  summary: string;
+  homePath: string;
+  copy: Copy;
+  model: ProjectInspectionModel;
+}
+
+const { title, summary, homePath, copy, model } = Astro.props;
+
+const configure = model.productElements.find((item) => item.id === 'configure');
+const generate = model.productElements.find((item) => item.id === 'generate');
+const preview = model.productElements.find((item) => item.id === 'preview');
+const exportResult = model.productElements.find((item) => item.id === 'export');
+const generatedData = model.systemNodes.find(
+  (node) => node.id === 'generated-data',
+);
+
+const invalidationEvidence = model.evidence.find(
+  (item): item is SourceEvidence =>
+    item.id === 'configuration-invalidation' && item.type === 'source',
+);
+const outputEvidence = model.evidence.find(
+  (item): item is OutputEvidence =>
+    item.id === 'multiple-output-representations' && item.type === 'output',
+);
+
+if (
+  !configure ||
+  !generate ||
+  !preview ||
+  !exportResult ||
+  !generatedData ||
+  !invalidationEvidence ||
+  !outputEvidence
+) {
+  throw new Error('DevData static case study requires verified evidence');
+}
+
+const repositoryUrl = 'https://github.com/Martret92/devdata-generator';
+---
+
+<article class="container devdata-case-study" data-devdata-case-study>
+  <header class="project-intro stack">
+    <p class="eyebrow">{copy.label}</p>
+    <h1>{title}</h1>
+    <p class="measure project-summary">{summary}</p>
+    <p class="measure project-scope">{copy.scopeNote}</p>
+    <div class="project-actions">
+      <a href={homePath}>{copy.backHome}</a>
+      <a href={repositoryUrl} target="_blank" rel="noopener noreferrer">
+        {copy.repositoryCta}
+      </a>
+    </div>
+  </header>
+
+  <div class="case-study-sections">
+    <section
+      class="editorial-section overview"
+      aria-labelledby="devdata-overview"
+    >
+      <div class="section-heading">
+        <span aria-hidden="true">01</span>
+        <h2 id="devdata-overview">{copy.sections.overview.title}</h2>
+      </div>
+      <div class="section-content overview-content">
+        <p class="measure section-lead">{copy.sections.overview.copy}</p>
+        <figure class="product-visual">
+          <picture>
+            <source
+              srcset={model.productVisual.optimizedSrc}
+              type="image/jpeg"
+            />
+            <img
+              src={model.productVisual.src}
+              width={model.productVisual.width}
+              height={model.productVisual.height}
+              alt={model.productVisual.alt}
+              decoding="async"
+            />
+          </picture>
+          <figcaption>{model.productVisual.caption}</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="editorial-section" aria-labelledby="devdata-flow">
+      <div class="section-heading">
+        <span aria-hidden="true">02</span>
+        <h2 id="devdata-flow">{copy.editorial.howItWorks.title}</h2>
+      </div>
+      <div class="section-content">
+        <p class="measure section-lead">{copy.editorial.howItWorks.copy}</p>
+        <div class="static-flow" data-devdata-flow>
+          <div class="static-flow__visual" aria-hidden="true">
+            <span class="flow-node flow-node--configure">{configure.label}</span
+            >
+            <span class="flow-arrow">↓</span>
+            <span class="flow-node"
+              >{copy.editorial.howItWorks.validateLabel}</span
+            >
+            <span class="flow-arrow">↓</span>
+            <div class="generation-step">
+              <span class="flow-node">{generate.label}</span>
+              <span class="dependency"
+                >← {copy.editorial.howItWorks.dependencyLabel}</span
+              >
+            </div>
+            <span class="flow-arrow">↓</span>
+            <code class="flow-node flow-node--result">generatedData</code>
+            <div class="flow-branch">
+              <span class="flow-branch__line">↙</span>
+              <span class="flow-branch__line">↘</span>
+              <div>
+                <strong>{preview.label}</strong>
+                <small>{copy.editorial.howItWorks.previewDetail}</small>
+              </div>
+              <div>
+                <strong>{exportResult.label}</strong>
+                <small>{copy.editorial.howItWorks.exportDetail}</small>
+              </div>
+            </div>
+          </div>
+          <p class="visually-hidden">
+            {copy.editorial.howItWorks.topologyLabel}
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="editorial-section" aria-labelledby="devdata-result">
+      <div class="section-heading">
+        <span aria-hidden="true">03</span>
+        <h2 id="devdata-result">{copy.editorial.sharedResult.title}</h2>
+      </div>
+      <div class="section-content result-explanation">
+        <p class="measure section-lead">{copy.editorial.sharedResult.copy}</p>
+        <div class="result-rail">
+          <code>generatedData</code>
+          <div>
+            <p>{copy.editorial.sharedResult.usesLabel}</p>
+            <ul>
+              {copy.editorial.sharedResult.uses.map((use) => <li>{use}</li>)}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="editorial-section" aria-labelledby="devdata-invalidation">
+      <div class="section-heading">
+        <span aria-hidden="true">04</span>
+        <h2 id="devdata-invalidation">{copy.editorial.invalidation.title}</h2>
+      </div>
+      <div class="section-content evidence-layout">
+        <div>
+          <p class="measure section-lead">{copy.editorial.invalidation.copy}</p>
+          <p class="micro-label">{copy.editorial.invalidation.triggersLabel}</p>
+          <ul>
+            {
+              generatedData.inspection.invalidationTriggers?.map((trigger) => (
+                <li>{trigger}</li>
+              ))
+            }
+          </ul>
+        </div>
+        <figure class="source-evidence">
+          <figcaption>
+            <span>{copy.editorial.sourceLabel}</span>
+            <code>{invalidationEvidence.provenance}</code>
+          </figcaption>
+          <pre><code>{invalidationEvidence.snippets.map((snippet) => snippet.code).join('\n\n')}</code></pre>
+          <p>{invalidationEvidence.annotation}</p>
+        </figure>
+      </div>
+    </section>
+
+    <section class="editorial-section" aria-labelledby="devdata-outputs">
+      <div class="section-heading">
+        <span aria-hidden="true">05</span>
+        <h2 id="devdata-outputs">{copy.editorial.outputs.title}</h2>
+      </div>
+      <div class="section-content">
+        <p class="measure section-lead">{copy.editorial.outputs.copy}</p>
+        <figure class="output-evidence">
+          <figcaption>
+            <span>{copy.editorial.illustrativeOutputLabel}</span>
+            <strong>{outputEvidence.illustrativeLabel}</strong>
+          </figcaption>
+          <div class="output-formats">
+            {
+              outputEvidence.formats.map((format) => (
+                <section aria-labelledby={`output-${format.id}`}>
+                  <h3 id={`output-${format.id}`}>{format.label}</h3>
+                  <pre>
+                    <code>{format.content}</code>
+                  </pre>
+                </section>
+              ))
+            }
+          </div>
+          <p>{outputEvidence.annotation}</p>
+        </figure>
+      </div>
+    </section>
+
+    <section class="editorial-section" aria-labelledby="devdata-architecture">
+      <div class="section-heading">
+        <span aria-hidden="true">06</span>
+        <h2 id="devdata-architecture">{copy.editorial.architecture.title}</h2>
+      </div>
+      <div class="section-content">
+        <p class="measure section-lead">{copy.editorial.architecture.copy}</p>
+        <ol
+          class="architecture-flow"
+          aria-label={copy.editorial.architecture.title}
+        >
+          <li>{copy.editorial.architecture.reactLabel}</li>
+          <li>{copy.editorial.architecture.generationLabel}</li>
+          <li><code>generatedData</code></li>
+          <li>{copy.editorial.architecture.deliveryLabel}</li>
+        </ol>
+        <div class="boundary-notes">
+          <p>{copy.editorial.architecture.boundaryNote}</p>
+          <p>{copy.editorial.architecture.sqlNote}</p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <footer class="case-study-footer">
+    <a href={repositoryUrl} target="_blank" rel="noopener noreferrer">
+      {copy.repositoryCta}<span aria-hidden="true">→</span>
+    </a>
+  </footer>
+</article>
+
+<style>
+  .devdata-case-study {
+    padding-block: clamp(var(--space-7), 10vw, var(--space-9));
+  }
+
+  .project-intro {
+    --stack-space: var(--space-5);
+    max-inline-size: 58rem;
+    padding-block-end: clamp(var(--space-8), 12vw, 8rem);
+  }
+
+  .eyebrow,
+  h1,
+  h2,
+  h3,
+  p,
+  figure {
+    margin-block: 0;
+  }
+
+  .eyebrow,
+  .micro-label,
+  .source-evidence figcaption span,
+  .output-evidence figcaption span {
+    color: var(--color-text-muted);
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+    letter-spacing: var(--letter-spacing-wide);
+    text-transform: uppercase;
+  }
+
+  h1 {
+    font-size: var(--font-size-heading-lg);
+  }
+  h2 {
+    font-size: var(--font-size-heading-sm);
+  }
+
+  .project-summary {
+    color: var(--color-text-muted);
+    font-size: var(--font-size-lead);
+  }
+
+  .project-scope,
+  .section-lead,
+  .source-evidence > p,
+  .output-evidence > p {
+    color: var(--color-text-muted);
+  }
+
+  .project-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3) var(--space-5);
+  }
+
+  .project-actions a,
+  .case-study-footer a {
+    min-block-size: var(--touch-target-min);
+    display: inline-flex;
+    align-items: center;
+    font-weight: var(--font-weight-medium);
+  }
+
+  .case-study-sections {
+    border-block-start: var(--border-width) solid var(--color-border);
+  }
+
+  .editorial-section {
+    display: grid;
+    gap: var(--space-6);
+    padding-block: clamp(var(--space-7), 8vw, var(--space-9));
+    border-block-end: var(--border-width) solid var(--color-border);
+  }
+
+  .section-heading {
+    display: grid;
+    gap: var(--space-2);
+    align-content: start;
+  }
+
+  .section-heading > span {
+    color: var(--color-text-muted);
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-xs);
+  }
+
+  .section-content {
+    min-inline-size: 0;
+    display: grid;
+    gap: var(--space-6);
+  }
+
+  .product-visual img {
+    display: block;
+    inline-size: 100%;
+    block-size: auto;
+    border-block: var(--border-width) solid var(--color-border);
+  }
+
+  .product-visual figcaption {
+    max-inline-size: var(--content-measure);
+    margin-block-start: var(--space-3);
+    padding-inline-start: var(--space-3);
+    border-inline-start: var(--border-width-strong) solid var(--color-border);
+    color: var(--color-text-muted);
+    font-size: var(--font-size-sm);
+  }
+
+  .static-flow {
+    padding-block: var(--space-5);
+    border-block: var(--border-width) solid var(--color-border);
+  }
+
+  .static-flow__visual {
+    max-inline-size: 38rem;
+    display: grid;
+    justify-items: center;
+    gap: var(--space-2);
+    margin-inline: auto;
+  }
+
+  .flow-node {
+    min-inline-size: 11rem;
+    padding: var(--space-3) var(--space-4);
+    border-inline-start: var(--border-width-strong) solid
+      var(--color-border-strong);
+    background: var(--color-surface);
+    text-align: center;
+  }
+
+  .flow-node--result {
+    border-inline-start-color: var(--architecture-node-focus-border);
+    font-size: var(--font-size-lead);
+    font-weight: var(--font-weight-bold);
+  }
+
+  .flow-arrow,
+  .flow-branch__line {
+    color: var(--architecture-connection);
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-lead);
+  }
+
+  .generation-step {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .dependency {
+    padding-inline-start: var(--space-3);
+    border-inline-start: var(--border-width) dashed var(--color-border-strong);
+    color: var(--color-text-muted);
+    font-size: var(--font-size-sm);
+  }
+
+  .flow-branch {
+    inline-size: min(100%, 30rem);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-2) var(--space-5);
+    text-align: center;
+  }
+
+  .flow-branch > div {
+    display: grid;
+    gap: var(--space-1);
+    padding-block-start: var(--space-3);
+    border-block-start: var(--border-width-strong) solid
+      var(--color-border-strong);
+  }
+
+  .flow-branch small {
+    color: var(--color-text-muted);
+  }
+
+  .result-rail {
+    display: grid;
+    gap: var(--space-5);
+    padding-inline-start: var(--space-5);
+    border-inline-start: var(--border-width-strong) solid
+      var(--architecture-node-focus-border);
+  }
+
+  .result-rail > code {
+    font-size: var(--font-size-heading-sm);
+    font-weight: var(--font-weight-bold);
+  }
+
+  .result-rail ul,
+  .evidence-layout ul {
+    margin-block-end: 0;
+    padding-inline-start: var(--space-5);
+  }
+
+  .evidence-layout {
+    gap: var(--space-7);
+  }
+  .micro-label {
+    margin-block-start: var(--space-5);
+  }
+
+  .source-evidence,
+  .output-evidence {
+    min-inline-size: 0;
+    padding-inline-start: var(--space-4);
+    border-inline-start: var(--border-width) solid var(--color-border-strong);
+  }
+
+  .source-evidence figcaption,
+  .output-evidence figcaption {
+    display: grid;
+    gap: var(--space-2);
+    margin-block-end: var(--space-4);
+  }
+
+  pre {
+    max-inline-size: 100%;
+    margin: 0;
+    padding: var(--space-4);
+    overflow-wrap: anywhere;
+    background: var(--color-surface);
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-loose);
+    white-space: pre-wrap;
+  }
+
+  .source-evidence > p,
+  .output-evidence > p {
+    margin-block-start: var(--space-3);
+    font-size: var(--font-size-sm);
+  }
+
+  .output-formats {
+    display: grid;
+    gap: var(--space-5);
+  }
+
+  .output-formats section {
+    min-inline-size: 0;
+  }
+  .output-formats h3 {
+    margin-block-end: var(--space-2);
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-sm);
+  }
+
+  .architecture-flow {
+    max-inline-size: 34rem;
+    display: grid;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .architecture-flow li {
+    position: relative;
+    padding: var(--space-4);
+    border-inline-start: var(--border-width-strong) solid
+      var(--color-border-strong);
+  }
+
+  .architecture-flow li:not(:last-child)::after {
+    content: '↓';
+    position: absolute;
+    inset-block-end: calc(var(--space-3) * -1);
+    inset-inline-start: var(--space-4);
+    z-index: 1;
+    color: var(--architecture-connection);
+  }
+
+  .boundary-notes {
+    display: grid;
+    gap: var(--space-3);
+    padding-block-start: var(--space-4);
+    border-block-start: var(--border-width) solid var(--color-border);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .case-study-footer {
+    padding-block: clamp(var(--space-7), 8vw, var(--space-9));
+  }
+
+  .case-study-footer a {
+    gap: var(--space-2);
+    padding-inline-start: var(--space-3);
+    border-inline-start: var(--border-width-strong) solid
+      var(--architecture-node-focus-border);
+  }
+
+  @media (width >= 64rem) {
+    .editorial-section {
+      grid-template-columns: minmax(11rem, 0.45fr) minmax(0, 1.55fr);
+    }
+
+    .output-formats {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .evidence-layout {
+      grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.25fr);
+    }
+    .result-rail {
+      grid-template-columns: minmax(12rem, 0.6fr) minmax(0, 1.4fr);
+    }
+  }
+
+  @media (width < 36rem) {
+    .generation-step {
+      flex-direction: column;
+      align-items: stretch;
+      text-align: center;
+    }
+
+    .dependency {
+      padding-block-start: var(--space-2);
+      padding-inline-start: 0;
+      border-block-start: var(--border-width) dashed var(--color-border-strong);
+      border-inline-start: 0;
+    }
+  }
+</style>
