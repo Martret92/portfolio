@@ -40,7 +40,7 @@ test('Home remains complete without JavaScript', async ({ browser }) => {
     page.getByRole('heading', { name: 'Technical capabilities' }),
   ).toBeVisible();
   await expect(
-    page.getByRole('heading', { name: 'Previous professional experience' }),
+    page.getByRole('heading', { name: 'Professional experience' }),
   ).toBeVisible();
   await expect(
     page.getByRole('heading', { name: 'Education and certification' }),

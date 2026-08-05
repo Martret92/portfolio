@@ -83,12 +83,12 @@ const professionalProfiles = {
         'Also used: Vite, Bootstrap, MySQL, SQLite, Linux and Postman.',
     },
     experience: {
-      heading: 'Previous professional experience',
+      heading: 'Professional experience',
       entries: [
         {
           company: 'BonÀrea',
-          role: 'Store assistant / Cashier',
-          meta: 'Barcelona · Nov 2024 – Jan 2026',
+          role: 'Cashier / Stock Replenisher',
+          meta: 'Barcelona · Nov 2024 – Present',
           summary:
             'Customer service, stock replenishment, checkout and point-of-sale organisation.',
         },
@@ -218,12 +218,12 @@ const professionalProfiles = {
         'También he utilizado: Vite, Bootstrap, MySQL, SQLite, Linux y Postman.',
     },
     experience: {
-      heading: 'Experiencia profesional anterior',
+      heading: 'Experiencia profesional',
       entries: [
         {
           company: 'BonÀrea',
           role: 'Reponedor / Cajero',
-          meta: 'Barcelona · Nov. 2024 – Ene. 2026',
+          meta: 'Barcelona · Nov. 2024 – Actualidad',
           summary:
             'Atención al cliente, reposición, caja y organización del punto de venta.',
         },

@@ -37,7 +37,9 @@ const professionalHomes = [
     hero: /junior Full Stack Developer based in Barcelona/,
     about: 'About',
     capabilities: 'Technical capabilities',
-    experience: 'Previous professional experience',
+    experience: 'Professional experience',
+    bonareaRole: 'Cashier / Stock Replenisher',
+    bonareaMeta: 'Barcelona · Nov 2024 – Present',
     education: 'Education and certification',
     inProgress: 'In progress',
     incomplete: 'Studies not completed',
@@ -54,7 +56,9 @@ const professionalHomes = [
     hero: /desarrollador Full Stack Junior en Barcelona/,
     about: 'Sobre mí',
     capabilities: 'Capacidades técnicas',
-    experience: 'Experiencia profesional anterior',
+    experience: 'Experiencia profesional',
+    bonareaRole: 'Reponedor / Cajero',
+    bonareaMeta: 'Barcelona · Nov. 2024 – Actualidad',
     education: 'Formación y certificación',
     inProgress: 'En curso',
     incomplete: 'Estudios no finalizados',
@@ -143,6 +147,12 @@ for (const home of professionalHomes) {
     );
     await expect(page.locator('body')).not.toContainText(/\+34|\b[679]\d{8}\b/);
     await expect(page.getByText('BonÀrea', { exact: true })).toBeVisible();
+    await expect(
+      page.getByText(home.bonareaRole, { exact: true }),
+    ).toBeVisible();
+    await expect(
+      page.getByText(home.bonareaMeta, { exact: true }),
+    ).toBeVisible();
     await expect(
       page.getByText('Bluespace Self-Storage', { exact: true }),
     ).toBeVisible();
