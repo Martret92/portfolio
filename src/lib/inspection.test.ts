@@ -58,8 +58,8 @@ describe('project inspection model', () => {
     expect(model.productVisual).toEqual({
       src: '/images/projects/devdata/devdata-product-overview.png',
       optimizedSrc: '/images/projects/devdata/devdata-product-overview.jpg',
-      width: 1440,
-      height: 1205,
+      width: 845,
+      height: 1172,
       alt: 'DevData Generator configured with the Users template and three generated records shown in a table.',
       caption:
         'The real DevData interface connects dataset configuration, generation, preview and export in one workflow.',

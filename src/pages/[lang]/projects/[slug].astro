@@ -41,7 +41,21 @@ if (!projectEntry) {
 }
 
 const homePath = getLocalizedPath(locale);
+const devDataPath = getLocalizedPath(locale, '/projects/devdata-generator');
+const duckyArenaPath = getLocalizedPath(locale, '/projects/duckyarena');
 const isDuckyArena = projectId === 'duckyarena';
+const navigationCopy =
+  locale === 'en'
+    ? {
+        label: 'Case study navigation',
+        home: 'Home',
+        backToTop: 'Back to top',
+      }
+    : {
+        label: 'Navegación del caso de estudio',
+        home: 'Inicio',
+        backToTop: 'Volver arriba',
+      };
 const duckyArenaContent = isDuckyArena
   ? getDuckyArenaContent(locale)
   : undefined;
@@ -61,7 +75,15 @@ const inspectionModel = isDuckyArena
 
   {
     duckyArenaContent ? (
-      <DuckyArenaCaseStudy content={duckyArenaContent} homePath={homePath} />
+      <DuckyArenaCaseStudy
+        content={duckyArenaContent}
+        homePath={homePath}
+        bottomNavigation={{
+          ...navigationCopy,
+          nextProject: 'DevData Generator',
+          nextProjectPath: devDataPath,
+        }}
+      />
     ) : (
       inspectionModel && (
         <DevDataCaseStudy
@@ -70,6 +92,11 @@ const inspectionModel = isDuckyArena
           homePath={homePath}
           copy={t.caseStudy}
           model={inspectionModel}
+          bottomNavigation={{
+            ...navigationCopy,
+            nextProject: 'DuckyArena',
+            nextProjectPath: duckyArenaPath,
+          }}
         />
       )
     )

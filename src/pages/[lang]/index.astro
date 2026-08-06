@@ -1,5 +1,6 @@
 ---
 import HomeProjectPreview from '@components/HomeProjectPreview.astro';
+import ContactIcon from '@components/ContactIcon.astro';
 import DuckyArenaHomePreview from '@components/DuckyArenaHomePreview.astro';
 import SiteHeader from '@components/SiteHeader.astro';
 import { getProjectInspectionModel } from '@content/project-inspections';
@@ -41,6 +42,7 @@ const duckyArenaPath = getLocalizedPath(
   locale,
   `/projects/${duckyArenaProject.slug}`,
 );
+const backToTopLabel = locale === 'en' ? 'Back to top' : 'Volver arriba';
 ---
 
 <BaseLayout
@@ -50,7 +52,7 @@ const duckyArenaPath = getLocalizedPath(
 >
   <SiteHeader slot="header" locale={locale} pathname={Astro.url.pathname} />
 
-  <div class="container home">
+  <div id="top" class="container home">
     <section class="hero stack" aria-labelledby="home-heading">
       <p class="eyebrow">{profile.hero.eyebrow}</p>
       <h1 id="home-heading">{profile.hero.heading}</h1>
@@ -190,9 +192,9 @@ const duckyArenaPath = getLocalizedPath(
         </p>
         <ul class="contact-links">
           <li>
-            <span>{profile.contact.emailLabel}</span>
             <a href={`mailto:${professionalLinks.email}`}>
-              {professionalLinks.email}
+              <ContactIcon type="email" />
+              {profile.contact.emailLabel}
             </a>
           </li>
           <li>
@@ -201,6 +203,7 @@ const duckyArenaPath = getLocalizedPath(
               target="_blank"
               rel="noopener noreferrer"
             >
+              <ContactIcon type="github" />
               {profile.contact.githubLabel}
             </a>
           </li>
@@ -210,15 +213,23 @@ const duckyArenaPath = getLocalizedPath(
               target="_blank"
               rel="noopener noreferrer"
             >
+              <ContactIcon type="linkedin" />
               {profile.contact.linkedinLabel}
             </a>
           </li>
           <li>
-            <a href={publicCvPath} download>{profile.contact.cvLabel}</a>
+            <a href={publicCvPath} download>
+              <ContactIcon type="download" />
+              {profile.contact.cvLabel}
+            </a>
           </li>
         </ul>
       </div>
     </section>
+
+    <a class="back-to-top" href="#top">
+      <span aria-hidden="true">↑</span>{backToTopLabel}
+    </a>
   </div>
 
   <footer slot="footer" class="site-footer">
@@ -421,18 +432,22 @@ const duckyArenaPath = getLocalizedPath(
   }
 
   .contact-links a {
+    gap: var(--space-2);
     padding-inline: var(--space-3);
   }
 
   .contact-links li {
-    display: flex;
-    flex-direction: column;
+    display: contents;
   }
 
-  .contact-links span {
-    padding-inline: var(--space-3);
+  .back-to-top {
+    min-block-size: var(--touch-target-min);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-block-start: var(--space-6);
     color: var(--color-text-muted);
-    font-size: var(--font-size-xs);
+    font-size: var(--font-size-body);
   }
 
   .site-footer {

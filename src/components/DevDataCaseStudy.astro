@@ -55,9 +55,16 @@ interface Props {
   homePath: string;
   copy: Copy;
   model: ProjectInspectionModel;
+  bottomNavigation: {
+    label: string;
+    home: string;
+    nextProject: string;
+    nextProjectPath: string;
+    backToTop: string;
+  };
 }
 
-const { title, summary, homePath, copy, model } = Astro.props;
+const { title, summary, homePath, copy, model, bottomNavigation } = Astro.props;
 
 const configure = model.productElements.find((item) => item.id === 'configure');
 const generate = model.productElements.find((item) => item.id === 'generate');
@@ -91,7 +98,7 @@ if (
 const repositoryUrl = 'https://github.com/Martret92/devdata-generator';
 ---
 
-<article class="container devdata-case-study" data-devdata-case-study>
+<article id="top" class="container devdata-case-study" data-devdata-case-study>
   <header class="project-intro stack">
     <p class="eyebrow">{copy.label}</p>
     <h1>{title}</h1>
@@ -281,8 +288,19 @@ const repositoryUrl = 'https://github.com/Martret92/devdata-generator';
 
   <footer class="case-study-footer">
     <a href={repositoryUrl} target="_blank" rel="noopener noreferrer">
-      {copy.repositoryCta}<span aria-hidden="true">→</span>
+      {copy.repositoryCta}<span aria-hidden="true">↗</span>
     </a>
+    <nav aria-label={bottomNavigation.label}>
+      <a href={homePath}
+        ><span aria-hidden="true">←</span>{bottomNavigation.home}</a
+      >
+      <a href={bottomNavigation.nextProjectPath}>
+        {bottomNavigation.nextProject}<span aria-hidden="true">→</span>
+      </a>
+      <a href="#top"
+        ><span aria-hidden="true">↑</span>{bottomNavigation.backToTop}</a
+      >
+    </nav>
   </footer>
 </article>
 
@@ -569,17 +587,37 @@ const repositoryUrl = 'https://github.com/Martret92/devdata-generator';
   }
 
   .case-study-footer {
+    display: grid;
+    gap: var(--space-5);
     padding-block: clamp(var(--space-7), 8vw, var(--space-9));
   }
 
-  .case-study-footer a {
+  .case-study-footer > a {
     gap: var(--space-2);
     padding-inline-start: var(--space-3);
     border-inline-start: var(--border-width-strong) solid
       var(--architecture-node-focus-border);
   }
 
+  .case-study-footer nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-5);
+    padding-block-start: var(--space-4);
+    border-block-start: var(--border-width) solid var(--color-border);
+  }
+
+  .case-study-footer nav a {
+    gap: var(--space-2);
+    color: var(--color-text-muted);
+  }
+
   @media (width >= 64rem) {
+    .case-study-footer nav {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+    }
+
     .editorial-section {
       grid-template-columns: minmax(11rem, 0.45fr) minmax(0, 1.55fr);
     }
