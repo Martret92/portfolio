@@ -4,10 +4,10 @@
 
 Bilingual professional developer portfolio for Jaime Martret. It combines a concise professional profile with two verified project stories:
 
-- **DevData Generator**, an interactive case study built around an inspectable Product/System model, relationship navigation, source evidence and technical decisions.
-- **DuckyArena**, a static technical editorial case study that separates the collaborative project architecture from Jaime's verified backend and integration contribution.
+- **DevData Generator**, a linear static technical and editorial case study explaining its shared generated result, predictable invalidation, output formats and browser-only architecture.
+- **DuckyArena**, a distinct static technical and editorial case study that separates the collaborative project architecture from Jaime's verified backend and integration contribution.
 
-The portfolio follows a static-first approach: overview first, optional inspection, and technical depth on demand.
+The site is statically generated and requires no client-side JavaScript. Its content is designed for direct reading, with concise professional context on Home and deeper verified technical evidence in each case study.
 
 ## Production
 
@@ -17,21 +17,22 @@ The portfolio follows a static-first approach: overview first, optional inspecti
 
 ## Architecture
 
-Astro owns routing, localization, content, layouts and static rendering. TypeScript uses Astro's strictest baseline. Home and both project case studies use static Astro/HTML/CSS.
+Astro owns routing, layouts, localized content and static generation. TypeScript extends Astro's `strictest` configuration. Home and both project case studies are rendered as static Astro, HTML and CSS.
 
-Localized pages are generated at build time for English and Spanish. Shared project routes use stable untranslated slugs.
+Localized pages are generated at build time for English and Spanish. Shared project routes use stable untranslated slugs. The current production build contains no React runtime, interactive islands, `client:*` directives or emitted client JavaScript.
 
-See [the static-first architecture decision](docs/adr/0001-static-first-astro-react.md) for the original framework boundary.
+See [the superseded static-first architecture decision](docs/adr/0001-static-first-astro-react.md) for the original framework boundary and its current status.
 
 ## Stack
 
 - Astro 7
+- `@astrojs/sitemap`
 - TypeScript
 - HTML and CSS
 - Node.js 24
 - pnpm 11
-- Vitest and Testing Library
-- Playwright and axe-core
+- Vitest, jsdom and jest-dom matchers
+- Playwright and axe-core for browser and accessibility checks
 - Lighthouse CI
 - ESLint and Prettier
 - GitHub Actions
@@ -44,7 +45,7 @@ See [the static-first architecture decision](docs/adr/0001-static-first-astro-re
 - `/en/projects/devdata-generator` and `/es/projects/devdata-generator`
 - `/en/projects/duckyarena` and `/es/projects/duckyarena`
 
-Language switching preserves the equivalent route. Production metadata includes localized canonical and hreflang URLs.
+English and Spanish routes are generated symmetrically. Language switching preserves the equivalent route, and production metadata includes localized canonical and `hreflang` URLs.
 
 ## Development
 
@@ -79,7 +80,7 @@ The quality baseline combines:
 - Astro/TypeScript diagnostics
 - ESLint
 - Prettier
-- Vitest and Testing Library
+- Vitest unit tests with jsdom and jest-dom matchers
 - Playwright E2E coverage
 - axe automated accessibility checks
 - Lighthouse CI performance/accessibility/best-practices/SEO assertions
@@ -103,11 +104,11 @@ Merges to `main` produce the Cloudflare Pages production deployment. Pull reques
 
 - `src/pages/` — localized static routes, project routes and 404
 - `src/layouts/` — shared document layout and production metadata
-- `src/components/` — static Astro presentation components
-- `src/content/` — localized professional and project content
+- `src/components/` — static Astro presentation and case-study components
+- `src/content/` — localized professional content, project entries and verified case-study data
 - `src/i18n/` — locale configuration, translations and route helpers
-- `src/lib/` — validation and UI-independent logic
+- `src/lib/` — content validation and UI-independent logic
 - `src/styles/` — tokens and shared visual foundations
 - `public/` — static assets, CV, favicon, robots and Cloudflare redirect rules
-- `tests/e2e/` — routing, interaction, accessibility and no-JS journeys
-- `docs/` — architecture and performance documentation
+- `tests/e2e/` — routing, static content, accessibility, mobile and no-JS journeys
+- `docs/` — current and historical architecture, UI-foundation and performance documentation
