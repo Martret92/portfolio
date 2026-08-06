@@ -55,8 +55,8 @@ for (const localized of localizedCases) {
       'src',
       '/images/projects/devdata/devdata-product-overview.png',
     );
-    await expect(image).toHaveAttribute('width', '1440');
-    await expect(image).toHaveAttribute('height', '1205');
+    await expect(image).toHaveAttribute('width', '845');
+    await expect(image).toHaveAttribute('height', '1172');
 
     const flow = article.locator('[data-devdata-flow]');
     await expect(flow).toContainText('generatedData');

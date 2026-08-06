@@ -382,8 +382,8 @@ const localized = {
     productVisual: {
       src: '/images/projects/devdata/devdata-product-overview.png',
       optimizedSrc: '/images/projects/devdata/devdata-product-overview.jpg',
-      width: 1440,
-      height: 1205,
+      width: 845,
+      height: 1172,
       alt: 'DevData Generator configured with the Users template and three generated records shown in a table.',
       caption:
         'The real DevData interface connects dataset configuration, generation, preview and export in one workflow.',
@@ -597,8 +597,8 @@ const localized = {
     productVisual: {
       src: '/images/projects/devdata/devdata-product-overview.png',
       optimizedSrc: '/images/projects/devdata/devdata-product-overview.jpg',
-      width: 1440,
-      height: 1205,
+      width: 845,
+      height: 1172,
       alt: 'DevData Generator configurado con la plantilla Usuarios y tres registros generados mostrados en una tabla.',
       caption:
         'La interfaz real de DevData conecta la configuración del dataset, la generación, la vista previa y la exportación en un mismo flujo.',

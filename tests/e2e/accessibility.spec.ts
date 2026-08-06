@@ -46,9 +46,13 @@ test('Home remains complete without JavaScript', async ({ browser }) => {
     page.getByRole('heading', { name: 'Education and certification' }),
   ).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Contact' })).toBeVisible();
-  await expect(
-    page.getByRole('link', { name: 'jaime.martret@gmail.com' }),
-  ).toHaveAttribute('href', 'mailto:jaime.martret@gmail.com');
+  await expect(page.getByRole('link', { name: 'Email' })).toHaveAttribute(
+    'href',
+    'mailto:jaime.martret@gmail.com',
+  );
+  await expect(page.locator('#contact')).not.toContainText(
+    'jaime.martret@gmail.com',
+  );
   await expect(page.getByRole('link', { name: 'Download CV' })).toHaveAttribute(
     'href',
     '/jaime-martret-full-stack-cv.pdf',

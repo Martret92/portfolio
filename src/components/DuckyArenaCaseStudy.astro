@@ -4,13 +4,20 @@ import type { getDuckyArenaContent } from '@content/projects/duckyarena';
 interface Props {
   content: ReturnType<typeof getDuckyArenaContent>;
   homePath: string;
+  bottomNavigation: {
+    label: string;
+    home: string;
+    nextProject: string;
+    nextProjectPath: string;
+    backToTop: string;
+  };
 }
 
-const { content, homePath } = Astro.props;
+const { content, homePath, bottomNavigation } = Astro.props;
 const evidence = content.evidence;
 ---
 
-<article class="ducky-case-study container" data-duckyarena-case-study>
+<article id="top" class="ducky-case-study container" data-duckyarena-case-study>
   <header class="project-hero stack">
     <p class="eyebrow">{content.hero.eyebrow}</p>
     <h1>{content.hero.heading}</h1>
@@ -212,6 +219,17 @@ const evidence = content.evidence;
     <a href={content.repository} target="_blank" rel="noopener noreferrer">
       {content.repositoryCta}<span aria-hidden="true">↗</span>
     </a>
+    <nav aria-label={bottomNavigation.label}>
+      <a href={homePath}
+        ><span aria-hidden="true">←</span>{bottomNavigation.home}</a
+      >
+      <a href={bottomNavigation.nextProjectPath}>
+        {bottomNavigation.nextProject}<span aria-hidden="true">→</span>
+      </a>
+      <a href="#top"
+        ><span aria-hidden="true">↑</span>{bottomNavigation.backToTop}</a
+      >
+    </nav>
   </footer>
 </article>
 
@@ -276,6 +294,23 @@ const evidence = content.evidence;
     border-inline-start: var(--border-width-strong) solid
       var(--color-border-strong);
     font-weight: var(--font-weight-medium);
+  }
+
+  .project-footer {
+    display: grid;
+    gap: var(--space-5);
+  }
+
+  .project-footer nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-5);
+    padding-block-start: var(--space-4);
+    border-block-start: var(--border-width) solid var(--color-border);
+  }
+
+  .project-footer nav a {
+    color: var(--color-text-muted);
   }
 
   .case-section {
@@ -515,6 +550,13 @@ const evidence = content.evidence;
     .architecture-composition,
     .evidence-list {
       grid-template-columns: 1fr;
+    }
+  }
+
+  @media (width >= 64rem) {
+    .project-footer nav {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
     }
   }
 

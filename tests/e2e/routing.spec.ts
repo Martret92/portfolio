@@ -44,6 +44,8 @@ const professionalHomes = [
     inProgress: 'In progress',
     incomplete: 'Studies not completed',
     contact: 'Contact',
+    email: 'Email',
+    backToTop: 'Back to top',
     navigation: {
       work: 'Work',
       about: 'About',
@@ -63,6 +65,8 @@ const professionalHomes = [
     inProgress: 'En curso',
     incomplete: 'Estudios no finalizados',
     contact: 'Contacto',
+    email: 'Correo electrónico',
+    backToTop: 'Volver arriba',
     navigation: {
       work: 'Proyectos',
       about: 'Sobre mí',
@@ -115,14 +119,16 @@ for (const home of professionalHomes) {
       navigation.getByRole('link', { name: home.navigation.contact }),
     ).toHaveAttribute('href', `${home.path}#contact`);
 
-    const emailLink = page.getByRole('link', {
-      name: 'jaime.martret@gmail.com',
-    });
+    const contact = page
+      .getByRole('heading', { level: 2, name: home.contact })
+      .locator('xpath=ancestor::section[1]');
+    const emailLink = contact.getByRole('link', { name: home.email });
     await expect(emailLink).toBeVisible();
     await expect(emailLink).toHaveAttribute(
       'href',
       'mailto:jaime.martret@gmail.com',
     );
+    await expect(contact).not.toContainText('jaime.martret@gmail.com');
     await expect(page.getByRole('link', { name: /GitHub/i })).toHaveAttribute(
       'href',
       'https://github.com/Martret92',
@@ -141,6 +147,9 @@ for (const home of professionalHomes) {
       'href',
       '/jaime-martret-full-stack-cv.pdf',
     );
+    await expect(
+      page.getByRole('link', { name: home.backToTop }),
+    ).toHaveAttribute('href', '#top');
 
     await expect(page.locator('body')).not.toContainText(
       /Developer Name|Nombre de desarrollo|Placeholder identity|Identidad provisional/,
@@ -159,6 +168,66 @@ for (const home of professionalHomes) {
     await expect(
       page.getByText('Starbucks Coffee Company', { exact: true }),
     ).toBeVisible();
+  });
+}
+
+const caseStudyNavigation = [
+  {
+    path: '/en/projects/devdata-generator',
+    navigation: 'Case study navigation',
+    home: 'Home',
+    homePath: '/en',
+    next: 'DuckyArena',
+    nextPath: '/en/projects/duckyarena',
+    backToTop: 'Back to top',
+  },
+  {
+    path: '/es/projects/devdata-generator',
+    navigation: 'Navegación del caso de estudio',
+    home: 'Inicio',
+    homePath: '/es',
+    next: 'DuckyArena',
+    nextPath: '/es/projects/duckyarena',
+    backToTop: 'Volver arriba',
+  },
+  {
+    path: '/en/projects/duckyarena',
+    navigation: 'Case study navigation',
+    home: 'Home',
+    homePath: '/en',
+    next: 'DevData Generator',
+    nextPath: '/en/projects/devdata-generator',
+    backToTop: 'Back to top',
+  },
+  {
+    path: '/es/projects/duckyarena',
+    navigation: 'Navegación del caso de estudio',
+    home: 'Inicio',
+    homePath: '/es',
+    next: 'DevData Generator',
+    nextPath: '/es/projects/devdata-generator',
+    backToTop: 'Volver arriba',
+  },
+] as const;
+
+for (const route of caseStudyNavigation) {
+  test(`${route.path} provides localized bottom navigation`, async ({
+    page,
+  }) => {
+    await page.goto(route.path);
+    const navigation = page.getByRole('navigation', {
+      name: route.navigation,
+    });
+
+    await expect(
+      navigation.getByRole('link', { name: route.home }),
+    ).toHaveAttribute('href', route.homePath);
+    await expect(
+      navigation.getByRole('link', { name: route.next }),
+    ).toHaveAttribute('href', route.nextPath);
+    await expect(
+      navigation.getByRole('link', { name: route.backToTop }),
+    ).toHaveAttribute('href', '#top');
   });
 }
 
@@ -347,8 +416,8 @@ for (const preview of homePreviews) {
       'src',
       '/images/projects/devdata/devdata-product-overview.jpg',
     );
-    await expect(productImage).toHaveAttribute('width', '1440');
-    await expect(productImage).toHaveAttribute('height', '1205');
+    await expect(productImage).toHaveAttribute('width', '845');
+    await expect(productImage).toHaveAttribute('height', '1172');
 
     const topology = section.locator(
       `ol[aria-label="${preview.topologyLabel}"]`,
