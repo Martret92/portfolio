@@ -1,8 +1,8 @@
 # Performance baseline
 
-This baseline measures the current localized MVP with Lighthouse CI and reports
-the JavaScript emitted by the Astro static build. Lighthouse runs twice against
-each primary localized route using the local preview server:
+This document preserves the initial localized Lighthouse baseline and records
+the current JavaScript bundle state. Lighthouse CI runs twice against each
+primary localized route using the local preview server:
 
 - `/en`
 - `/es`
@@ -33,19 +33,27 @@ monitoring later.
 - `pnpm report:bundle` reports raw and gzip sizes for built JavaScript in
   `dist/`, largest first.
 
-The bundle report is informational. Approximately 150–200 KiB compressed
-initial JavaScript is an alarm threshold rather than a target; route-level
-delivery should also be inspected before treating the aggregate build total as
-initial payload.
+The bundle report is informational. The historical project used approximately
+150–200 KiB compressed initial JavaScript as an alarm threshold rather than a
+target; route-level delivery also needed inspection before treating an
+aggregate build total as initial payload.
 
-The current static build emits one JavaScript asset totaling 187.07 KiB raw and
-58.23 KiB gzip. This aggregate build figure is the initial reporting baseline,
-not a claim that every route downloads the full asset.
+## Historical pre-CR2.5 bundle baseline
 
-## Initial local result
+The earlier interactive DevData architecture emitted one JavaScript asset
+totaling 187.07 KiB raw and 58.23 KiB gzip. This was an aggregate historical
+reporting baseline, not a claim that every route downloaded the full asset.
+
+## Current post-CR2.5/CR2.6 bundle state
+
+After DevData became a static linear case study and the React integration was
+removed, the current production build emits 0 JavaScript assets: 0.00 KiB raw
+and 0.00 KiB gzip. This is verified by `pnpm report:bundle` against `dist/`.
+
+## Historical initial local Lighthouse result
 
 Two runs per route on 3 August 2026 produced the following representative
-scores and metric ranges:
+scores and metric ranges for the earlier baseline:
 
 | Route                            | Performance | Accessibility | Best practices | SEO  | LCP range  | CLS range | TBT  |
 | -------------------------------- | ----------- | ------------- | -------------- | ---- | ---------- | --------- | ---- |
