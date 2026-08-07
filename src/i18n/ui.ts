@@ -18,7 +18,7 @@ const ui = {
     },
     home: {
       featuredProject: {
-        eyebrow: 'Featured project',
+        eyebrow: 'Selected project',
         title: 'DevData Generator',
         summary:
           'Configure realistic datasets once, inspect one generated result and reuse it across table, JSON, CSV and SQL.',
@@ -182,7 +182,7 @@ const ui = {
     },
     home: {
       featuredProject: {
-        eyebrow: 'Proyecto destacado',
+        eyebrow: 'Proyecto seleccionado',
         title: 'DevData Generator',
         summary:
           'Configura datasets realistas una vez, inspecciona un único resultado generado y reutilízalo en tabla, JSON, CSV y SQL.',

@@ -2,9 +2,11 @@
 import HomeProjectPreview from '@components/HomeProjectPreview.astro';
 import ContactIcon from '@components/ContactIcon.astro';
 import DuckyArenaHomePreview from '@components/DuckyArenaHomePreview.astro';
+import QuestBoardHomePreview from '@components/QuestBoardHomePreview.astro';
 import SiteHeader from '@components/SiteHeader.astro';
 import { getProjectInspectionModel } from '@content/project-inspections';
 import { getDuckyArenaContent } from '@content/projects/duckyarena';
+import { getQuestBoardContent } from '@content/projects/questboard';
 import {
   getProfessionalProfile,
   professionalLinks,
@@ -32,7 +34,9 @@ const t = useTranslations(locale);
 const profile = getProfessionalProfile(locale);
 const project = requireProject('devdata-generator');
 const duckyArenaProject = requireProject('duckyarena');
+const questBoardProject = requireProject('questboard');
 const duckyArenaContent = getDuckyArenaContent(locale);
+const questBoardContent = getQuestBoardContent(locale);
 const projectInspection = getProjectInspectionModel(
   'devdata-generator',
   locale,
@@ -41,6 +45,10 @@ const projectPath = getLocalizedPath(locale, `/projects/${project.slug}`);
 const duckyArenaPath = getLocalizedPath(
   locale,
   `/projects/${duckyArenaProject.slug}`,
+);
+const questBoardPath = getLocalizedPath(
+  locale,
+  `/projects/${questBoardProject.slug}`,
 );
 const backToTopLabel = locale === 'en' ? 'Back to top' : 'Volver arriba';
 ---
@@ -65,13 +73,15 @@ const backToTopLabel = locale === 'en' ? 'Back to top' : 'Volver arriba';
       </div>
     </section>
 
+    <QuestBoardHomePreview content={questBoardContent} href={questBoardPath} />
+
+    <DuckyArenaHomePreview content={duckyArenaContent} href={duckyArenaPath} />
+
     <HomeProjectPreview
       copy={t.home.featuredProject}
       href={projectPath}
       productVisual={projectInspection.productVisual}
     />
-
-    <DuckyArenaHomePreview content={duckyArenaContent} href={duckyArenaPath} />
 
     <section id="about" class="profile-section" aria-labelledby="about-heading">
       <div class="section-heading">

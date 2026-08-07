@@ -1,0 +1,398 @@
+---
+import type { getQuestBoardContent } from '@content/projects/questboard';
+
+interface Props {
+  content: ReturnType<typeof getQuestBoardContent>;
+  homePath: string;
+  bottomNavigation: {
+    label: string;
+    home: string;
+    nextProject: string;
+    nextProjectPath: string;
+    backToTop: string;
+  };
+}
+
+const { content, homePath, bottomNavigation } = Astro.props;
+---
+
+<article
+  id="top"
+  class="container questboard-case-study"
+  data-questboard-case-study
+>
+  <header class="project-hero stack">
+    <p class="eyebrow">{content.hero.eyebrow}</p>
+    <h1>{content.hero.heading}</h1>
+    <p class="introduction measure">{content.hero.introduction}</p>
+    <ul class="stack-list" aria-label={content.hero.stackLabel}>
+      {content.stack.map((technology) => <li>{technology}</li>)}
+    </ul>
+    <div class="hero-links">
+      <a href={homePath}>{content.hero.backHome}</a>
+      <a
+        href={content.links.repository}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        {content.hero.repository}<span aria-hidden="true">↗</span>
+      </a>
+      <a href={content.links.apiDocs} target="_blank" rel="noopener noreferrer">
+        {content.hero.apiDocs}<span aria-hidden="true">↗</span>
+      </a>
+    </div>
+  </header>
+
+  <section class="case-section" aria-labelledby="questboard-overview">
+    <div class="section-label">
+      <span>01</span><h2 id="questboard-overview">
+        {content.overview.heading}
+      </h2>
+    </div>
+    <p class="measure section-copy">{content.overview.copy}</p>
+  </section>
+
+  <section class="case-section" aria-labelledby="questboard-workflow">
+    <div class="section-label">
+      <span>02</span><h2 id="questboard-workflow">
+        {content.workflow.heading}
+      </h2>
+    </div>
+    <div>
+      <p class="measure section-copy">{content.workflow.copy}</p>
+      <ol class="workflow" aria-label={content.workflow.label}>
+        {
+          content.workflowStates.map((state) => (
+            <li>
+              <code>{state}</code>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="case-section" aria-labelledby="questboard-dependencies">
+    <div class="section-label">
+      <span>03</span><h2 id="questboard-dependencies">
+        {content.dependencies.heading}
+      </h2>
+    </div>
+    <div>
+      <p class="measure section-copy">{content.dependencies.copy}</p>
+      <ul class="evidence-list" aria-label={content.dependencies.rulesLabel}>
+        {content.dependencyRules.map((rule) => <li>{rule}</li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="case-section" aria-labelledby="questboard-permissions">
+    <div class="section-label">
+      <span>04</span><h2 id="questboard-permissions">
+        {content.permissions.heading}
+      </h2>
+    </div>
+    <div>
+      <p class="measure section-copy">{content.permissions.copy}</p>
+      <div class="permission-evidence">
+        <div>
+          <h3>{content.permissions.rolesLabel}</h3>
+          <ul class="role-list">
+            {
+              content.roles.map((role) => (
+                <li>
+                  <code>{role}</code>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+        <div>
+          <h3>{content.permissions.invariantsLabel}</h3>
+          <ul class="evidence-list">
+            {content.invariants.map((rule) => <li>{rule}</li>)}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="case-section" aria-labelledby="questboard-audit">
+    <div class="section-label">
+      <span>05</span><h2 id="questboard-audit">{content.audit.heading}</h2>
+    </div>
+    <p class="measure section-copy">{content.audit.copy}</p>
+  </section>
+
+  <section class="case-section" aria-labelledby="questboard-concurrency">
+    <div class="section-label">
+      <span>06</span><h2 id="questboard-concurrency">
+        {content.concurrency.heading}
+      </h2>
+    </div>
+    <div>
+      <p class="measure section-copy">{content.concurrency.copy}</p>
+      <ol class="locking-flow" aria-label={content.concurrency.heading}>
+        <li><code>{content.concurrency.transaction}</code></li>
+        <li><code>{content.concurrency.questLock}</code></li>
+        <li><code>{content.concurrency.projectLock}</code></li>
+      </ol>
+    </div>
+  </section>
+
+  <section
+    class="case-section challenge"
+    aria-labelledby="questboard-challenge"
+  >
+    <div class="section-label">
+      <span>07</span><h2 id="questboard-challenge">
+        {content.challenge.heading}
+      </h2>
+    </div>
+    <p class="measure section-copy">{content.challenge.copy}</p>
+  </section>
+
+  <section class="case-section" aria-labelledby="questboard-delivery">
+    <div class="section-label">
+      <span>08</span><h2 id="questboard-delivery">
+        {content.delivery.heading}
+      </h2>
+    </div>
+    <div>
+      <p class="measure section-copy">{content.delivery.copy}</p>
+      <ul class="delivery-list" aria-label={content.delivery.checksLabel}>
+        {
+          content.deliveryChecks.map((check) => (
+            <li>
+              <code>{check}</code>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <footer class="project-footer">
+    <div class="external-links">
+      <a
+        href={content.links.repository}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        {content.footer.repository}<span aria-hidden="true">↗</span>
+      </a>
+      <a href={content.links.apiDocs} target="_blank" rel="noopener noreferrer">
+        {content.footer.apiDocs}<span aria-hidden="true">↗</span>
+      </a>
+    </div>
+    <nav aria-label={bottomNavigation.label}>
+      <a href={homePath}
+        ><span aria-hidden="true">←</span>{bottomNavigation.home}</a
+      >
+      <a href={bottomNavigation.nextProjectPath}
+        >{bottomNavigation.nextProject}<span aria-hidden="true">→</span></a
+      >
+      <a href="#top"
+        ><span aria-hidden="true">↑</span>{bottomNavigation.backToTop}</a
+      >
+    </nav>
+  </footer>
+</article>
+
+<style>
+  .questboard-case-study {
+    padding-block: clamp(var(--space-7), 9vw, var(--space-9));
+  }
+
+  .project-hero {
+    --stack-space: var(--space-5);
+    max-inline-size: 64rem;
+    padding-block-end: clamp(var(--space-8), 12vw, 9rem);
+  }
+
+  .eyebrow,
+  .section-label > span {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+    letter-spacing: var(--letter-spacing-wide);
+    text-transform: uppercase;
+  }
+
+  h1,
+  h2,
+  h3,
+  p {
+    margin-block: 0;
+  }
+  h1 {
+    max-inline-size: 20ch;
+    font-size: var(--font-size-heading-lg);
+  }
+  h2 {
+    font-size: var(--font-size-heading-sm);
+  }
+  h3 {
+    font-size: var(--font-size-body);
+  }
+  .introduction {
+    color: var(--color-text-muted);
+    font-size: var(--font-size-lead);
+  }
+  .stack-list,
+  .role-list,
+  .evidence-list,
+  .delivery-list,
+  .workflow,
+  .locking-flow {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  .stack-list,
+  .role-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1) var(--space-3);
+    color: var(--color-text-muted);
+  }
+  .stack-list li:not(:last-child)::after,
+  .role-list li:not(:last-child)::after {
+    content: '·';
+    margin-inline-start: var(--space-3);
+  }
+
+  .hero-links,
+  .external-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+
+  .hero-links a,
+  .project-footer a {
+    min-block-size: var(--touch-target-min);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding-inline: var(--space-3);
+    border-inline-start: var(--border-width-strong) solid
+      var(--color-border-strong);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .case-section {
+    display: grid;
+    grid-template-columns: minmax(12rem, 0.5fr) minmax(0, 1.5fr);
+    gap: var(--space-6) clamp(var(--space-6), 8vw, var(--space-9));
+    padding-block: clamp(var(--space-7), 8vw, var(--space-9));
+    border-block-start: var(--border-width) solid var(--color-border);
+  }
+
+  .section-label {
+    align-self: start;
+    padding-inline-start: var(--space-4);
+    border-inline-start: var(--border-width-strong) solid
+      var(--color-border-strong);
+  }
+  .section-label h2 {
+    margin-block-start: var(--space-2);
+  }
+  .section-copy {
+    color: var(--color-text-muted);
+    font-size: var(--font-size-lead);
+  }
+
+  .workflow,
+  .locking-flow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-block-start: var(--space-6);
+  }
+  .workflow li,
+  .locking-flow li {
+    min-block-size: var(--touch-target-min);
+    display: inline-flex;
+    align-items: center;
+    padding-inline: var(--space-3);
+    border-inline-start: var(--border-width-strong) solid
+      var(--color-border-strong);
+    border-block-end: var(--border-width) solid var(--color-border);
+  }
+  .workflow li:not(:last-child)::after {
+    content: '→';
+    margin-inline-start: var(--space-3);
+    color: var(--color-text-muted);
+  }
+
+  .evidence-list,
+  .delivery-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-3);
+    margin-block-start: var(--space-6);
+  }
+  .evidence-list li,
+  .delivery-list li {
+    padding: var(--space-3);
+    border-inline-start: var(--border-width) solid var(--color-border-strong);
+    background: var(--color-surface-subtle);
+  }
+
+  .permission-evidence {
+    display: grid;
+    grid-template-columns: minmax(12rem, 0.55fr) minmax(0, 1.45fr);
+    gap: var(--space-7);
+    margin-block-start: var(--space-6);
+  }
+  .permission-evidence h3 {
+    margin-block-end: var(--space-3);
+  }
+  .permission-evidence .evidence-list {
+    grid-template-columns: 1fr;
+    margin-block-start: 0;
+  }
+
+  .challenge .section-copy {
+    padding-inline-start: var(--space-5);
+    border-inline-start: var(--border-width-strong) solid
+      var(--color-border-strong);
+  }
+
+  .project-footer {
+    display: grid;
+    gap: var(--space-5);
+    padding-block: var(--space-7);
+    border-block-start: var(--border-width) solid var(--color-border);
+  }
+  .project-footer nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-5);
+    padding-block-start: var(--space-4);
+    border-block-start: var(--border-width) solid var(--color-border);
+  }
+  .project-footer nav a {
+    color: var(--color-text-muted);
+  }
+
+  @media (width >= 64rem) {
+    .project-footer nav {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+    }
+  }
+
+  @media (width < 48rem) {
+    .case-section,
+    .permission-evidence,
+    .evidence-list,
+    .delivery-list {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

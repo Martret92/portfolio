@@ -45,6 +45,10 @@ const editorialEntries = discoverMarkdownFiles(projectEntriesDirectory).map(
 
 describe('project data', () => {
   it('retrieves a project by its stable ID', () => {
+    expect(getProject('questboard')).toEqual({
+      id: 'questboard',
+      slug: 'questboard',
+    });
     expect(getProject('devdata-generator')).toEqual({
       id: 'devdata-generator',
       slug: 'devdata-generator',
@@ -146,6 +150,17 @@ describe('project data', () => {
 
     expect(new Set(devDataEntries.map(({ projectId }) => projectId))).toEqual(
       new Set(['devdata-generator']),
+    );
+  });
+
+  it('includes one localized QuestBoard entry per locale', () => {
+    const questBoardEntries = editorialEntries.filter(
+      ({ projectId }) => projectId === 'questboard',
+    );
+
+    expect(questBoardEntries).toHaveLength(2);
+    expect(new Set(questBoardEntries.map(({ locale }) => locale))).toEqual(
+      new Set(['en', 'es']),
     );
   });
 });

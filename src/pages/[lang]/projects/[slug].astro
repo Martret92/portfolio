@@ -3,9 +3,11 @@ import { getCollection } from 'astro:content';
 
 import DuckyArenaCaseStudy from '@components/DuckyArenaCaseStudy.astro';
 import DevDataCaseStudy from '@components/DevDataCaseStudy.astro';
+import QuestBoardCaseStudy from '@components/QuestBoardCaseStudy.astro';
 import SiteHeader from '@components/SiteHeader.astro';
 import { getProjectInspectionModel } from '@content/project-inspections';
 import { getDuckyArenaContent } from '@content/projects/duckyarena';
+import { getQuestBoardContent } from '@content/projects/questboard';
 import { projects, type ProjectId } from '@content/projects';
 import { locales, type Locale } from '@i18n/config';
 import { getLocalizedPath } from '@i18n/routes';
@@ -43,7 +45,9 @@ if (!projectEntry) {
 const homePath = getLocalizedPath(locale);
 const devDataPath = getLocalizedPath(locale, '/projects/devdata-generator');
 const duckyArenaPath = getLocalizedPath(locale, '/projects/duckyarena');
+const questBoardPath = getLocalizedPath(locale, '/projects/questboard');
 const isDuckyArena = projectId === 'duckyarena';
+const isQuestBoard = projectId === 'questboard';
 const navigationCopy =
   locale === 'en'
     ? {
@@ -59,22 +63,38 @@ const navigationCopy =
 const duckyArenaContent = isDuckyArena
   ? getDuckyArenaContent(locale)
   : undefined;
-const pageTitle = duckyArenaContent
-  ? duckyArenaContent.metadata.title
-  : t.caseStudy.metadata.title;
-const pageDescription = duckyArenaContent
-  ? duckyArenaContent.metadata.description
-  : t.caseStudy.metadata.description;
-const inspectionModel = isDuckyArena
-  ? undefined
-  : getProjectInspectionModel(projectId, locale);
+const questBoardContent = isQuestBoard
+  ? getQuestBoardContent(locale)
+  : undefined;
+const pageTitle =
+  questBoardContent?.metadata.title ??
+  duckyArenaContent?.metadata.title ??
+  t.caseStudy.metadata.title;
+const pageDescription =
+  questBoardContent?.metadata.description ??
+  duckyArenaContent?.metadata.description ??
+  t.caseStudy.metadata.description;
+const inspectionModel =
+  isDuckyArena || isQuestBoard
+    ? undefined
+    : getProjectInspectionModel(projectId, locale);
 ---
 
 <BaseLayout locale={locale} title={pageTitle} description={pageDescription}>
   <SiteHeader slot="header" locale={locale} pathname={Astro.url.pathname} />
 
   {
-    duckyArenaContent ? (
+    questBoardContent ? (
+      <QuestBoardCaseStudy
+        content={questBoardContent}
+        homePath={homePath}
+        bottomNavigation={{
+          ...navigationCopy,
+          nextProject: 'DuckyArena',
+          nextProjectPath: duckyArenaPath,
+        }}
+      />
+    ) : duckyArenaContent ? (
       <DuckyArenaCaseStudy
         content={duckyArenaContent}
         homePath={homePath}
@@ -94,8 +114,8 @@ const inspectionModel = isDuckyArena
           model={inspectionModel}
           bottomNavigation={{
             ...navigationCopy,
-            nextProject: 'DuckyArena',
-            nextProjectPath: duckyArenaPath,
+            nextProject: 'QuestBoard',
+            nextProjectPath: questBoardPath,
           }}
         />
       )
