@@ -1,0 +1,147 @@
+---
+import type { getQuestBoardContent } from '@content/projects/questboard';
+
+interface Props {
+  content: ReturnType<typeof getQuestBoardContent>;
+  href: string;
+}
+
+const { content, href } = Astro.props;
+---
+
+<section
+  id="featured-work"
+  class="questboard-preview"
+  aria-labelledby="questboard-preview-heading"
+  data-questboard-home-preview
+>
+  <header>
+    <p class="eyebrow">{content.home.eyebrow}</p>
+    <h2 id="questboard-preview-heading">{content.home.title}</h2>
+    <p class="summary">{content.home.summary}</p>
+    <p class="signal">{content.home.signal}</p>
+  </header>
+
+  <div class="technical-signature">
+    <p>{content.home.stackLabel}</p>
+    <ul aria-label={content.home.stackLabel}>
+      {content.stack.map((technology) => <li>{technology}</li>)}
+    </ul>
+    <ol aria-label={content.home.workflowLabel}>
+      {
+        content.workflowStates.map((state) => (
+          <li>
+            <code>{state}</code>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+
+  <a href={href}>{content.home.cta}<span aria-hidden="true">→</span></a>
+</section>
+
+<style>
+  .questboard-preview {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(18rem, 0.7fr);
+    gap: var(--space-6) clamp(var(--space-6), 7vw, var(--space-9));
+    padding-block: clamp(var(--space-7), 8vw, var(--space-9));
+    border-block: var(--border-width) solid var(--color-border);
+  }
+
+  header {
+    max-inline-size: var(--content-measure);
+  }
+
+  .eyebrow,
+  .technical-signature > p {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+    letter-spacing: var(--letter-spacing-wide);
+    text-transform: uppercase;
+  }
+
+  h2 {
+    margin-block: var(--space-3) 0;
+    font-size: var(--font-size-heading-md);
+  }
+
+  .summary {
+    margin-block: var(--space-4) 0;
+    font-size: var(--font-size-lead);
+  }
+
+  .signal {
+    margin-block: var(--space-4) 0;
+    color: var(--color-text-muted);
+  }
+
+  .technical-signature {
+    padding-inline-start: var(--space-4);
+    border-inline-start: var(--border-width-strong) solid
+      var(--color-border-strong);
+  }
+
+  ul,
+  ol {
+    padding: 0;
+    margin: var(--space-4) 0 0;
+    list-style: none;
+  }
+
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1) var(--space-3);
+    color: var(--color-text-muted);
+  }
+
+  ul li:not(:last-child)::after {
+    content: '·';
+    margin-inline-start: var(--space-3);
+  }
+
+  ol {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  ol li {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  ol li:not(:last-child)::after {
+    content: '→';
+    margin-inline-start: var(--space-2);
+    color: var(--color-text-muted);
+  }
+
+  .questboard-preview > a {
+    min-block-size: var(--touch-target-min);
+    inline-size: fit-content;
+    display: inline-flex;
+    grid-column: 1 / -1;
+    align-items: center;
+    gap: var(--space-2);
+    padding-inline-start: var(--space-3);
+    border-inline-start: var(--border-width-strong) solid
+      var(--color-border-strong);
+    font-weight: var(--font-weight-medium);
+  }
+
+  @media (width < 48rem) {
+    .questboard-preview {
+      grid-template-columns: 1fr;
+    }
+
+    .questboard-preview > a {
+      grid-column: auto;
+    }
+  }
+</style>

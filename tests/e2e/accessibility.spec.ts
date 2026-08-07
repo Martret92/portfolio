@@ -6,6 +6,8 @@ const routes = [
   '/es',
   '/en/projects/devdata-generator',
   '/es/projects/devdata-generator',
+  '/en/projects/questboard',
+  '/es/projects/questboard',
   '/en/projects/duckyarena',
   '/es/projects/duckyarena',
   '/404',
@@ -27,6 +29,13 @@ test('Home remains complete without JavaScript', async ({ browser }) => {
   const page = await context.newPage();
 
   await page.goto('/en');
+  const questBoardPreview = page.locator('[data-questboard-home-preview]');
+  await expect(
+    questBoardPreview.getByRole('heading', { name: 'QuestBoard' }),
+  ).toBeVisible();
+  await expect(
+    questBoardPreview.getByRole('link', { name: /Explore case study/ }),
+  ).toHaveAttribute('href', '/en/projects/questboard');
   const preview = page.locator('[data-home-project-preview]');
   await expect(preview.getByRole('img')).toBeVisible();
   await expect(
@@ -107,6 +116,26 @@ test('project content remains usable without JavaScript', async ({
   }
   await expect(caseStudy).toContainText('generatedData');
   await expect(caseStudy).toContainText('No backend or database is required.');
+
+  await context.close();
+});
+
+test('QuestBoard content remains usable without JavaScript', async ({
+  browser,
+}) => {
+  const context = await browser.newContext({ javaScriptEnabled: false });
+  const page = await context.newPage();
+
+  await page.goto('/en/projects/questboard');
+  const caseStudy = page.locator('[data-questboard-case-study]');
+  await expect(
+    caseStudy.getByRole('heading', { name: 'Explicit workflow' }),
+  ).toBeVisible();
+  await expect(caseStudy).toContainText('QuestEvent');
+  await expect(
+    caseStudy.getByRole('link', { name: /Live API Docs/ }).first(),
+  ).toHaveAttribute('href', 'https://questboard-4tnl.onrender.com/api/docs/');
+  await expect(caseStudy.locator('script')).toHaveCount(0);
 
   await context.close();
 });

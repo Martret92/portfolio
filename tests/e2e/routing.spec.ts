@@ -12,6 +12,16 @@ const routes = [
       'Construyo aplicaciones web sobre bases técnicas claras y mantenibles.',
   },
   {
+    path: '/en/projects/questboard',
+    heading:
+      'Dependency-aware workflows with explicit permissions and auditable state transitions.',
+  },
+  {
+    path: '/es/projects/questboard',
+    heading:
+      'Flujos con dependencias, permisos explícitos y transiciones de estado auditables.',
+  },
+  {
     path: '/en/projects/devdata-generator',
     heading: 'DevData Generator',
   },
@@ -177,8 +187,8 @@ const caseStudyNavigation = [
     navigation: 'Case study navigation',
     home: 'Home',
     homePath: '/en',
-    next: 'DuckyArena',
-    nextPath: '/en/projects/duckyarena',
+    next: 'QuestBoard',
+    nextPath: '/en/projects/questboard',
     backToTop: 'Back to top',
   },
   {
@@ -186,8 +196,8 @@ const caseStudyNavigation = [
     navigation: 'Navegación del caso de estudio',
     home: 'Inicio',
     homePath: '/es',
-    next: 'DuckyArena',
-    nextPath: '/es/projects/duckyarena',
+    next: 'QuestBoard',
+    nextPath: '/es/projects/questboard',
     backToTop: 'Volver arriba',
   },
   {
@@ -206,6 +216,24 @@ const caseStudyNavigation = [
     homePath: '/es',
     next: 'DevData Generator',
     nextPath: '/es/projects/devdata-generator',
+    backToTop: 'Volver arriba',
+  },
+  {
+    path: '/en/projects/questboard',
+    navigation: 'Case study navigation',
+    home: 'Home',
+    homePath: '/en',
+    next: 'DuckyArena',
+    nextPath: '/en/projects/duckyarena',
+    backToTop: 'Back to top',
+  },
+  {
+    path: '/es/projects/questboard',
+    navigation: 'Navegación del caso de estudio',
+    home: 'Inicio',
+    homePath: '/es',
+    next: 'DuckyArena',
+    nextPath: '/es/projects/duckyarena',
     backToTop: 'Volver arriba',
   },
 ] as const;
@@ -341,7 +369,7 @@ test('Spanish Home and project navigation remain localized', async ({
 const homePreviews = [
   {
     path: '/en',
-    eyebrow: 'Featured project',
+    eyebrow: 'Selected project',
     summary:
       'Configure realistic datasets once, inspect one generated result and reuse it across table, JSON, CSV and SQL.',
     workflowLabel: 'Workflow',
@@ -360,7 +388,7 @@ const homePreviews = [
   },
   {
     path: '/es',
-    eyebrow: 'Proyecto destacado',
+    eyebrow: 'Proyecto seleccionado',
     summary:
       'Configura datasets realistas una vez, inspecciona un único resultado generado y reutilízalo en tabla, JSON, CSV y SQL.',
     workflowLabel: 'Flujo',
@@ -456,25 +484,29 @@ test('featured DevData preview has no mobile horizontal overflow', async ({
   ).toBe(true);
 });
 
-test('Home preserves DevData as the primary project before DuckyArena', async ({
-  page,
-}) => {
-  await page.goto('/en');
+for (const path of ['/en', '/es']) {
+  test(`${path} orders QuestBoard before DuckyArena and DevData`, async ({
+    page,
+  }) => {
+    await page.goto(path);
 
-  const projects = page.locator(
-    '[data-home-project-preview], [data-duckyarena-home-preview]',
-  );
-  await expect(projects).toHaveCount(2);
-  expect(
-    await projects.evaluateAll((nodes) =>
-      nodes.map((node) =>
-        node.hasAttribute('data-home-project-preview')
-          ? 'devdata-generator'
-          : 'duckyarena',
+    const projects = page.locator(
+      '[data-questboard-home-preview], [data-duckyarena-home-preview], [data-home-project-preview]',
+    );
+    await expect(projects).toHaveCount(3);
+    expect(
+      await projects.evaluateAll((nodes) =>
+        nodes.map((node) =>
+          node.hasAttribute('data-questboard-home-preview')
+            ? 'questboard'
+            : node.hasAttribute('data-duckyarena-home-preview')
+              ? 'duckyarena'
+              : 'devdata-generator',
+        ),
       ),
-    ),
-  ).toEqual(['devdata-generator', 'duckyarena']);
-});
+    ).toEqual(['questboard', 'duckyarena', 'devdata-generator']);
+  });
+}
 
 test('language switching preserves the project route', async ({ page }) => {
   await page.goto('/en/projects/devdata-generator');
@@ -483,6 +515,108 @@ test('language switching preserves the project route', async ({ page }) => {
 
   await page.getByRole('link', { name: 'English' }).click();
   await expect(page).toHaveURL(/\/en\/projects\/devdata-generator\/?$/);
+
+  await page.goto('/en/projects/questboard');
+  await page.getByRole('link', { name: 'Español' }).click();
+  await expect(page).toHaveURL(/\/es\/projects\/questboard\/?$/);
+
+  await page.getByRole('link', { name: 'English' }).click();
+  await expect(page).toHaveURL(/\/en\/projects\/questboard\/?$/);
+});
+
+const questBoardRoutes = [
+  {
+    homePath: '/en',
+    projectPath: '/en/projects/questboard',
+    cta: 'Explore case study',
+    workflow: 'Explicit workflow',
+    dependencies: 'Dependency-aware progression',
+    permissions: 'Contextual permissions and invariants',
+    challenge: 'Engineering challenge',
+    docs: 'Live API Docs',
+  },
+  {
+    homePath: '/es',
+    projectPath: '/es/projects/questboard',
+    cta: 'Explorar caso de estudio',
+    workflow: 'Flujo explícito',
+    dependencies: 'Progresión basada en dependencias',
+    permissions: 'Permisos contextuales e invariantes',
+    challenge: 'Reto de ingeniería',
+    docs: 'Documentación de la API',
+  },
+] as const;
+
+for (const route of questBoardRoutes) {
+  test(`${route.homePath} links to the localized QuestBoard story`, async ({
+    page,
+  }) => {
+    await page.goto(route.homePath);
+    const preview = page.locator('[data-questboard-home-preview]');
+    await expect(
+      preview.getByRole('heading', { name: 'QuestBoard' }),
+    ).toBeVisible();
+    await expect(
+      preview.getByRole('list').filter({ hasText: 'PostgreSQL' }),
+    ).toContainText('PostgreSQL');
+    await expect(
+      preview.getByRole('link', { name: new RegExp(route.cta) }),
+    ).toHaveAttribute('href', route.projectPath);
+
+    await page.goto(route.projectPath);
+    const caseStudy = page.locator('[data-questboard-case-study]');
+    for (const heading of [
+      route.workflow,
+      route.dependencies,
+      route.permissions,
+      route.challenge,
+    ]) {
+      await expect(
+        caseStudy.getByRole('heading', { name: heading }),
+      ).toBeVisible();
+    }
+    await expect(caseStudy).toContainText('QuestEvent');
+    await expect(caseStudy).toContainText('SELECT FOR UPDATE');
+
+    const repositoryLinks = caseStudy.getByRole('link', {
+      name: /View repository|Ver repositorio/,
+    });
+    await expect(repositoryLinks).toHaveCount(2);
+    for (const link of await repositoryLinks.all()) {
+      await expect(link).toHaveAttribute(
+        'href',
+        'https://github.com/Martret92/questboard',
+      );
+      await expect(link).toHaveAttribute('rel', 'noopener noreferrer');
+    }
+
+    const docsLinks = caseStudy.getByRole('link', { name: route.docs });
+    await expect(docsLinks).toHaveCount(2);
+    for (const link of await docsLinks.all()) {
+      await expect(link).toHaveAttribute(
+        'href',
+        'https://questboard-4tnl.onrender.com/api/docs/',
+      );
+    }
+  });
+}
+
+test('QuestBoard remains readable without mobile overflow', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.goto('/en/projects/questboard');
+
+  await expect(
+    page.getByRole('heading', { name: 'Dependency-aware progression' }),
+  ).toBeVisible();
+  expect(
+    await page.evaluate(
+      () =>
+        document.documentElement.scrollWidth <=
+        document.documentElement.clientWidth,
+    ),
+  ).toBe(true);
 });
 
 const duckyArenaRoutes = [

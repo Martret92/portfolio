@@ -11,6 +11,8 @@ const localizedRoutes = [
   '/es',
   '/en/projects/devdata-generator',
   '/es/projects/devdata-generator',
+  '/en/projects/questboard',
+  '/es/projects/questboard',
   '/en/projects/duckyarena',
   '/es/projects/duckyarena',
 ] as const;

@@ -2,10 +2,11 @@
 
 ## Overview
 
-Bilingual professional developer portfolio for Jaime Martret. It combines a concise professional profile with two verified project stories:
+Bilingual professional developer portfolio for Jaime Martret. It combines a concise professional profile with three verified project stories:
 
-- **DevData Generator**, a linear static technical and editorial case study explaining its shared generated result, predictable invalidation, output formats and browser-only architecture.
+- **QuestBoard**, a backend-first technical case study about dependency-aware workflows, contextual permissions, business invariants, auditability and PostgreSQL concurrency semantics.
 - **DuckyArena**, a distinct static technical and editorial case study that separates the collaborative project architecture from Jaime's verified backend and integration contribution.
+- **DevData Generator**, a linear static technical and editorial case study explaining its shared generated result, predictable invalidation, output formats and browser-only architecture.
 
 The site is statically generated and requires no client-side JavaScript. Its content is designed for direct reading, with concise professional context on Home and deeper verified technical evidence in each case study.
 
@@ -19,7 +20,7 @@ The site is statically generated and requires no client-side JavaScript. Its con
 
 ## Architecture
 
-Astro owns routing, layouts, localized content and static generation. TypeScript extends Astro's `strictest` configuration. Home and both project case studies are rendered as static Astro, HTML and CSS.
+Astro owns routing, layouts, localized content and static generation. TypeScript extends Astro's `strictest` configuration. Home and all three project case studies are rendered as static Astro, HTML and CSS.
 
 Localized pages are generated at build time for English and Spanish. Shared project routes use stable untranslated slugs. The current production build contains no React runtime, interactive islands, `client:*` directives or emitted client JavaScript.
 
@@ -44,8 +45,9 @@ See [the superseded static-first architecture decision](docs/adr/0001-static-fir
 
 - `/` redirects to the default English locale at `/en`
 - `/en` and `/es`
-- `/en/projects/devdata-generator` and `/es/projects/devdata-generator`
+- `/en/projects/questboard` and `/es/projects/questboard`
 - `/en/projects/duckyarena` and `/es/projects/duckyarena`
+- `/en/projects/devdata-generator` and `/es/projects/devdata-generator`
 
 English and Spanish routes are generated symmetrically. Language switching preserves the equivalent route, and production metadata includes localized canonical and `hreflang` URLs.
 

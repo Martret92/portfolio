@@ -9,6 +9,8 @@ module.exports = {
       url: [
         'http://127.0.0.1:4321/en',
         'http://127.0.0.1:4321/es',
+        'http://127.0.0.1:4321/en/projects/questboard',
+        'http://127.0.0.1:4321/es/projects/questboard',
         'http://127.0.0.1:4321/en/projects/devdata-generator',
         'http://127.0.0.1:4321/es/projects/devdata-generator',
         'http://127.0.0.1:4321/en/projects/duckyarena',
