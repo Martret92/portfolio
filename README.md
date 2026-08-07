@@ -9,6 +9,8 @@ Bilingual professional developer portfolio for Jaime Martret. It combines a conc
 
 The site is statically generated and requires no client-side JavaScript. Its content is designed for direct reading, with concise professional context on Home and deeper verified technical evidence in each case study.
 
+**Status: Production / completed.**
+
 ## Production
 
 - Production URL: [https://jaimemartret.com](https://jaimemartret.com)
