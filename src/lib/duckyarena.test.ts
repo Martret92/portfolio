@@ -15,35 +15,46 @@ describe('DuckyArena verified story', () => {
   });
 
   it.each(locales)(
-    '%s contains six evidence areas and the verified stack',
+    '%s contains five verified screenshots and the current stack',
     (locale) => {
       const content = getDuckyArenaContent(locale);
 
-      expect(Object.keys(content.evidence)).toHaveLength(6);
+      expect(Object.keys(content.images)).toHaveLength(5);
       expect(content.stack).toEqual([
         'React',
-        'JavaScript',
+        'Vite',
         'Node.js',
         'Express',
+        'Socket.IO',
         'PostgreSQL',
         'Docker',
-        'REST API',
+        'GitHub Actions',
       ]);
     },
   );
 
-  it('keeps collaboration, contribution, and limitations explicit', () => {
+  it('keeps collaboration, contribution, quality, and limits explicit', () => {
     const english = getDuckyArenaContent('en');
     const spanish = getDuckyArenaContent('es');
 
-    expect(english.context.copy).toContain('three-person educational project');
-    expect(spanish.context.copy).toContain(
-      'proyecto educativo colaborativo de tres personas',
+    expect(english.overview.paragraphs.join(' ')).toContain(
+      'collaborative academic foundation',
     );
-    expect(english.contribution.heading).toBe('My contribution');
-    expect(spanish.contribution.heading).toBe('Mi contribución');
-    expect(english.status.copy).toMatch(
-      /Authentication, broader frontend integration, automated tests and CI are still pending/,
+    expect(spanish.overview.paragraphs.join(' ')).toContain(
+      'base académica colaborativa',
+    );
+    expect(english.contribution.introduction).toContain(
+      'Built on a collaborative academic foundation',
+    );
+    expect(spanish.contribution.introduction).toContain(
+      'Partiendo de una base académica colaborativa',
+    );
+    expect(english.quality.items.join(' ')).toContain('64 backend tests');
+    expect(english.quality.items.join(' ')).toContain(
+      'Browser E2E is not automated',
+    );
+    expect(english.outcomes.limits).toContain(
+      'The realtime layer does not support horizontal scaling.',
     );
   });
 
@@ -53,7 +64,7 @@ describe('DuckyArena verified story', () => {
       .join(' ');
 
     expect(copy).not.toMatch(
-      /individual project|built the entire backend|designed the entire database|production-ready|authentication is implemented|frontend integration is complete|automated tests already exist|CI already exists/i,
+      /individual project|built the entire backend|designed the entire database|production-ready|production-grade|publicly deployed|live demo|play now|horizontally scalable multiplayer platform/i,
     );
   });
 });

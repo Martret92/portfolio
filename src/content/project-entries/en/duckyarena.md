@@ -2,7 +2,7 @@
 projectId: duckyarena
 locale: en
 title: DuckyArena
-summary: Collaborative educational full stack game with a backend and integration-focused contribution.
+summary: Realtime 3v3 Duckie battles where hidden lane strategy and technical answers decide a server-authoritative best-of-three match.
 ---
 
-DuckyArena began as a collaborative three-person educational project.
+DuckyArena combines private-room 3v3 play, hidden lane deployment and realtime technical-question duels on a collaborative academic foundation.
