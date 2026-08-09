@@ -31,13 +31,11 @@ const routes = [
   },
   {
     path: '/en/projects/duckyarena',
-    heading:
-      'Evolving a collaborative game backend into a more structured full stack system.',
+    heading: 'DuckyArena',
   },
   {
     path: '/es/projects/duckyarena',
-    heading:
-      'Evolucionando un backend colaborativo hacia un sistema full stack más estructurado.',
+    heading: 'DuckyArena',
   },
 ] as const;
 
@@ -624,8 +622,11 @@ const duckyArenaRoutes = [
     path: '/en',
     projectPath: '/en/projects/duckyarena',
     cta: 'Explore case study',
-    collaboration: /three-person educational project/,
-    contribution: 'My contribution',
+    collaboration: /collaborative academic foundation/,
+    contribution: 'My contribution · Professionalization',
+    authority: 'Server authority and realtime architecture',
+    quality: 'Quality and evidence',
+    imageAlt: /DuckyArena combat screen with two Duckies/,
     alternate: 'Español',
     alternateProjectPath: /\/es\/projects\/duckyarena\/?$/,
     alternateBack: 'Volver al inicio',
@@ -635,8 +636,11 @@ const duckyArenaRoutes = [
     path: '/es',
     projectPath: '/es/projects/duckyarena',
     cta: 'Explorar caso de estudio',
-    collaboration: /proyecto educativo colaborativo de tres personas/,
-    contribution: 'Mi contribución',
+    collaboration: /base académica colaborativa/,
+    contribution: 'Mi contribución · Profesionalización',
+    authority: 'Autoridad del servidor y arquitectura realtime',
+    quality: 'Calidad y evidencia',
+    imageAlt: /Pantalla de combate de DuckyArena con dos Duckies/,
     alternate: 'English',
     alternateProjectPath: /\/en\/projects\/duckyarena\/?$/,
     alternateBack: 'Back to Home',
@@ -654,6 +658,9 @@ for (const route of duckyArenaRoutes) {
       preview.getByRole('heading', { name: 'DuckyArena' }),
     ).toBeVisible();
     await expect(preview.getByRole('list')).toContainText('PostgreSQL');
+    await expect(preview).toContainText(
+      /private-room 3v3|partidas 3v3 en salas privadas/,
+    );
     await expect(
       preview.getByRole('link', { name: new RegExp(route.cta) }),
     ).toHaveAttribute('href', route.projectPath);
@@ -664,6 +671,35 @@ for (const route of duckyArenaRoutes) {
     await expect(
       caseStudy.getByRole('heading', { name: route.contribution }),
     ).toBeVisible();
+    await expect(
+      caseStudy.getByRole('heading', { name: route.authority }),
+    ).toBeVisible();
+    await expect(
+      caseStudy.getByRole('heading', { name: route.quality }),
+    ).toBeVisible();
+    await expect(caseStudy).toContainText('64');
+    await expect(caseStudy).toContainText('Socket.IO');
+
+    const screenshots = caseStudy.getByRole('img');
+    await expect(screenshots).toHaveCount(5);
+    await expect(
+      caseStudy.getByRole('img', { name: route.imageAlt }),
+    ).toHaveAttribute(
+      'src',
+      '/images/projects/duckyarena/04-combat-redacted.jpg',
+    );
+    await expect(
+      caseStudy.getByRole('img', { name: route.imageAlt }),
+    ).toHaveAttribute('loading', 'eager');
+    await expect(
+      caseStudy.getByRole('img', { name: route.imageAlt }),
+    ).toHaveAttribute('fetchpriority', 'high');
+    await expect(
+      caseStudy.getByRole('img', { name: route.imageAlt }),
+    ).toHaveAttribute(
+      'srcset',
+      /04-combat-redacted-1000\.jpg 1000w.*04-combat-redacted\.jpg 1425w/,
+    );
 
     const repositoryLinks = caseStudy.getByRole('link', {
       name: /View repository|Ver repositorio/,
@@ -678,17 +714,17 @@ for (const route of duckyArenaRoutes) {
     await expect(
       caseStudy.locator('a[href*="DuckyArena-legacy"], a[href*="Isildu"]'),
     ).toHaveCount(0);
-
-    await expect(caseStudy).toContainText(/Authentication|autenticación/i);
-    await expect(caseStudy).toContainText(
-      /broader frontend integration|integración más amplia del frontend/i,
-    );
-    await expect(caseStudy).toContainText(
-      /automated tests|tests automatizados/i,
-    );
-    await expect(caseStudy).toContainText(/CI.*pending|CI siguen pendientes/i);
+    const externalLinks = caseStudy.locator('a[target="_blank"]');
+    await expect(externalLinks).toHaveCount(2);
+    for (const link of await externalLinks.all()) {
+      await expect(link).toHaveAttribute(
+        'href',
+        'https://github.com/Martret92/DuckyArena',
+      );
+      await expect(link).toHaveAttribute('rel', 'noopener noreferrer');
+    }
     await expect(caseStudy).not.toContainText(
-      /individual project|built the entire backend|production-ready/i,
+      /Live Demo|Play Now|Ver demo|Jugar ahora|production-ready/i,
     );
 
     await page.getByRole('link', { name: route.alternate }).click();
@@ -706,7 +742,9 @@ test('DuckyArena remains readable without mobile overflow', async ({
   await page.goto('/en/projects/duckyarena');
 
   await expect(
-    page.getByRole('heading', { name: 'System architecture' }),
+    page.getByRole('heading', {
+      name: 'Server authority and realtime architecture',
+    }),
   ).toBeVisible();
   expect(
     await page.evaluate(
