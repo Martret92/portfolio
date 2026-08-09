@@ -41,9 +41,13 @@ const { images, screenshots } = content;
     <figure class="evidence-figure evidence-figure--hero">
       <img
         src={images.combat.src}
+        srcset={`${images.combat.responsiveSrc} 1000w, ${images.combat.src} 1425w`}
+        sizes="(max-width: 80rem) calc(100vw - 2rem), 76rem"
         width={images.combat.width}
         height={images.combat.height}
         alt={screenshots.combat.alt}
+        loading="eager"
+        fetchpriority="high"
         decoding="async"
       />
       <figcaption>{screenshots.combat.caption}</figcaption>

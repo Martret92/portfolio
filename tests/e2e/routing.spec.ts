@@ -688,6 +688,18 @@ for (const route of duckyArenaRoutes) {
       'src',
       '/images/projects/duckyarena/04-combat-redacted.jpg',
     );
+    await expect(
+      caseStudy.getByRole('img', { name: route.imageAlt }),
+    ).toHaveAttribute('loading', 'eager');
+    await expect(
+      caseStudy.getByRole('img', { name: route.imageAlt }),
+    ).toHaveAttribute('fetchpriority', 'high');
+    await expect(
+      caseStudy.getByRole('img', { name: route.imageAlt }),
+    ).toHaveAttribute(
+      'srcset',
+      /04-combat-redacted-1000\.jpg 1000w.*04-combat-redacted\.jpg 1425w/,
+    );
 
     const repositoryLinks = caseStudy.getByRole('link', {
       name: /View repository|Ver repositorio/,

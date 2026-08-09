@@ -31,6 +31,7 @@ const shared = {
     },
     combat: {
       src: '/images/projects/duckyarena/04-combat-redacted.jpg',
+      responsiveSrc: '/images/projects/duckyarena/04-combat-redacted-1000.jpg',
       width: 1425,
       height: 1484,
     },
