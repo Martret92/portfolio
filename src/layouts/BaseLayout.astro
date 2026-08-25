@@ -8,9 +8,10 @@ interface Props {
   locale: Locale;
   title: string;
   description?: string;
+  noindex?: boolean;
 }
 
-const { locale, title, description } = Astro.props;
+const { locale, title, description, noindex = false } = Astro.props;
 const t = useTranslations(locale);
 const site = Astro.site;
 
@@ -33,6 +34,7 @@ const socialImageUrl = new URL('/social/jaime-martret-portfolio-og.png', site);
     <title>{title}</title>
 
     {description && <meta name="description" content={description} />}
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
     <link rel="canonical" href={canonicalUrl} />
     {
       Object.entries(alternatePaths).map(([hreflang, path]) => (

@@ -18,9 +18,17 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'] },
     },
   ],
-  webServer: {
-    command: 'pnpm build && pnpm preview --host 127.0.0.1',
-    url: 'http://127.0.0.1:4321',
-    reuseExistingServer: !process.env.CI,
-  },
+  webServer: [
+    {
+      command: 'pnpm preview --host 127.0.0.1',
+      url: 'http://127.0.0.1:4321',
+      reuseExistingServer: !process.env.CI,
+    },
+    {
+      command: 'pnpm dev --host 127.0.0.1 --port 4322',
+      url: 'http://127.0.0.1:4322/en/design-system',
+      reuseExistingServer: !process.env.CI,
+      env: { CODEX_THREAD_ID: '' },
+    },
+  ],
 });
