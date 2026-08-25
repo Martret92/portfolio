@@ -1,0 +1,33 @@
+---
+import DesignSystemPrototype from '@components/DesignSystemPrototype.astro';
+import { locales, type Locale } from '@i18n/config';
+import BaseLayout from '@layouts/BaseLayout.astro';
+
+export function getStaticPaths() {
+  if (!import.meta.env.DEV) {
+    return [];
+  }
+
+  return locales.map((locale) => ({
+    params: { lang: locale },
+    props: { locale },
+  }));
+}
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const title =
+  locale === 'en'
+    ? 'Portfolio v2 visual prototype'
+    : 'Prototipo visual Portfolio v2';
+const description =
+  locale === 'en'
+    ? 'Internal visual foundation prototype.'
+    : 'Prototipo interno de la base visual.';
+---
+
+<BaseLayout locale={locale} title={title} description={description} noindex>
+  <DesignSystemPrototype locale={locale} />
+</BaseLayout>

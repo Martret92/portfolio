@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 import { expect, test } from '@playwright/test';
@@ -122,6 +122,17 @@ test('robots and sitemap expose only localized production routes', async ({
   }
   expect(sitemapBody).not.toContain(`<loc>${origin}/</loc>`);
   expect(sitemapBody).not.toContain(`${origin}/404`);
+  expect(sitemapBody).not.toContain('/design-system');
+});
+
+test('production build omits development-only prototype routes', () => {
+  expect(existsSync(resolve('dist/en/design-system/index.html'))).toBe(false);
+  expect(existsSync(resolve('dist/es/design-system/index.html'))).toBe(false);
+
+  const htmlPages = readdirSync(resolve('dist'), { recursive: true }).filter(
+    (path) => path.toString().endsWith('.html'),
+  );
+  expect(htmlPages).toHaveLength(10);
 });
 
 test('static production assets and stable CV remain available', async ({

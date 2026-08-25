@@ -5,12 +5,17 @@
   --color-canvas: #f7f7f5;
   --color-surface: #ffffff;
   --color-surface-subtle: #efefec;
+  --color-surface-raised: #ffffff;
   --color-text: #1d1d1b;
   --color-text-muted: #5f5f59;
+  --color-text-soft: #707069;
   --color-border: #d4d4ce;
   --color-border-strong: #8a8a82;
   --color-interactive: #30302d;
   --color-interactive-hover: #050505;
+  --color-accent: #2457d6;
+  --color-accent-strong: #173a9f;
+  --color-accent-secondary: #087f8c;
   --color-selected: #e4e4df;
   --color-disabled: #777770;
   --color-selection-background: #d9d9d3;
@@ -33,6 +38,8 @@
   --font-size-heading-sm: clamp(1.375rem, 1.19rem + 0.9vw, 1.875rem);
   --font-size-heading-md: clamp(1.75rem, 1.39rem + 1.8vw, 2.75rem);
   --font-size-heading-lg: clamp(2.25rem, 1.61rem + 3.2vw, 4rem);
+  --font-size-display: clamp(2.75rem, 1.9rem + 4.25vw, 5.25rem);
+  --font-size-project: clamp(2rem, 1.55rem + 2.25vw, 3.5rem);
   --font-weight-regular: 400;
   --font-weight-medium: 600;
   --font-weight-bold: 700;
@@ -62,6 +69,7 @@
   --border-width-strong: 2px;
   --shadow-sm: 0 1px 2px rgb(0 0 0 / 8%);
   --shadow-md: 0 8px 24px rgb(0 0 0 / 10%);
+  --shadow-raised: 0 24px 64px rgb(0 0 0 / 16%);
 
   /* Focus and interaction */
   --focus-ring-color: #3f3f3a;
@@ -73,8 +81,13 @@
   --motion-duration-fast: 120ms;
   --motion-duration-standard: 200ms;
   --motion-duration-slow: 320ms;
+  --motion-duration-micro: 180ms;
+  --motion-duration-reveal: 480ms;
+  --motion-duration-narrative: 800ms;
   --motion-easing-standard: cubic-bezier(0.2, 0, 0, 1);
   --motion-easing-emphasized: cubic-bezier(0.2, 0, 0, 1.2);
+  --motion-easing-enter: cubic-bezier(0.16, 1, 0.3, 1);
+  --motion-easing-exit: cubic-bezier(0.7, 0, 0.84, 0);
 
   /* Layering */
   --z-index-base: 0;
@@ -103,6 +116,48 @@
   --architecture-node-dimmed-opacity: 0.4;
   --architecture-connection: var(--color-border-strong);
   --architecture-connection-active: var(--color-text);
+}
+
+[data-theme='v2-dark'] {
+  color-scheme: dark;
+  --color-canvas: #080d17;
+  --color-surface: #101827;
+  --color-surface-subtle: #151f31;
+  --color-surface-raised: #1a263a;
+  --color-text: #f3f7ff;
+  --color-text-muted: #a9b6ca;
+  --color-text-soft: #8492a8;
+  --color-border: #26344a;
+  --color-border-strong: #526783;
+  --color-interactive: #67d8ff;
+  --color-interactive-hover: #a7ebff;
+  --color-accent: #4da8ff;
+  --color-accent-strong: #7c6cff;
+  --color-accent-secondary: #47e4e0;
+  --color-selected: #1b3150;
+  --color-disabled: #718096;
+  --color-selection-background: #245ca1;
+  --color-selection-text: #ffffff;
+  --focus-ring-color: #67d8ff;
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 32%);
+  --shadow-md: 0 16px 40px rgb(0 0 0 / 38%);
+  --shadow-raised: 0 28px 80px rgb(0 0 0 / 48%);
+}
+
+[data-project='questboard'] {
+  --project-accent: #4da8ff;
+  --project-accent-strong: #7c6cff;
+  --project-accent-soft: #47e4e0;
+  --project-accent-surface: #121f3c;
+}
+
+[data-project='duckyarena'] {
+  --project-accent: #77c66e;
+  --project-accent-strong: #f0bd58;
+  --project-accent-soft: #ee8b4a;
+  --project-accent-surface: #1c291e;
+  --project-team-blue: #5bb8ff;
+  --project-team-red: #ff747c;
 }
 
 [data-density='product'] {
