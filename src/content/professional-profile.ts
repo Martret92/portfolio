@@ -22,7 +22,9 @@ const professionalProfiles = {
     navigation: {
       home: 'Home',
       work: 'Work',
+      stack: 'Stack',
       about: 'About',
+      cv: 'CV',
       contact: 'Contact',
     },
     hero: {
@@ -157,7 +159,9 @@ const professionalProfiles = {
     navigation: {
       home: 'Inicio',
       work: 'Proyectos',
+      stack: 'Stack',
       about: 'Sobre mí',
+      cv: 'CV',
       contact: 'Contacto',
     },
     hero: {

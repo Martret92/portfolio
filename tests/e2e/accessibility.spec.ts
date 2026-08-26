@@ -54,6 +54,7 @@ test('Home remains complete without JavaScript', async ({ browser }) => {
   await expect(
     page.getByRole('heading', { name: 'Education and certification' }),
   ).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'CV' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Contact' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Email' })).toHaveAttribute(
     'href',

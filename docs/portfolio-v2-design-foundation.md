@@ -26,4 +26,12 @@ Spacing and type scale fluidly; multi-column surfaces collapse intentionally; ra
 
 ## Guardrails
 
-Astro static generation, strict TypeScript, zero client JavaScript, no third-party fonts, no animation dependency and existing Lighthouse thresholds remain unchanged. V0 does not implement the final Home IA, Living System, flagship project treatments, sticky/active navigation, CV preview, copy-email behavior or signature motion.
+V0 preserved Astro static generation, strict TypeScript, zero client JavaScript, no third-party fonts, no animation dependency and the existing Lighthouse thresholds. It did not implement the final Home IA, Living System, flagship project treatments, sticky/active navigation, CV preview, copy-email behavior or signature motion.
+
+## V1 global shell
+
+V1 activates the approved dark semantic palette across production and introduces a sticky shared header and footer. Home navigation maps to `work`, `stack`, `about`, `cv` and `contact`; every destination remains a native localized anchor without JavaScript.
+
+A small dependency-free `IntersectionObserver` enhancement applies `aria-current="location"` to the visible Home section. Mobile uses a compact two-row header with horizontally scrollable primary links rather than a disclosure menu. Shared responsive header-offset tokens protect anchor and focus destinations, while reduced motion disables smooth scrolling and decorative translation. The production JavaScript budget remains capped at 4 KiB gzip, with 6 KiB as the hard review threshold.
+
+Living System, final Hero and Home composition, flagship project treatments, Stack redesign, CV preview, copy-email behavior and signature motion remain deferred.
