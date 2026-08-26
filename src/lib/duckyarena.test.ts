@@ -58,6 +58,25 @@ describe('DuckyArena verified story', () => {
     );
   });
 
+  it('provides symmetric factual Home flagship content', () => {
+    const english = getDuckyArenaContent('en');
+    const spanish = getDuckyArenaContent('es');
+
+    expect(english.home.experienceLabel).toBe('The experience');
+    expect(spanish.home.experienceLabel).toBe('La experiencia');
+    expect(english.home.signals).toHaveLength(3);
+    expect(spanish.home.signals).toHaveLength(3);
+    expect(english.home.provenance).toContain('collaborative academic project');
+    expect(spanish.home.provenance).toContain(
+      'proyecto académico colaborativo',
+    );
+    expect(english.home.signals.map(({ label }) => label)).toEqual([
+      'Hidden strategy',
+      'Authoritative combat',
+      'Durable outcome',
+    ]);
+  });
+
   it('does not introduce forbidden ownership or completion claims', () => {
     const copy = locales
       .map((locale) => JSON.stringify(getDuckyArenaContent(locale)))
