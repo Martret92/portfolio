@@ -65,3 +65,9 @@ Stack translates the existing capability content into three evidence-led tracks:
 About closes the personal narrative with two grounded paragraphs about responsibility boundaries, practical training and prior operational experience, avoiding repetition of the Hero, Stack or employment entries. The CV section pairs concise supporting copy with a deterministic first-page preview generated from the approved PDF and separate native View and Download actions; the PDF and its stable public route remain unchanged.
 
 Contact is the final conversion point: the email address is visible as a mail link, GitHub and LinkedIn remain secondary, and a dependency-free clipboard enhancement provides localized, live-announced success feedback. Without JavaScript, the email and all links remain complete and the unavailable copy control stays hidden. The preview is lazy-loaded with intrinsic dimensions, layouts collapse to one column on smaller screens, and reduced-motion behavior requires no additional treatment. V6 adds no framework or dependency; Experience, Education and the final Home IA remain unchanged.
+
+## V7 responsive, accessibility and motion polish
+
+V7 keeps the approved composition intact while correcting shared interaction details found in a whole-portfolio audit. Native hash navigation now uses the scroll container's responsive header padding as its single offset mechanism, avoiding duplicated target clearance. Compact header links and the prominent contact email meet the 44px target convention, while tighter mobile navigation spacing keeps both locales naturally visible at 360px and retains native horizontal scrolling as a fallback.
+
+Focused coverage protects settled anchor clearance, target dimensions and representative 1920px, 640px and 360px layouts. Existing signature motion and reduced-motion states remain unchanged, and V7 adds no JavaScript, dependency or runtime behavior.

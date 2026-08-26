@@ -33,10 +33,6 @@ main {
   flex: 1;
 }
 
-:where([id]) {
-  scroll-margin-block-start: var(--site-header-offset);
-}
-
 .skip-link {
   position: fixed;
   inset-block-start: var(--space-2);
