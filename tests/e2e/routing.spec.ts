@@ -4,12 +4,12 @@ const routes = [
   {
     path: '/en',
     heading:
-      'I build web applications on clear, maintainable technical foundations.',
+      'Build reliable systems and turn them into real product experiences.',
   },
   {
     path: '/es',
     heading:
-      'Construyo aplicaciones web sobre bases técnicas claras y mantenibles.',
+      'Construyo sistemas fiables y los convierto en experiencias de producto reales.',
   },
   {
     path: '/en/projects/questboard',
@@ -42,7 +42,7 @@ const routes = [
 const professionalHomes = [
   {
     path: '/en',
-    hero: /junior Full Stack Developer based in Barcelona/,
+    hero: /backend-oriented web applications around clear APIs/,
     about: 'About',
     capabilities: 'Technical capabilities',
     experience: 'Professional experience',
@@ -65,7 +65,7 @@ const professionalHomes = [
   },
   {
     path: '/es',
-    hero: /desarrollador Full Stack Junior en Barcelona/,
+    hero: /aplicaciones web con orientación backend mediante APIs claras/,
     about: 'Sobre mí',
     capabilities: 'Capacidades técnicas',
     experience: 'Experiencia profesional',

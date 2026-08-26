@@ -1,0 +1,341 @@
+---
+import type { Locale } from '@i18n/config';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const copy =
+  locale === 'en'
+    ? {
+        title: 'Living System',
+        description:
+          'A system flow from input through an API and service layer into state and data, producing a product experience.',
+        caption: 'Input → API → Service → State and data → Product experience',
+        event: 'event',
+        status: 'system active',
+      }
+    : {
+        title: 'Sistema vivo',
+        description:
+          'Un flujo de sistema desde la entrada, pasando por una API y una capa de servicio, hasta el estado y los datos que producen una experiencia de producto.',
+        caption:
+          'Entrada → API → Servicio → Estado y datos → Experiencia de producto',
+        event: 'evento',
+        status: 'sistema activo',
+      };
+const titleId = `living-system-title-${locale}`;
+const descriptionId = `living-system-description-${locale}`;
+---
+
+<figure class="living-system" data-living-system>
+  <div class="living-system__frame">
+    <div class="living-system__header" aria-hidden="true">
+      <span>{copy.title}</span>
+      <span class="living-system__status"><i></i> {copy.status}</span>
+    </div>
+
+    <svg
+      viewBox="0 0 640 500"
+      role="img"
+      aria-labelledby={`${titleId} ${descriptionId}`}
+      focusable="false"
+    >
+      <title id={titleId}>{copy.title}</title>
+      <desc id={descriptionId}>{copy.description}</desc>
+      <defs>
+        <marker
+          id={`system-arrow-${locale}`}
+          markerWidth="8"
+          markerHeight="8"
+          refX="7"
+          refY="4"
+          orient="auto"
+        >
+          <path d="M 0 0 L 8 4 L 0 8 Z" class="arrow-head"></path>
+        </marker>
+      </defs>
+
+      <g class="boundaries" aria-hidden="true">
+        <rect x="24" y="36" width="592" height="428" rx="12"></rect>
+        <path d="M 166 36 V 464"></path>
+        <path d="M 468 36 V 464"></path>
+        <text x="46" y="68">INTERFACE</text>
+        <text x="190" y="68">BACKEND SYSTEM</text>
+        <text x="492" y="68">PRODUCT</text>
+      </g>
+
+      <g class="connections" aria-hidden="true">
+        <path d="M 138 250 H 206"></path>
+        <path d="M 290 250 H 338"></path>
+        <path d="M 434 250 H 502"></path>
+        <path d="M 386 214 V 154" marker-end={`url(#system-arrow-${locale})`}
+        ></path>
+        <path d="M 386 286 V 346" marker-end={`url(#system-arrow-${locale})`}
+        ></path>
+        <path
+          d="M 434 118 C 484 118 474 224 502 238"
+          marker-end={`url(#system-arrow-${locale})`}></path>
+        <path
+          d="M 434 382 C 484 382 474 276 502 262"
+          marker-end={`url(#system-arrow-${locale})`}></path>
+      </g>
+
+      <path
+        class="active-path"
+        aria-hidden="true"
+        d="M 138 250 H 206 H 290 H 338 H 434 H 502"
+        marker-end={`url(#system-arrow-${locale})`}></path>
+      <circle class="data-packet" cx="0" cy="0" r="5" aria-hidden="true"
+      ></circle>
+
+      <g class="system-node system-node--input" aria-hidden="true">
+        <rect x="50" y="214" width="88" height="72" rx="6"></rect>
+        <text x="94" y="244">INPUT</text>
+        <text class="node-detail" x="94" y="266">request</text>
+      </g>
+      <g class="system-node" aria-hidden="true">
+        <rect x="206" y="214" width="84" height="72" rx="6"></rect>
+        <text x="248" y="244">API</text>
+        <text class="node-detail" x="248" y="266">boundary</text>
+      </g>
+      <g class="system-node system-node--core" aria-hidden="true">
+        <rect x="338" y="214" width="96" height="72" rx="6"></rect>
+        <text x="386" y="244">SERVICE</text>
+        <text class="node-detail" x="386" y="266">rules</text>
+      </g>
+      <g class="system-node system-node--support" aria-hidden="true">
+        <rect x="338" y="82" width="96" height="72" rx="6"></rect>
+        <text x="386" y="112">STATE</text>
+        <text class="node-detail" x="386" y="134">transition</text>
+      </g>
+      <g class="system-node system-node--support" aria-hidden="true">
+        <rect x="338" y="346" width="96" height="72" rx="6"></rect>
+        <text x="386" y="376">DATA</text>
+        <text class="node-detail" x="386" y="398">persistence</text>
+      </g>
+      <g class="system-node system-node--output" aria-hidden="true">
+        <rect x="502" y="206" width="90" height="88" rx="6"></rect>
+        <text x="547" y="238">OUTPUT</text>
+        <text class="node-detail" x="547" y="260">experience</text>
+        <text class="node-detail" x="547" y="278">delivered</text>
+      </g>
+
+      <g class="event-label" aria-hidden="true">
+        <circle cx="386" cy="250" r="3"></circle>
+        <text x="398" y="198">{copy.event.toUpperCase()}</text>
+      </g>
+    </svg>
+  </div>
+  <figcaption>{copy.caption}</figcaption>
+</figure>
+
+<style>
+  .living-system {
+    margin: 0;
+  }
+
+  .living-system__frame {
+    position: relative;
+    overflow: hidden;
+    border: var(--border-width) solid var(--color-border-strong);
+    border-radius: var(--radius-lg);
+    background:
+      linear-gradient(var(--color-border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--color-border) 1px, transparent 1px),
+      var(--color-surface-subtle);
+    background-size: 2rem 2rem;
+    box-shadow: var(--shadow-raised);
+  }
+
+  .living-system__frame::after {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgb(77 168 255 / 8%), transparent 45%);
+    content: '';
+    pointer-events: none;
+  }
+
+  .living-system__header {
+    min-block-size: var(--touch-target-min);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-3);
+    padding-inline: var(--space-4);
+    border-block-end: var(--border-width) solid var(--color-border);
+    color: var(--color-text-muted);
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-xs);
+    letter-spacing: var(--letter-spacing-wide);
+    text-transform: uppercase;
+  }
+
+  .living-system__status {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .living-system__status i {
+    inline-size: 0.5rem;
+    block-size: 0.5rem;
+    border-radius: 50%;
+    background: var(--color-accent-secondary);
+    box-shadow: 0 0 0 3px rgb(71 228 224 / 12%);
+  }
+
+  svg {
+    inline-size: 100%;
+    block-size: auto;
+    display: block;
+  }
+
+  .boundaries rect {
+    fill: rgb(8 13 23 / 66%);
+    stroke: var(--color-border);
+  }
+
+  .boundaries path,
+  .connections path {
+    fill: none;
+    stroke: var(--color-border-strong);
+    stroke-width: 1.5;
+  }
+
+  .boundaries text,
+  .event-label text {
+    fill: var(--color-text-soft);
+    font-family: var(--font-family-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+  }
+
+  .connections path {
+    stroke-dasharray: 5 6;
+  }
+
+  .active-path {
+    fill: none;
+    stroke: var(--color-accent-secondary);
+    stroke-dasharray: 10 8;
+    stroke-width: 2.5;
+    animation: system-path var(--motion-duration-narrative)
+      var(--motion-easing-standard) 400ms both;
+  }
+
+  .arrow-head {
+    fill: var(--color-accent-secondary);
+  }
+
+  .data-packet {
+    fill: var(--color-text);
+    filter: drop-shadow(0 0 5px var(--color-accent-secondary));
+    offset-path: path('M 138 250 H 206 H 290 H 338 H 434 H 502');
+    animation: system-packet 1.2s var(--motion-easing-standard) 900ms both;
+  }
+
+  .system-node rect {
+    fill: var(--color-surface-raised);
+    stroke: var(--color-border-strong);
+    stroke-width: 1.5;
+  }
+
+  .system-node--core rect,
+  .system-node--output rect {
+    fill: var(--color-selected);
+    stroke: var(--color-accent);
+    stroke-width: 2;
+  }
+
+  .system-node text {
+    fill: var(--color-text);
+    font-family: var(--font-family-mono);
+    font-size: 12px;
+    font-weight: var(--font-weight-bold);
+    letter-spacing: 0.04em;
+    text-anchor: middle;
+  }
+
+  .system-node .node-detail {
+    fill: var(--color-text-muted);
+    font-size: 10px;
+    font-weight: var(--font-weight-regular);
+  }
+
+  .event-label circle {
+    fill: var(--color-accent-secondary);
+  }
+
+  figcaption {
+    margin-block-start: var(--space-3);
+    color: var(--color-text-muted);
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-xs);
+    line-height: var(--line-height-body);
+  }
+
+  @keyframes system-path {
+    from {
+      opacity: 0.35;
+      stroke-dashoffset: 36;
+    }
+    to {
+      opacity: 1;
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @keyframes system-packet {
+    0% {
+      opacity: 0;
+      offset-distance: 0%;
+    }
+    10% {
+      opacity: 1;
+    }
+    90% {
+      opacity: 1;
+      offset-distance: 100%;
+    }
+    100% {
+      opacity: 0;
+      offset-distance: 100%;
+    }
+  }
+
+  @media (width < 48rem) {
+    .living-system__frame {
+      background-size: 1.5rem 1.5rem;
+    }
+
+    .boundaries text,
+    .event-label {
+      display: none;
+    }
+
+    .system-node text {
+      font-size: 18px;
+    }
+
+    .system-node .node-detail {
+      display: none;
+    }
+
+    .living-system__header {
+      padding-inline: var(--space-3);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .active-path {
+      animation: none;
+    }
+
+    .data-packet {
+      display: none;
+      animation: none;
+    }
+  }
+</style>

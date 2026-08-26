@@ -2,6 +2,7 @@
 import HomeProjectPreview from '@components/HomeProjectPreview.astro';
 import ContactIcon from '@components/ContactIcon.astro';
 import DuckyArenaHomePreview from '@components/DuckyArenaHomePreview.astro';
+import HomeHero from '@components/HomeHero.astro';
 import QuestBoardHomePreview from '@components/QuestBoardHomePreview.astro';
 import SiteFooter from '@components/SiteFooter.astro';
 import SiteHeader from '@components/SiteHeader.astro';
@@ -62,17 +63,15 @@ const backToTopLabel = locale === 'en' ? 'Back to top' : 'Volver arriba';
   <SiteHeader slot="header" locale={locale} pathname={Astro.url.pathname} />
 
   <div id="top" class="container home">
-    <section class="hero stack" aria-labelledby="home-heading">
-      <p class="eyebrow">{profile.hero.eyebrow}</p>
-      <h1 id="home-heading">{profile.hero.heading}</h1>
-      <p class="measure introduction">{profile.hero.introduction}</p>
-      <div class="hero-actions">
-        <a class="action-link action-link--primary" href="#work">
-          {profile.hero.workCta}
-        </a>
-        <a class="action-link" href="#contact">{profile.hero.contactCta}</a>
-      </div>
-    </section>
+    <HomeHero
+      locale={locale}
+      eyebrow={profile.hero.eyebrow}
+      name={profile.identity}
+      heading={profile.hero.heading}
+      introduction={profile.hero.introduction}
+      workCta={profile.hero.workCta}
+      cvCta={profile.hero.cvCta}
+    />
 
     <div id="work" class="work-region">
       <QuestBoardHomePreview
@@ -263,14 +262,7 @@ const backToTopLabel = locale === 'en' ? 'Back to top' : 'Volver arriba';
 
 <style>
   .home {
-    padding-block: clamp(var(--space-7), 10vw, var(--space-9));
-  }
-
-  .hero {
-    --stack-space: var(--space-5);
-
-    max-inline-size: 58rem;
-    padding-block-end: clamp(var(--space-8), 14vw, 9rem);
+    padding-block: 0 clamp(var(--space-7), 10vw, var(--space-9));
   }
 
   .work-region {
@@ -288,22 +280,10 @@ const backToTopLabel = locale === 'en' ? 'Back to top' : 'Volver arriba';
     text-transform: uppercase;
   }
 
-  h1,
   p {
     margin-block: 0;
   }
 
-  h1 {
-    max-inline-size: 17ch;
-    font-size: var(--font-size-heading-lg);
-  }
-
-  .introduction {
-    color: var(--color-text-muted);
-    font-size: var(--font-size-lead);
-  }
-
-  .hero-actions,
   .contact-links {
     display: flex;
     flex-wrap: wrap;
