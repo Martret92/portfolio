@@ -6,6 +6,8 @@ primary localized route using the local preview server:
 
 - `/en`
 - `/es`
+- `/en/projects/questboard`
+- `/es/projects/questboard`
 - `/en/projects/devdata-generator`
 - `/es/projects/devdata-generator`
 - `/en/projects/duckyarena`
@@ -44,11 +46,19 @@ The earlier interactive DevData architecture emitted one JavaScript asset
 totaling 187.07 KiB raw and 58.23 KiB gzip. This was an aggregate historical
 reporting baseline, not a claim that every route downloaded the full asset.
 
-## Current post-CR2.5/CR2.6 bundle state
+## Current Portfolio v2 bundle state
 
-After DevData became a static linear case study and the React integration was
-removed, the current production build emits 0 JavaScript assets: 0.00 KiB raw
-and 0.00 KiB gzip. This is verified by `pnpm report:bundle` against `dist/`.
+After DevData became a static linear case study, the React integration and
+framework runtime remained removed. Portfolio v2 later added two dependency-free
+vanilla progressive enhancements:
+
+- `section-navigation.js`: 2,992 bytes raw and 1,016 bytes gzip.
+- `copy-email.js`: 1,212 bytes raw and 516 bytes gzip.
+- Total own production JavaScript: 4,204 bytes raw and 1,532 bytes gzip.
+
+The static content, navigation destinations and contact paths remain complete
+without JavaScript. No framework or third-party runtime is shipped. These values
+are verified by `pnpm report:bundle` against `dist/`.
 
 ## Historical initial local Lighthouse result
 

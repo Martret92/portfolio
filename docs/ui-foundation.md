@@ -7,13 +7,16 @@ page types without separate themes.
 
 ## Current production foundation
 
-The current portfolio uses static editorial compositions for Home, DevData and
-DuckyArena. Structure, spacing, rails, restrained borders and typography create
-hierarchy while shared tokens keep the localized pages visually consistent.
+The current portfolio uses static editorial compositions for Home, QuestBoard,
+DevData and DuckyArena. Structure, spacing, rails, restrained borders and
+typography create hierarchy while shared tokens keep the localized pages
+visually consistent.
 
 DevData is now a linear case study and DuckyArena remains a separate static
 technical and editorial case study. Neither requires interactive inspection,
-and the production build emits 0 client JavaScript.
+and neither depends on client JavaScript. Two small vanilla scripts progressively
+enhance active-section navigation and copy-email feedback; no framework or
+third-party runtime is shipped.
 
 The baseline targets WCAG 2.2 AA with visible keyboard focus, a 44px minimum
 touch-target token, restrained high-contrast neutrals, responsive media, readable

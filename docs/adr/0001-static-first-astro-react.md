@@ -7,7 +7,7 @@
 
 This ADR records the original architecture decision. It allowed React islands for Product/System inspection and architecture exploration. CR2.5 replaced that interaction with a linear static DevData case study, after which the React island, React runtime and `@astrojs/react` integration were removed.
 
-The current production architecture uses pure Astro static rendering and emits 0 client JavaScript. The sections below describe the original decision and are retained as historical context.
+The current production architecture uses Astro static rendering with two small dependency-free vanilla scripts for progressive enhancement. It has no React or third-party runtime, no interactive islands and no `client:*` directives. The sections below describe the original decision and are retained as historical context.
 
 ## Original context
 
@@ -48,6 +48,7 @@ A strong alternative, but broader than current requirements. The portfolio does 
 ## Current state
 
 - Astro owns routing, layouts, localized content and static generation.
-- Home, DevData and DuckyArena render as static Astro, HTML and CSS.
+- Home, QuestBoard, DevData and DuckyArena render as static Astro, HTML and CSS.
 - Production has no React runtime, interactive islands or `client:*` directives.
-- The current build reports 0 JavaScript assets and 0.00 KiB raw/gzip client JavaScript.
+- `section-navigation.js` and `copy-email.js` progressively enhance the static experience without becoming content, navigation or contact dependencies.
+- The current build reports 4,204 bytes raw and 1,532 bytes gzip of own production JavaScript, with no framework or third-party runtime.
