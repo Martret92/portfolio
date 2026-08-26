@@ -2,7 +2,7 @@
 
 ## Status and scope
 
-V0 is an isolated visual prototype, not a production Home redesign. It validates a dark-first semantic token direction while the public portfolio keeps its current information architecture and light token activation.
+V0 established the isolated visual prototype that validated the dark-first semantic token direction. Later milestones activated that foundation in production while preserving the portfolio's information architecture and static-first delivery.
 
 ## Visual north star
 
@@ -71,3 +71,20 @@ Contact is the final conversion point: the email address is visible as a mail li
 V7 keeps the approved composition intact while correcting shared interaction details found in a whole-portfolio audit. Native hash navigation now uses the scroll container's responsive header padding as its single offset mechanism, avoiding duplicated target clearance. Compact header links and the prominent contact email meet the 44px target convention, while tighter mobile navigation spacing keeps both locales naturally visible at 360px and retains native horizontal scrolling as a fallback.
 
 Focused coverage protects settled anchor clearance, target dimensions and representative 1920px, 640px and 360px layouts. Existing signature motion and reduced-motion states remain unchanged, and V7 adds no JavaScript, dependency or runtime behavior.
+
+## V8 CI, performance and production closeout
+
+V8 is validation and documentation only: it changes no production code, CSS or JavaScript. The three-job CI structure and Lighthouse thresholds remain unchanged, with Lighthouse covering all eight localized production pages. The static build emits 10 HTML pages and 4,204 bytes raw / 1,532 bytes gzip of own JavaScript across the two existing progressive enhancements; framework and third-party runtime remain at zero. Design-system routes remain development-only, and `/jaime-martret-full-stack-cv.pdf` remains the stable public CV route.
+
+Final live-production checks are required before closing Portfolio v2. Reconsidering Experience and Education in the Home IA and investigating the unreferenced prototype CSS artifact remain optional post-v2 work.
+
+### Final production smoke checklist
+
+- **Root and domain:** confirm `https://jaimemartret.com/` redirects to `/en`, `www` redirects to the apex domain, and HTTPS/TLS is healthy.
+- **Localized Home:** verify `/en` and `/es`.
+- **Projects:** verify QuestBoard, DuckyArena and DevData Generator in EN and ES.
+- **CV:** verify `/jaime-martret-full-stack-cv.pdf` opens and downloads.
+- **404 and development routes:** confirm `/en/design-system`, `/es/design-system` and an unknown route return the custom production 404.
+- **Interactions:** verify header anchors, language switching, copy email, `mailto`, GitHub, LinkedIn, project CTAs and case-study bottom navigation.
+- **Accessibility:** verify keyboard operation, visible focus, reduced motion and the no-JavaScript fallback.
+- **Responsive:** verify representative layouts at 390px, 768px, desktop and 2560px.

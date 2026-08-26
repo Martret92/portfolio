@@ -8,7 +8,7 @@ Bilingual professional developer portfolio for Jaime Martret. It combines a conc
 - **DuckyArena**, a distinct static technical and editorial case study that separates the collaborative project architecture from Jaime's verified backend and integration contribution.
 - **DevData Generator**, a linear static technical and editorial case study explaining its shared generated result, predictable invalidation, output formats and browser-only architecture.
 
-The site is statically generated and requires no client-side JavaScript. Its content is designed for direct reading, with concise professional context on Home and deeper verified technical evidence in each case study.
+The site is statically generated and remains complete without client-side JavaScript. Two small vanilla scripts progressively enhance active-section navigation and copy-email feedback; no framework or third-party runtime is shipped. Its content is designed for direct reading, with concise professional context on Home and deeper verified technical evidence in each case study.
 
 **Status: Production / completed.**
 
@@ -22,7 +22,7 @@ The site is statically generated and requires no client-side JavaScript. Its con
 
 Astro owns routing, layouts, localized content and static generation. TypeScript extends Astro's `strictest` configuration. Home and all three project case studies are rendered as static Astro, HTML and CSS.
 
-Localized pages are generated at build time for English and Spanish. Shared project routes use stable untranslated slugs. The current production build contains no React runtime, interactive islands, `client:*` directives or emitted client JavaScript.
+Localized pages are generated at build time for English and Spanish. Shared project routes use stable untranslated slugs. The current production build contains no React runtime, interactive islands or `client:*` directives. Client behavior is limited to `section-navigation.js` and `copy-email.js`, both dependency-free progressive enhancements; navigation, contact links and content remain functional without them.
 
 See [the superseded static-first architecture decision](docs/adr/0001-static-first-astro-react.md) for the original framework boundary and its current status.
 
