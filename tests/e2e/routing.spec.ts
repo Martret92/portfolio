@@ -541,6 +541,10 @@ const questBoardRoutes = [
     homePath: '/en',
     projectPath: '/en/projects/questboard',
     cta: 'Explore case study',
+    systemLabel: 'The system',
+    narrative:
+      'Reliable workflows are built from explicit states, rules and transitions.',
+    evidence: 'Engineering evidence',
     workflow: 'Explicit workflow',
     dependencies: 'Dependency-aware progression',
     permissions: 'Contextual permissions and invariants',
@@ -551,6 +555,10 @@ const questBoardRoutes = [
     homePath: '/es',
     projectPath: '/es/projects/questboard',
     cta: 'Explorar caso de estudio',
+    systemLabel: 'El sistema',
+    narrative:
+      'Los flujos fiables se construyen con estados, reglas y transiciones explícitas.',
+    evidence: 'Evidencia de ingeniería',
     workflow: 'Flujo explícito',
     dependencies: 'Progresión basada en dependencias',
     permissions: 'Permisos contextuales e invariantes',
@@ -568,12 +576,31 @@ for (const route of questBoardRoutes) {
     await expect(
       preview.getByRole('heading', { name: 'QuestBoard' }),
     ).toBeVisible();
+    await expect(preview).toContainText(route.systemLabel);
+    await expect(preview).toContainText(route.narrative);
     await expect(
-      preview.getByRole('list').filter({ hasText: 'PostgreSQL' }),
-    ).toContainText('PostgreSQL');
+      preview.getByRole('heading', { name: route.evidence }),
+    ).toBeVisible();
+    const workflow = preview.getByRole('list', {
+      name: /QuestBoard workflow|Flujo de QuestBoard/,
+    });
+    await expect(workflow).toContainText('BACKLOG');
+    await expect(workflow).toContainText('READY');
+    await expect(workflow).toContainText('IN_PROGRESS');
+    await expect(workflow).toContainText('REVIEW');
+    await expect(workflow).toContainText('DONE');
     await expect(
       preview.getByRole('link', { name: new RegExp(route.cta) }),
     ).toHaveAttribute('href', route.projectPath);
+    const repositoryLink = preview.getByRole('link', {
+      name: /Repository|Repositorio/,
+    });
+    await expect(repositoryLink).toHaveAttribute(
+      'href',
+      'https://github.com/Martret92/questboard',
+    );
+    await expect(repositoryLink).toHaveAttribute('target', '_blank');
+    await expect(repositoryLink).toHaveAttribute('rel', 'noopener noreferrer');
 
     await page.goto(route.projectPath);
     const caseStudy = page.locator('[data-questboard-case-study]');

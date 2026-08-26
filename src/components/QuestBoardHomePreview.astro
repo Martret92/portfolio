@@ -11,53 +11,167 @@ const { content, href } = Astro.props;
 
 <section
   id="featured-work"
-  class="questboard-preview"
+  class="questboard-flagship"
   aria-labelledby="questboard-preview-heading"
+  data-project="questboard"
   data-questboard-home-preview
 >
-  <header>
-    <p class="eyebrow">{content.home.eyebrow}</p>
-    <h2 id="questboard-preview-heading">{content.home.title}</h2>
-    <p class="summary">{content.home.summary}</p>
-    <p class="signal">{content.home.signal}</p>
+  <header class="flagship-header">
+    <div class="project-marker" aria-hidden="true"><span>01</span><i></i></div>
+    <div class="project-intro">
+      <p class="system-label">{content.home.systemLabel}</p>
+      <p class="eyebrow">{content.home.eyebrow}</p>
+      <h2 id="questboard-preview-heading">{content.home.title}</h2>
+      <p class="summary">{content.home.summary}</p>
+      <p class="narrative">{content.home.narrative}</p>
+    </div>
   </header>
 
-  <div class="technical-signature">
-    <p>{content.home.stackLabel}</p>
-    <ul aria-label={content.home.stackLabel}>
-      {content.stack.map((technology) => <li>{technology}</li>)}
-    </ul>
-    <ol aria-label={content.home.workflowLabel}>
-      {
-        content.workflowStates.map((state) => (
-          <li>
-            <code>{state}</code>
-          </li>
-        ))
-      }
-    </ol>
+  <div class="flagship-system">
+    <div class="workflow-panel">
+      <div class="panel-heading">
+        <p>{content.home.workflowLabel}</p>
+        <span>{content.home.transitionLabel}</span>
+      </div>
+      <ol class="workflow" aria-label={content.home.workflowLabel}>
+        {
+          content.workflowStates.map((state, index) => (
+            <li style={`--state-index: ${index}`}>
+              <span class="state-index" aria-hidden="true">
+                {String(index + 1).padStart(2, '0')}
+              </span>
+              <code>{state}</code>
+              {index < content.workflowStates.length - 1 && (
+                <span class="transition" aria-hidden="true">
+                  →
+                </span>
+              )}
+            </li>
+          ))
+        }
+      </ol>
+      <dl class="system-rules">
+        {
+          content.home.rules.map((rule) => (
+            <div>
+              <>
+                <dt>{rule.label}</dt>
+                <dd>{rule.value}</dd>
+              </>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+
+    <section
+      class="engineering-evidence"
+      aria-labelledby="questboard-evidence-heading"
+    >
+      <div class="evidence-heading">
+        <h3 id="questboard-evidence-heading">{content.home.evidenceLabel}</h3>
+        <p>{content.home.evidenceContext}</p>
+      </div>
+      <ol>
+        {
+          content.home.evidence.map((item, index) => (
+            <li>
+              <span aria-hidden="true">
+                {String(index + 1).padStart(2, '0')}
+              </span>
+              <div>
+                <>
+                  <h4>{item.heading}</h4>
+                  <p>{item.copy}</p>
+                </>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </section>
   </div>
 
-  <a href={href}>{content.home.cta}<span aria-hidden="true">→</span></a>
+  <footer class="flagship-actions">
+    <a class="button-primary" href={href}
+      >{content.home.cta}<span aria-hidden="true">→</span></a
+    >
+    <a
+      class="button-secondary"
+      href={content.links.repository}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      {content.home.repository}<span aria-hidden="true">↗</span>
+    </a>
+  </footer>
 </section>
 
 <style>
-  .questboard-preview {
-    display: grid;
-    grid-template-columns: minmax(0, 1.3fr) minmax(18rem, 0.7fr);
-    gap: var(--space-6) clamp(var(--space-6), 7vw, var(--space-9));
-    padding-block: clamp(var(--space-7), 8vw, var(--space-9));
+  .questboard-flagship {
+    position: relative;
+    inline-size: min(
+      var(--layout-container-wide),
+      calc(100vw - (2 * var(--layout-gutter)))
+    );
+    margin-inline: calc(50% - 50vw + var(--layout-gutter));
+    padding-block: clamp(var(--space-8), 9vw, calc(var(--space-9) * 1.35));
     border-block: var(--border-width) solid var(--color-border);
+    isolation: isolate;
   }
 
-  header {
-    max-inline-size: var(--content-measure);
+  .questboard-flagship::before {
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    background:
+      linear-gradient(90deg, var(--project-accent-surface), transparent 48%),
+      linear-gradient(180deg, transparent, rgb(71 228 224 / 0.025));
+    content: '';
   }
 
+  .flagship-header,
+  .flagship-system,
+  .flagship-actions {
+    inline-size: min(100%, var(--layout-container));
+    margin-inline: auto;
+  }
+
+  .flagship-header {
+    display: grid;
+    grid-template-columns: 4rem minmax(0, 1fr);
+    gap: var(--space-5);
+    align-items: start;
+  }
+
+  .project-marker {
+    display: grid;
+    gap: var(--space-3);
+    justify-items: center;
+    min-block-size: 100%;
+    color: var(--project-accent-soft);
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-xs);
+    letter-spacing: var(--letter-spacing-wide);
+  }
+
+  .project-marker i {
+    inline-size: var(--border-width);
+    block-size: 100%;
+    min-block-size: 5rem;
+    background: linear-gradient(var(--project-accent), transparent);
+  }
+
+  .project-intro {
+    min-inline-size: 0;
+    max-inline-size: 58rem;
+  }
+
+  .system-label,
   .eyebrow,
-  .technical-signature > p {
+  .panel-heading p,
+  .evidence-heading h3 {
     margin: 0;
-    color: var(--color-text-muted);
     font-family: var(--font-family-mono);
     font-size: var(--font-size-xs);
     font-weight: var(--font-weight-medium);
@@ -65,83 +179,306 @@ const { content, href } = Astro.props;
     text-transform: uppercase;
   }
 
-  h2 {
-    margin-block: var(--space-3) 0;
-    font-size: var(--font-size-heading-md);
+  .system-label {
+    color: var(--project-accent-soft);
   }
-
-  .summary {
-    margin-block: var(--space-4) 0;
-    font-size: var(--font-size-lead);
-  }
-
-  .signal {
-    margin-block: var(--space-4) 0;
+  .eyebrow {
+    margin-block-start: var(--space-2);
     color: var(--color-text-muted);
   }
 
-  .technical-signature {
-    padding-inline-start: var(--space-4);
-    border-inline-start: var(--border-width-strong) solid
-      var(--color-border-strong);
+  h2 {
+    margin-block: var(--space-3) 0;
+    font-size: clamp(2.75rem, 7vw, 6.5rem);
+    line-height: 0.92;
+    letter-spacing: -0.055em;
   }
 
-  ul,
-  ol {
+  .summary {
+    max-inline-size: 48rem;
+    margin-block: var(--space-5) 0;
+    font-size: var(--font-size-lead);
+  }
+  .narrative {
+    max-inline-size: 46rem;
+    margin-block: var(--space-4) 0;
+    color: var(--project-accent-soft);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .flagship-system {
+    display: grid;
+    grid-template-columns: minmax(0, 1.55fr) minmax(18rem, 0.65fr);
+    gap: clamp(var(--space-5), 5vw, var(--space-8));
+    margin-block-start: clamp(var(--space-7), 8vw, var(--space-9));
+  }
+
+  .workflow-panel {
+    min-inline-size: 0;
+    padding: clamp(var(--space-4), 4vw, var(--space-6));
+    border: var(--border-width) solid var(--color-border-strong);
+    background:
+      linear-gradient(135deg, rgb(77 168 255 / 0.08), transparent 45%),
+      var(--color-surface-subtle);
+    box-shadow: var(--shadow-raised);
+  }
+
+  .panel-heading,
+  .evidence-heading {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-4);
+    align-items: baseline;
+    justify-content: space-between;
+  }
+
+  .panel-heading p,
+  .evidence-heading h3 {
+    color: var(--project-accent-soft);
+  }
+  .panel-heading span,
+  .evidence-heading p {
+    margin: 0;
+    color: var(--color-text-soft);
+    font-size: var(--font-size-sm);
+  }
+
+  .workflow {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    padding: 0;
+    margin: clamp(var(--space-6), 6vw, var(--space-8)) 0 0;
+    list-style: none;
+  }
+
+  .workflow li {
+    position: relative;
+    display: grid;
+    gap: var(--space-2);
+    min-inline-size: 0;
+    padding-inline-end: var(--space-4);
+    opacity: 0;
+    animation: state-reveal var(--motion-duration-reveal)
+      var(--motion-easing-enter) forwards;
+    animation-delay: calc(var(--state-index) * 90ms);
+  }
+
+  .workflow li::before {
+    inline-size: 0.75rem;
+    block-size: 0.75rem;
+    border: var(--border-width-strong) solid var(--project-accent-soft);
+    border-radius: 50%;
+    background: var(--color-surface-raised);
+    box-shadow: 0 0 0 0.25rem rgb(71 228 224 / 0.08);
+    content: '';
+  }
+
+  .workflow li::after {
+    position: absolute;
+    inset-block-start: 0.34rem;
+    inset-inline: 0.8rem 0;
+    block-size: var(--border-width);
+    background: linear-gradient(
+      90deg,
+      var(--project-accent),
+      var(--project-accent-strong)
+    );
+    content: '';
+  }
+
+  .workflow li:last-child::after {
+    display: none;
+  }
+  .state-index {
+    color: var(--color-text-soft);
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-xs);
+  }
+  .workflow code {
+    overflow-wrap: anywhere;
+    color: var(--color-text);
+    font-size: clamp(0.66rem, 1.1vw, var(--font-size-sm));
+  }
+  .transition {
+    position: absolute;
+    inset-block-start: -0.1rem;
+    inset-inline-end: var(--space-2);
+    color: var(--project-accent);
+  }
+
+  .system-rules {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-4);
+    margin: clamp(var(--space-6), 6vw, var(--space-8)) 0 0;
+  }
+
+  .system-rules div {
+    padding-block-start: var(--space-3);
+    border-block-start: var(--border-width) solid var(--color-border);
+  }
+  .system-rules dt {
+    color: var(--project-accent-soft);
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-xs);
+    letter-spacing: var(--letter-spacing-wide);
+    text-transform: uppercase;
+  }
+  .system-rules dd {
+    margin: var(--space-2) 0 0;
+    color: var(--color-text-muted);
+  }
+
+  .engineering-evidence {
+    align-self: stretch;
+    padding-block-start: var(--space-4);
+    border-block-start: var(--border-width-strong) solid
+      var(--project-accent-strong);
+  }
+  .engineering-evidence ol {
+    display: grid;
+    gap: 0;
     padding: 0;
     margin: var(--space-4) 0 0;
     list-style: none;
   }
+  .engineering-evidence li {
+    display: grid;
+    grid-template-columns: 2rem minmax(0, 1fr);
+    gap: var(--space-3);
+    padding-block: var(--space-4);
+    border-block-end: var(--border-width) solid var(--color-border);
+  }
+  .engineering-evidence li > span {
+    color: var(--project-accent-strong);
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-xs);
+  }
+  .engineering-evidence h4,
+  .engineering-evidence p {
+    margin: 0;
+  }
+  .engineering-evidence h4 {
+    font-size: var(--font-size-md);
+  }
+  .engineering-evidence li p {
+    margin-block-start: var(--space-2);
+    color: var(--color-text-muted);
+    font-size: var(--font-size-sm);
+  }
 
-  ul {
+  .flagship-actions {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--space-1) var(--space-3);
-    color: var(--color-text-muted);
+    gap: var(--space-3);
+    margin-block-start: var(--space-7);
+    padding-inline-start: calc(4rem + var(--space-5));
   }
 
-  ul li:not(:last-child)::after {
-    content: '·';
-    margin-inline-start: var(--space-3);
-  }
-
-  ol {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-2);
-  }
-
-  ol li {
-    display: inline-flex;
-    align-items: center;
-  }
-
-  ol li:not(:last-child)::after {
-    content: '→';
-    margin-inline-start: var(--space-2);
-    color: var(--color-text-muted);
-  }
-
-  .questboard-preview > a {
+  .flagship-actions a {
     min-block-size: var(--touch-target-min);
-    inline-size: fit-content;
     display: inline-flex;
-    grid-column: 1 / -1;
     align-items: center;
     gap: var(--space-2);
-    padding-inline-start: var(--space-3);
-    border-inline-start: var(--border-width-strong) solid
-      var(--color-border-strong);
+    padding: var(--space-3) var(--space-4);
+    border: var(--border-width-strong) solid var(--color-border-strong);
     font-weight: var(--font-weight-medium);
   }
 
-  @media (width < 48rem) {
-    .questboard-preview {
+  .button-primary {
+    background: var(--project-accent);
+    color: var(--color-canvas);
+  }
+  .button-primary:hover {
+    background: var(--project-accent-soft);
+    color: var(--color-canvas);
+  }
+  .button-secondary {
+    background: var(--project-accent-surface);
+    color: var(--color-text);
+  }
+  .button-secondary:hover {
+    border-color: var(--project-accent-soft);
+    background: var(--color-surface-raised);
+  }
+
+  @keyframes state-reveal {
+    from {
+      opacity: 0;
+      transform: translateY(var(--space-2));
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @media (width < 72rem) {
+    .flagship-system {
       grid-template-columns: 1fr;
     }
+    .engineering-evidence ol {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: var(--space-5);
+    }
+  }
 
-    .questboard-preview > a {
-      grid-column: auto;
+  @media (width <= 48rem) {
+    .flagship-header {
+      grid-template-columns: 2rem minmax(0, 1fr);
+      gap: var(--space-3);
+    }
+    h2 {
+      font-size: clamp(2.5rem, 13vw, 4.5rem);
+    }
+    .workflow-panel {
+      padding: var(--space-4);
+    }
+    .workflow {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+    .workflow li {
+      grid-template-columns: 1rem minmax(0, 1fr);
+      gap: var(--space-2) var(--space-3);
+      align-items: center;
+      padding: var(--space-3) 0 var(--space-5);
+    }
+    .workflow li::after {
+      inset-block: 1.5rem 0;
+      inset-inline: 0.34rem auto;
+      inline-size: var(--border-width);
+      block-size: auto;
+      background: linear-gradient(
+        var(--project-accent),
+        var(--project-accent-strong)
+      );
+    }
+    .state-index {
+      grid-column: 2;
+      grid-row: 1;
+    }
+    .workflow code {
+      grid-column: 2;
+      font-size: var(--font-size-sm);
+    }
+    .transition {
+      display: none;
+    }
+    .system-rules,
+    .engineering-evidence ol {
+      grid-template-columns: 1fr;
+    }
+    .flagship-actions {
+      padding-inline-start: calc(2rem + var(--space-3));
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .workflow li {
+      opacity: 1;
+      animation: none;
+      transform: none;
     }
   }
 </style>

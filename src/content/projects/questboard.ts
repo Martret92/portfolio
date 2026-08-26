@@ -51,6 +51,7 @@ const localized = {
         'Backend-first Django REST API case study focused on dependency-aware workflows, contextual permissions, auditable transitions and PostgreSQL concurrency semantics.',
     },
     home: {
+      systemLabel: 'The system',
       eyebrow: 'Featured backend project',
       title: 'QuestBoard',
       summary:
@@ -59,7 +60,41 @@ const localized = {
         'A tested and deployed PostgreSQL API where domain rules control what work can start and who may approve it.',
       stackLabel: 'Backend stack',
       workflowLabel: 'QuestBoard workflow',
+      narrative:
+        'Reliable workflows are built from explicit states, rules and transitions.',
+      transitionLabel: 'Dedicated transition operation',
+      rules: [
+        {
+          label: 'Dependency gate',
+          value: 'Prerequisites must be DONE before READY',
+        },
+        {
+          label: 'Review boundary',
+          value: 'An assignee cannot approve their own work',
+        },
+      ],
+      evidenceLabel: 'Engineering evidence',
+      evidenceContext: 'Rules enforced by the backend',
+      evidence: [
+        {
+          heading: 'Transition API',
+          copy: 'State changes use a dedicated domain operation, not unrestricted PATCH.',
+        },
+        {
+          heading: 'Contextual authority',
+          copy: 'OWNER, REVIEWER and CONTRIBUTOR permissions depend on project and workflow context.',
+        },
+        {
+          heading: 'Durable audit',
+          copy: 'QuestEvent records meaningful assignment, dependency and state mutations.',
+        },
+        {
+          heading: 'Transactional integrity',
+          copy: 'transaction.atomic and deliberate row locks protect cross-row invariants.',
+        },
+      ],
       cta: 'Explore case study',
+      repository: 'Repository',
     },
     hero: {
       eyebrow: 'Backend-first project · Django REST API',
@@ -124,6 +159,7 @@ const localized = {
         'Caso de estudio de una API REST backend-first con Django, centrada en flujos con dependencias, permisos contextuales, transiciones auditables y concurrencia PostgreSQL.',
     },
     home: {
+      systemLabel: 'El sistema',
       eyebrow: 'Proyecto backend destacado',
       title: 'QuestBoard',
       summary:
@@ -132,7 +168,41 @@ const localized = {
         'Una API PostgreSQL probada y desplegada donde las reglas de dominio controlan qué trabajo puede comenzar y quién puede aprobarlo.',
       stackLabel: 'Stack backend',
       workflowLabel: 'Flujo de QuestBoard',
+      narrative:
+        'Los flujos fiables se construyen con estados, reglas y transiciones explícitas.',
+      transitionLabel: 'Operación de transición dedicada',
+      rules: [
+        {
+          label: 'Control de dependencias',
+          value: 'Los prerrequisitos deben estar DONE antes de READY',
+        },
+        {
+          label: 'Límite de revisión',
+          value: 'Una persona asignada no puede aprobar su propio trabajo',
+        },
+      ],
+      evidenceLabel: 'Evidencia de ingeniería',
+      evidenceContext: 'Reglas aplicadas por el backend',
+      evidence: [
+        {
+          heading: 'API de transiciones',
+          copy: 'Los estados cambian mediante una operación de dominio dedicada, no con PATCH sin restricciones.',
+        },
+        {
+          heading: 'Autoridad contextual',
+          copy: 'Los permisos de OWNER, REVIEWER y CONTRIBUTOR dependen del contexto del proyecto y del flujo.',
+        },
+        {
+          heading: 'Auditoría duradera',
+          copy: 'QuestEvent registra las mutaciones relevantes de asignación, dependencias y estado.',
+        },
+        {
+          heading: 'Integridad transaccional',
+          copy: 'transaction.atomic y bloqueos de fila deliberados protegen invariantes entre filas.',
+        },
+      ],
       cta: 'Explorar caso de estudio',
+      repository: 'Repositorio',
     },
     hero: {
       eyebrow: 'Proyecto backend-first · API REST con Django',

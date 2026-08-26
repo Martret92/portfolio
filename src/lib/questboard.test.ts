@@ -43,4 +43,22 @@ describe('QuestBoard content', () => {
       expect(spanish[section].heading).toBeTruthy();
     }
   });
+
+  it('keeps the localized Home flagship grounded in verified domain rules', () => {
+    const english = getQuestBoardContent('en');
+    const spanish = getQuestBoardContent('es');
+
+    expect(english.home.evidence).toHaveLength(4);
+    expect(spanish.home.evidence).toHaveLength(4);
+    expect(english.home.rules).toHaveLength(2);
+    expect(spanish.home.rules).toHaveLength(2);
+    expect(english.home.evidence.map(({ heading }) => heading)).toEqual([
+      'Transition API',
+      'Contextual authority',
+      'Durable audit',
+      'Transactional integrity',
+    ]);
+    expect(english.home.rules[0].value).toContain('DONE before READY');
+    expect(spanish.home.rules[0].value).toContain('DONE antes de READY');
+  });
 });
