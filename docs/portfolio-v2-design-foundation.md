@@ -34,4 +34,10 @@ V1 activates the approved dark semantic palette across production and introduces
 
 A small dependency-free `IntersectionObserver` enhancement applies `aria-current="location"` to the visible Home section. Mobile uses a compact two-row header with horizontally scrollable primary links rather than a disclosure menu. Shared responsive header-offset tokens protect anchor and focus destinations, while reduced motion disables smooth scrolling and decorative translation. The production JavaScript budget remains capped at 4 KiB gzip, with 6 KiB as the hard review threshold.
 
-Living System, final Hero and Home composition, flagship project treatments, Stack redesign, CV preview, copy-email behavior and signature motion remain deferred.
+Flagship project treatments, Stack redesign, CV preview, copy-email behavior and signature motion outside the Hero remain deferred.
+
+## V2 Hero and Living System
+
+The final Home Hero frames Jaime Martret as a backend-oriented Full Stack Developer through the narrative “build reliable systems and turn them into real product experiences.” A static inline SVG maps input through API, service, state and data layers into product output, giving the visual an explicit system grammar rather than decorative network imagery.
+
+CSS provides one restrained path-and-packet sequence; the complete diagram and copy render immediately without JavaScript. Reduced motion removes traversal and pulsing while retaining the full static hierarchy. The desktop composition balances copy and system side by side, then moves to text-first single-column flow before the visual becomes cramped. A small technical rail connects the Hero narrative to the existing Work evidence without redesigning project previews. V2 adds no JavaScript, framework runtime, font or dependency.

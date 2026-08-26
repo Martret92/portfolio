@@ -30,10 +30,11 @@ const professionalProfiles = {
     hero: {
       eyebrow: 'Full Stack Developer · Backend-oriented',
       heading:
-        'I build web applications on clear, maintainable technical foundations.',
+        'Build reliable systems and turn them into real product experiences.',
       introduction:
-        'I’m Jaime Martret, a junior Full Stack Developer based in Barcelona. I work mainly with Python, Django, JavaScript, React, SQL and PostgreSQL, with a particular interest in backend development, REST APIs, data modelling and software quality.',
-      workCta: 'Explore selected work',
+        'I build backend-oriented web applications around clear APIs, reliable data models and maintainable architecture, then connect those systems to useful product experiences.',
+      workCta: 'View my work',
+      cvCta: 'View CV',
       contactCta: 'Contact me',
     },
     about: {
@@ -167,10 +168,11 @@ const professionalProfiles = {
     hero: {
       eyebrow: 'Desarrollador Full Stack · Orientación backend',
       heading:
-        'Construyo aplicaciones web sobre bases técnicas claras y mantenibles.',
+        'Construyo sistemas fiables y los convierto en experiencias de producto reales.',
       introduction:
-        'Soy Jaime Martret, desarrollador Full Stack Junior en Barcelona. Trabajo principalmente con Python, Django, JavaScript, React, SQL y PostgreSQL, con especial interés en backend, APIs REST, modelado de datos y calidad del software.',
-      workCta: 'Explorar trabajo seleccionado',
+        'Desarrollo aplicaciones web con orientación backend mediante APIs claras, modelos de datos fiables y una arquitectura mantenible, y conecto esos sistemas con experiencias de producto útiles.',
+      workCta: 'Ver mi trabajo',
+      cvCta: 'Ver CV',
       contactCta: 'Contactar',
     },
     about: {

@@ -1,0 +1,212 @@
+---
+import LivingSystem from '@components/LivingSystem.astro';
+import type { Locale } from '@i18n/config';
+
+interface Props {
+  locale: Locale;
+  eyebrow: string;
+  name: string;
+  heading: string;
+  introduction: string;
+  workCta: string;
+  cvCta: string;
+}
+
+const { locale, eyebrow, name, heading, introduction, workCta, cvCta } =
+  Astro.props;
+---
+
+<section class="hero" aria-labelledby="home-heading" data-home-hero>
+  <div class="hero__copy">
+    <p class="hero__eyebrow">{eyebrow}</p>
+    <p class="hero__name">{name}</p>
+    <h1 id="home-heading">{heading}</h1>
+    <p class="hero__introduction">{introduction}</p>
+    <div class="hero__actions">
+      <a class="hero__action hero__action--primary" href="#work">
+        {workCta}
+        <span aria-hidden="true">↓</span>
+      </a>
+      <a class="hero__action" href="#cv">{cvCta}</a>
+    </div>
+  </div>
+
+  <div class="hero__visual">
+    <LivingSystem locale={locale} />
+  </div>
+
+  <div class="hero__continuity" aria-hidden="true">
+    <span></span>
+    <p>{locale === 'en' ? 'Evidence' : 'Evidencia'}</p>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    min-block-size: clamp(42rem, 78vh, 56rem);
+    display: grid;
+    grid-template-columns: minmax(0, 0.92fr) minmax(28rem, 1.08fr);
+    gap: clamp(var(--space-7), 6vw, var(--space-9));
+    align-items: center;
+    padding-block: clamp(var(--space-7), 8vh, var(--space-9))
+      clamp(var(--space-9), 12vh, 8rem);
+  }
+
+  .hero__copy {
+    min-inline-size: 0;
+  }
+
+  .hero__eyebrow,
+  .hero__name,
+  h1,
+  .hero__introduction,
+  .hero__continuity p {
+    margin: 0;
+  }
+
+  .hero__eyebrow {
+    color: var(--color-accent-secondary);
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+    letter-spacing: var(--letter-spacing-wide);
+    text-transform: uppercase;
+  }
+
+  .hero__name {
+    margin-block-start: var(--space-4);
+    color: var(--color-text-muted);
+    font-size: var(--font-size-lead);
+    font-weight: var(--font-weight-medium);
+  }
+
+  h1 {
+    max-inline-size: 14ch;
+    margin-block-start: var(--space-3);
+    font-size: var(--font-size-display);
+    letter-spacing: var(--letter-spacing-tight);
+    line-height: 1.03;
+    text-wrap: balance;
+  }
+
+  .hero__introduction {
+    max-inline-size: 58ch;
+    margin-block-start: var(--space-5);
+    color: var(--color-text-muted);
+    font-size: var(--font-size-lead);
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-block-start: var(--space-6);
+  }
+
+  .hero__action {
+    min-block-size: var(--touch-target-min);
+    inline-size: fit-content;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding-inline: var(--space-4);
+    border: var(--border-width) solid var(--color-border-strong);
+    font-weight: var(--font-weight-medium);
+    text-decoration: none;
+  }
+
+  .hero__action:hover {
+    border-color: var(--color-interactive-hover);
+    background: var(--color-surface-subtle);
+  }
+
+  .hero__action--primary {
+    border-color: var(--color-interactive);
+    background: var(--color-interactive);
+    color: var(--color-canvas);
+  }
+
+  .hero__action--primary:hover {
+    border-color: var(--color-interactive-hover);
+    background: var(--color-interactive-hover);
+    color: var(--color-canvas);
+  }
+
+  .hero__visual {
+    min-inline-size: 0;
+  }
+
+  .hero__continuity {
+    position: absolute;
+    inset-block-end: 0;
+    inset-inline-start: 50%;
+    display: grid;
+    justify-items: center;
+    color: var(--color-text-soft);
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-xs);
+    letter-spacing: var(--letter-spacing-wide);
+    text-transform: uppercase;
+    transform: translateX(-50%);
+  }
+
+  .hero__continuity span {
+    inline-size: var(--border-width);
+    block-size: var(--space-7);
+    display: block;
+    background: linear-gradient(
+      var(--color-accent-secondary),
+      var(--color-border-strong)
+    );
+  }
+
+  @media (width < 70rem) {
+    .hero {
+      min-block-size: auto;
+      grid-template-columns: minmax(0, 1fr) minmax(24rem, 0.9fr);
+      gap: var(--space-7);
+    }
+
+    h1 {
+      font-size: var(--font-size-heading-lg);
+    }
+  }
+
+  @media (width < 56rem) {
+    .hero {
+      grid-template-columns: 1fr;
+      padding-block-end: var(--space-9);
+    }
+
+    .hero__copy {
+      max-inline-size: 46rem;
+    }
+
+    .hero__visual {
+      max-inline-size: 42rem;
+      justify-self: center;
+    }
+  }
+
+  @media (width < 30rem) {
+    .hero {
+      gap: var(--space-6);
+      padding-block-start: var(--space-7);
+    }
+
+    h1 {
+      font-size: clamp(2.25rem, 11vw, 3.25rem);
+    }
+
+    .hero__introduction {
+      font-size: var(--font-size-body);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero__continuity {
+      transform: translateX(-50%);
+    }
+  }
+</style>
