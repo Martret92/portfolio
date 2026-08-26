@@ -41,3 +41,9 @@ Flagship project treatments, Stack redesign, CV preview, copy-email behavior and
 The final Home Hero frames Jaime Martret as a backend-oriented Full Stack Developer through the narrative “build reliable systems and turn them into real product experiences.” A static inline SVG maps input through API, service, state and data layers into product output, giving the visual an explicit system grammar rather than decorative network imagery.
 
 CSS provides one restrained path-and-packet sequence; the complete diagram and copy render immediately without JavaScript. Reduced motion removes traversal and pulsing while retaining the full static hierarchy. The desktop composition balances copy and system side by side, then moves to text-first single-column flow before the visual becomes cramped. A small technical rail connects the Hero narrative to the existing Work evidence without redesigning project previews. V2 adds no JavaScript, framework runtime, font or dependency.
+
+## V3 QuestBoard flagship
+
+QuestBoard is the Home's first proof point and represents “The System.” Its five-state workflow is presented as a real domain model, supported by dependency and review boundaries plus a concise evidence rail for transition APIs, contextual permissions, durable audit events and transactional integrity.
+
+The flagship inherits the Living System's node-and-rail grammar while using QuestBoard's scoped blue, cyan, indigo and violet accents. Semantic HTML carries the complete system story; one non-looping CSS reveal establishes progression, and reduced motion exposes the stable final state immediately. The wide composition separates workflow from evidence, becomes a single technical column at tablet widths and turns the workflow into a vertical sequence on mobile. V3 adds no JavaScript, dependency or image payload. DuckyArena, DevData and the QuestBoard case study remain structurally unchanged.
