@@ -109,12 +109,14 @@ const { content, href } = Astro.props;
 
 <style>
   .questboard-flagship {
-    position: relative;
-    inline-size: min(
+    --flagship-inline-size: min(
       var(--layout-container-wide),
       calc(100vw - (2 * var(--layout-gutter)))
     );
-    margin-inline: calc(50% - 50vw + var(--layout-gutter));
+
+    position: relative;
+    inline-size: var(--flagship-inline-size);
+    margin-inline: calc((100% - var(--flagship-inline-size)) / 2);
     padding-block: clamp(var(--space-8), 9vw, calc(var(--space-9) * 1.35));
     border-block: var(--border-width) solid var(--color-border);
     isolation: isolate;

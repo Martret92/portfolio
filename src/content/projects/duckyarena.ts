@@ -51,12 +51,33 @@ const localized = {
         'A collaborative full stack case study about hidden three-lane strategy, server-authoritative realtime combat and durable PostgreSQL results.',
     },
     home: {
+      experienceLabel: 'The experience',
       eyebrow: 'Selected project · Collaborative work',
       title: 'DuckyArena',
       summary:
         'DuckyArena combines private-room 3v3 play, hidden lane deployment and realtime technical-question duels. A server-authoritative Node.js backend resolves combat, while React presents the complete flow from Duckie selection to persistent match results.',
       stackLabel: 'Project stack',
+      narrative:
+        'Realtime systems become meaningful when players can feel the state change.',
+      provenance:
+        'A collaborative academic project, later shaped through a focused professionalization pass across realtime backend, frontend integration, quality and visual game feel.',
+      signalsLabel: 'Experience signals',
+      signals: [
+        {
+          label: 'Hidden strategy',
+          copy: 'Per-player snapshots keep rival lane choices private until the authoritative reveal.',
+        },
+        {
+          label: 'Authoritative combat',
+          copy: 'Players submit intentions; the Node.js backend resolves timing, abilities and outcomes.',
+        },
+        {
+          label: 'Durable outcome',
+          copy: 'PostgreSQL preserves completed match results and profile statistics.',
+        },
+      ],
       cta: 'Explore case study',
+      repository: 'Repository',
     },
     hero: {
       eyebrow: 'Collaborative full stack project · Realtime game systems',
@@ -280,12 +301,33 @@ const localized = {
         'Caso de estudio full stack colaborativo sobre estrategia oculta de tres líneas, combate realtime autoritativo y resultados persistentes en PostgreSQL.',
     },
     home: {
+      experienceLabel: 'La experiencia',
       eyebrow: 'Proyecto seleccionado · Trabajo colaborativo',
       title: 'DuckyArena',
       summary:
         'DuckyArena combina partidas 3v3 en salas privadas, despliegue oculto por líneas y duelos en tiempo real basados en preguntas técnicas. Un backend autoritativo en Node.js resuelve el combate, mientras React presenta el flujo completo desde la selección de Duckie hasta los resultados persistentes.',
       stackLabel: 'Stack del proyecto',
+      narrative:
+        'Los sistemas realtime cobran sentido cuando los jugadores pueden sentir cada cambio de estado.',
+      provenance:
+        'Un proyecto académico colaborativo, desarrollado después mediante una profesionalización enfocada en backend realtime, integración frontend, calidad y sensación de juego.',
+      signalsLabel: 'Señales de la experiencia',
+      signals: [
+        {
+          label: 'Estrategia oculta',
+          copy: 'Los snapshots por jugador mantienen ocultas las líneas rivales hasta la revelación autoritativa.',
+        },
+        {
+          label: 'Combate autoritativo',
+          copy: 'Los jugadores envían intenciones; el backend Node.js resuelve tiempos, habilidades y resultados.',
+        },
+        {
+          label: 'Resultado persistente',
+          copy: 'PostgreSQL conserva los resultados completados y las estadísticas de perfil.',
+        },
+      ],
       cta: 'Explorar caso de estudio',
+      repository: 'Repositorio',
     },
     hero: {
       eyebrow: 'Proyecto full stack colaborativo · Sistemas de juego realtime',

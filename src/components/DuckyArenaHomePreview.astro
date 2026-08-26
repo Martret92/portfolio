@@ -7,48 +7,160 @@ interface Props {
 }
 
 const { content, href } = Astro.props;
+const { images, screenshots } = content;
 ---
 
 <section
-  class="ducky-preview"
+  class="ducky-flagship"
   aria-labelledby="duckyarena-preview-heading"
+  data-project="duckyarena"
   data-duckyarena-home-preview
 >
-  <header>
-    <p class="eyebrow">{content.home.eyebrow}</p>
-    <h2 id="duckyarena-preview-heading">{content.home.title}</h2>
-    <p class="summary">{content.home.summary}</p>
+  <header class="flagship-header">
+    <div class="project-intro">
+      <p class="experience-label">{content.home.experienceLabel}</p>
+      <p class="eyebrow">{content.home.eyebrow}</p>
+      <h2 id="duckyarena-preview-heading">{content.home.title}</h2>
+      <p class="summary">{content.home.summary}</p>
+    </div>
+    <div class="experience-statement">
+      <p>{content.home.narrative}</p>
+      <p class="provenance">{content.home.provenance}</p>
+    </div>
   </header>
 
-  <div class="ducky-preview__details">
-    <p>{content.home.stackLabel}</p>
-    <ul aria-label={content.home.stackLabel}>
-      {content.stack.map((technology) => <li>{technology}</li>)}
-    </ul>
+  <figure class="arena-frame arena-frame--combat">
+    <picture>
+      <source
+        srcset={`${images.combat.responsiveSrc} 1000w, ${images.combat.src} 1425w`}
+        sizes="(max-width: 48rem) calc(100vw - 2rem), (max-width: 96rem) calc(100vw - 6rem), 90rem"
+      />
+      <img
+        src={images.combat.src}
+        width={images.combat.width}
+        height={images.combat.height}
+        alt={screenshots.combat.alt}
+        loading="lazy"
+        decoding="async"
+      />
+    </picture>
+    <figcaption>{screenshots.combat.caption}</figcaption>
+  </figure>
+
+  <div class="experience-grid">
+    <div class="supporting-frames">
+      <figure class="arena-frame arena-frame--character">
+        <img
+          src={images.characterSelect.src}
+          width={images.characterSelect.width}
+          height={images.characterSelect.height}
+          alt={screenshots.characterSelect.alt}
+          loading="lazy"
+          decoding="async"
+        />
+        <figcaption>{screenshots.characterSelect.caption}</figcaption>
+      </figure>
+      <figure class="arena-frame arena-frame--lane">
+        <img
+          src={images.laneSelection.src}
+          width={images.laneSelection.width}
+          height={images.laneSelection.height}
+          alt={screenshots.laneSelection.alt}
+          loading="lazy"
+          decoding="async"
+        />
+        <figcaption>{screenshots.laneSelection.caption}</figcaption>
+      </figure>
+    </div>
+
+    <section class="experience-signals" aria-labelledby="ducky-signals-heading">
+      <h3 id="ducky-signals-heading">{content.home.signalsLabel}</h3>
+      <ol>
+        {
+          content.home.signals.map((signal, index) => (
+            <li>
+              <span aria-hidden="true">
+                {String(index + 1).padStart(2, '0')}
+              </span>
+              <div>
+                <h4>{signal.label}</h4>
+                <p>{signal.copy}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </section>
   </div>
 
-  <a class="ducky-preview__cta" href={href}>
-    {content.home.cta}<span aria-hidden="true">→</span>
-  </a>
+  <footer class="flagship-actions">
+    <a class="button-primary" href={href}>
+      {content.home.cta}<span aria-hidden="true">→</span>
+    </a>
+    <a
+      class="button-secondary"
+      href={content.repository}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      {content.home.repository}<span aria-hidden="true">↗</span>
+    </a>
+  </footer>
 </section>
 
 <style>
-  .ducky-preview {
+  .ducky-flagship {
+    --flagship-inline-size: min(
+      var(--layout-container-wide),
+      calc(100vw - (2 * var(--layout-gutter)))
+    );
+
+    position: relative;
+    inline-size: var(--flagship-inline-size);
+    margin-inline: calc((100% - var(--flagship-inline-size)) / 2);
+    padding-block: clamp(var(--space-8), 9vw, calc(var(--space-9) * 1.25));
+    border-block-end: var(--border-width) solid var(--color-border);
+    isolation: isolate;
+  }
+
+  .ducky-flagship::before {
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    background:
+      radial-gradient(
+        circle at 85% 15%,
+        rgb(240 189 88 / 0.1),
+        transparent 28%
+      ),
+      linear-gradient(150deg, var(--project-accent-surface), transparent 52%);
+    content: '';
+  }
+
+  .flagship-header,
+  .arena-frame--combat,
+  .experience-grid,
+  .flagship-actions {
+    inline-size: min(100%, var(--layout-container));
+    margin-inline: auto;
+  }
+
+  .flagship-header {
     display: grid;
-    grid-template-columns: minmax(0, 1.35fr) minmax(16rem, 0.65fr);
-    gap: var(--space-6) clamp(var(--space-6), 7vw, var(--space-9));
-    padding-block: clamp(var(--space-7), 7vw, var(--space-8));
-    border-block-start: var(--border-width) solid var(--color-border);
+    grid-template-columns: minmax(0, 1.25fr) minmax(18rem, 0.75fr);
+    gap: clamp(var(--space-5), 7vw, var(--space-9));
+    align-items: end;
   }
 
-  .ducky-preview header {
-    max-inline-size: var(--content-measure);
+  .project-intro,
+  .experience-statement {
+    min-inline-size: 0;
   }
 
+  .experience-label,
   .eyebrow,
-  .ducky-preview__details > p {
+  .experience-signals > h3 {
     margin: 0;
-    color: var(--color-text-muted);
     font-family: var(--font-family-mono);
     font-size: var(--font-size-xs);
     font-weight: var(--font-weight-medium);
@@ -56,61 +168,266 @@ const { content, href } = Astro.props;
     text-transform: uppercase;
   }
 
+  .experience-label {
+    color: var(--project-accent-strong);
+  }
+
+  .eyebrow {
+    margin-block-start: var(--space-2);
+    color: var(--color-text-muted);
+  }
+
   h2 {
     margin-block: var(--space-3) 0;
-    font-size: var(--font-size-heading-sm);
+    color: var(--color-text);
+    font-size: clamp(3.25rem, 8vw, 7.25rem);
+    line-height: 0.9;
+    letter-spacing: -0.055em;
   }
 
   .summary {
-    margin-block: var(--space-4) 0;
+    max-inline-size: 52rem;
+    margin-block: var(--space-5) 0;
     color: var(--color-text-muted);
     font-size: var(--font-size-lead);
   }
 
-  .ducky-preview__details {
-    padding-inline-start: var(--space-4);
+  .experience-statement {
+    padding-block: var(--space-4);
+    padding-inline-start: var(--space-5);
     border-inline-start: var(--border-width-strong) solid
-      var(--color-border-strong);
+      var(--project-accent-strong);
   }
 
-  ul {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-1) var(--space-3);
-    padding: 0;
-    margin: var(--space-3) 0 0;
-    color: var(--color-text-muted);
-    list-style: none;
+  .experience-statement > p {
+    margin: 0;
   }
 
-  li:not(:last-child)::after {
-    content: '·';
-    margin-inline-start: var(--space-3);
-  }
-
-  .ducky-preview__cta {
-    min-block-size: var(--touch-target-min);
-    inline-size: fit-content;
-    display: inline-flex;
-    grid-column: 1 / -1;
-    align-items: center;
-    padding-inline-start: var(--space-3);
-    border-inline-start: var(--border-width-strong) solid
-      var(--color-border-strong);
+  .experience-statement > p:first-child {
+    color: var(--project-accent-strong);
+    font-size: var(--font-size-lead);
     font-weight: var(--font-weight-medium);
   }
 
-  .ducky-preview__cta span {
-    margin-inline-start: var(--space-2);
+  .provenance {
+    margin-block-start: var(--space-4) !important;
+    color: var(--color-text-muted);
+    font-size: var(--font-size-sm);
   }
 
-  @media (width < 48rem) {
-    .ducky-preview {
+  .arena-frame {
+    min-inline-size: 0;
+    margin-block: 0;
+  }
+
+  .arena-frame--combat {
+    position: relative;
+    margin-block-start: clamp(var(--space-7), 8vw, var(--space-9));
+    padding: clamp(var(--space-2), 1.5vw, var(--space-3));
+    border: var(--border-width) solid var(--project-accent-strong);
+    background: var(--color-surface-subtle);
+    box-shadow: var(--shadow-raised);
+  }
+
+  .arena-frame--combat::before,
+  .arena-frame--combat::after {
+    position: absolute;
+    z-index: var(--z-index-raised);
+    inline-size: clamp(3rem, 9vw, 8rem);
+    block-size: var(--border-width-strong);
+    content: '';
+  }
+
+  .arena-frame--combat::before {
+    inset-block-start: -0.125rem;
+    inset-inline-start: clamp(var(--space-4), 8vw, var(--space-8));
+    background: var(--project-team-blue);
+  }
+
+  .arena-frame--combat::after {
+    inset-block-end: -0.125rem;
+    inset-inline-end: clamp(var(--space-4), 8vw, var(--space-8));
+    background: var(--project-team-red);
+  }
+
+  .arena-frame img {
+    inline-size: 100%;
+    block-size: auto;
+    display: block;
+  }
+
+  .arena-frame figcaption {
+    margin-block-start: var(--space-3);
+    padding-inline-start: var(--space-3);
+    border-inline-start: var(--border-width-strong) solid var(--project-accent);
+    color: var(--color-text-muted);
+    font-size: var(--font-size-sm);
+  }
+
+  .experience-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(18rem, 0.65fr);
+    gap: clamp(var(--space-6), 6vw, var(--space-8));
+    margin-block-start: clamp(var(--space-7), 7vw, var(--space-9));
+    align-items: start;
+  }
+
+  .supporting-frames {
+    display: grid;
+    grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+    gap: var(--space-4);
+    align-items: start;
+  }
+
+  .supporting-frames .arena-frame {
+    padding-block-start: var(--space-3);
+    border-block-start: var(--border-width) solid var(--project-accent);
+  }
+
+  .arena-frame--lane {
+    margin-block-start: clamp(var(--space-5), 5vw, var(--space-7));
+  }
+
+  .experience-signals {
+    padding-block-start: var(--space-4);
+    border-block-start: var(--border-width-strong) solid
+      var(--project-accent-soft);
+  }
+
+  .experience-signals > h3 {
+    color: var(--project-accent-soft);
+  }
+
+  .experience-signals ol {
+    padding: 0;
+    margin: var(--space-4) 0 0;
+    list-style: none;
+  }
+
+  .experience-signals li {
+    display: grid;
+    grid-template-columns: 2rem minmax(0, 1fr);
+    gap: var(--space-3);
+    padding-block: var(--space-4);
+    border-block-end: var(--border-width) solid var(--color-border);
+  }
+
+  .experience-signals li > span {
+    color: var(--project-accent-strong);
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-xs);
+  }
+
+  .experience-signals h4,
+  .experience-signals p {
+    margin: 0;
+  }
+
+  .experience-signals h4 {
+    font-size: var(--font-size-md);
+  }
+
+  .experience-signals p {
+    margin-block-start: var(--space-2);
+    color: var(--color-text-muted);
+    font-size: var(--font-size-sm);
+  }
+
+  .flagship-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-block-start: var(--space-7);
+  }
+
+  .flagship-actions a {
+    min-block-size: var(--touch-target-min);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-4);
+    border: var(--border-width-strong) solid var(--color-border-strong);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .button-primary {
+    background: var(--project-accent-strong);
+    color: var(--color-canvas);
+  }
+
+  .button-primary:hover {
+    background: var(--project-accent);
+    color: var(--color-canvas);
+  }
+
+  .button-secondary {
+    background: var(--project-accent-surface);
+    color: var(--color-text);
+  }
+
+  .button-secondary:hover {
+    border-color: var(--project-accent-soft);
+    background: var(--color-surface-raised);
+  }
+
+  @media (width < 64rem) {
+    .flagship-header,
+    .experience-grid {
       grid-template-columns: 1fr;
     }
 
-    .ducky-preview__cta {
-      grid-column: auto;
+    .experience-statement {
+      max-inline-size: var(--content-measure);
+    }
+
+    .experience-signals ol {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--space-4);
+    }
+  }
+
+  @media (width <= 48rem) {
+    h2 {
+      font-size: clamp(2.75rem, 12vw, 4.25rem);
+    }
+
+    .experience-statement {
+      padding-inline-start: var(--space-4);
+    }
+
+    .arena-frame--combat {
+      padding: var(--space-2);
+    }
+
+    .supporting-frames,
+    .experience-signals ol {
+      grid-template-columns: 1fr;
+    }
+
+    .arena-frame--lane {
+      margin-block-start: var(--space-4);
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .arena-frame--combat picture {
+      display: block;
+      animation: arena-reveal var(--motion-duration-narrative)
+        var(--motion-easing-enter) both;
+    }
+  }
+
+  @keyframes arena-reveal {
+    from {
+      opacity: 0.72;
+      clip-path: inset(0 5%);
+      transform: scale(0.985);
+    }
+    to {
+      opacity: 1;
+      clip-path: inset(0);
+      transform: none;
     }
   }
 </style>
