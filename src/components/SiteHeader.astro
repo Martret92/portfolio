@@ -78,14 +78,15 @@ const sections = [
 
   .site-identity,
   .primary-navigation a {
+    min-inline-size: var(--touch-target-min);
     min-block-size: var(--touch-target-min);
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     text-decoration: none;
   }
 
   .site-identity {
-    justify-content: center;
     color: var(--color-text);
     font-family: var(--font-family-display);
     font-size: var(--font-size-lead);
@@ -156,10 +157,15 @@ const sections = [
       grid-column: 1 / -1;
       grid-row: 2;
       justify-content: flex-start;
+      gap: 0;
       overflow-x: auto;
       overscroll-behavior-inline: contain;
       scrollbar-color: var(--color-border-strong) transparent;
       scrollbar-width: thin;
+    }
+
+    .primary-navigation a {
+      padding-inline: var(--space-2);
     }
 
     :global(.language-switcher) {
