@@ -56,17 +56,13 @@ test('Home remains complete without JavaScript', async ({ browser }) => {
   ).toBeVisible();
   await expect(page.getByRole('heading', { name: 'CV' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Contact' })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Email' })).toHaveAttribute(
-    'href',
-    'mailto:jaime.martret@gmail.com',
-  );
-  await expect(page.locator('#contact')).not.toContainText(
-    'jaime.martret@gmail.com',
-  );
-  await expect(page.getByRole('link', { name: 'Download CV' })).toHaveAttribute(
-    'href',
-    '/jaime-martret-full-stack-cv.pdf',
-  );
+  await expect(
+    page.getByRole('link', { name: 'jaime.martret@gmail.com' }),
+  ).toHaveAttribute('href', 'mailto:jaime.martret@gmail.com');
+  await expect(page.getByRole('button', { name: 'Copy email' })).toBeHidden();
+  await expect(
+    page.getByRole('link', { name: 'Download PDF' }),
+  ).toHaveAttribute('href', '/jaime-martret-full-stack-cv.pdf');
   await expect(page.getByRole('link', { name: 'Español' })).toHaveAttribute(
     'href',
     '/es',

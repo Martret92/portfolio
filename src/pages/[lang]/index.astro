@@ -202,13 +202,32 @@ const backToTopLabel = locale === 'en' ? 'Back to top' : 'Volver arriba';
     <section id="cv" class="profile-section" aria-labelledby="cv-heading">
       <div class="section-heading">
         <p class="section-index">05</p>
-        <h2 id="cv-heading">CV</h2>
+        <h2 id="cv-heading">{profile.cv.heading}</h2>
       </div>
-      <div class="profile-section__body">
-        <a class="action-link" href={publicCvPath} download>
-          <ContactIcon type="download" />
-          {profile.contact.cvLabel}
+      <div class="profile-section__body cv-layout">
+        <a class="cv-preview" href={publicCvPath}>
+          <img
+            src="/images/cv/jaime-martret-cv-first-page.jpg"
+            width="1200"
+            height="1698"
+            alt={profile.cv.previewAlt}
+            loading="lazy"
+            decoding="async"
+          />
         </a>
+        <div class="cv-summary stack">
+          <p>{profile.cv.introduction}</p>
+          <div class="cv-actions">
+            <a class="action-link action-link--primary" href={publicCvPath}>
+              <ContactIcon type="document" />
+              {profile.cv.viewLabel}
+            </a>
+            <a class="action-link" href={publicCvPath} download>
+              <ContactIcon type="download" />
+              {profile.cv.downloadLabel}
+            </a>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -221,17 +240,34 @@ const backToTopLabel = locale === 'en' ? 'Back to top' : 'Volver arriba';
         <p class="section-index">06</p>
         <h2 id="contact-heading">{profile.contact.heading}</h2>
       </div>
-      <div class="profile-section__body stack">
+      <div
+        class="profile-section__body contact-layout stack"
+        data-copy-email-root
+      >
         <p class="measure contact-introduction">
           {profile.contact.introduction}
         </p>
+        <div class="contact-email-row">
+          <a class="contact-email" href={`mailto:${professionalLinks.email}`}>
+            {professionalLinks.email}
+          </a>
+          <button
+            class="copy-email-button"
+            type="button"
+            data-copy-email
+            data-email={professionalLinks.email}
+            data-default-label={profile.contact.copyEmailLabel}
+            data-success-label={profile.contact.copiedEmailLabel}
+          >
+            {profile.contact.copyEmailLabel}
+          </button>
+          <span
+            class="visually-hidden"
+            role="status"
+            aria-live="polite"
+            data-copy-email-status></span>
+        </div>
         <ul class="contact-links">
-          <li>
-            <a href={`mailto:${professionalLinks.email}`}>
-              <ContactIcon type="email" />
-              {profile.contact.emailLabel}
-            </a>
-          </li>
           <li>
             <a
               href={professionalLinks.github}
@@ -263,6 +299,8 @@ const backToTopLabel = locale === 'en' ? 'Back to top' : 'Volver arriba';
 
   <SiteFooter slot="footer" locale={locale} />
 </BaseLayout>
+
+<script is:inline src="/scripts/copy-email.js"></script>
 
 <style>
   .home {
@@ -309,6 +347,44 @@ const backToTopLabel = locale === 'en' ? 'Back to top' : 'Volver arriba';
     padding-inline: var(--space-4);
     border: var(--border-width) solid var(--color-border-strong);
     text-decoration: none;
+  }
+
+  .cv-layout {
+    display: grid;
+    grid-template-columns: minmax(14rem, 0.7fr) minmax(16rem, 1fr);
+    gap: clamp(var(--space-5), 5vw, var(--space-8));
+    align-items: center;
+  }
+
+  .cv-preview {
+    display: block;
+    padding: var(--space-2);
+    border: var(--border-width) solid var(--color-border-strong);
+    background: var(--color-surface-raised);
+    box-shadow: var(--shadow-raised);
+  }
+
+  .cv-preview img {
+    inline-size: 100%;
+    border: var(--border-width) solid color-mix(in srgb, black 14%, transparent);
+  }
+
+  .cv-summary {
+    --stack-space: var(--space-5);
+    max-inline-size: var(--content-measure);
+  }
+
+  .cv-summary > p {
+    color: var(--color-text-muted);
+    font-size: var(--font-size-lead);
+  }
+
+  .cv-actions,
+  .contact-email-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    align-items: center;
   }
 
   .action-link--primary {
@@ -462,8 +538,36 @@ const backToTopLabel = locale === 'en' ? 'Back to top' : 'Volver arriba';
     border-block-end: var(--border-width) solid var(--color-border);
   }
 
+  .contact-layout {
+    --stack-space: var(--space-6);
+  }
+
   .contact-introduction {
     font-size: var(--font-size-lead);
+  }
+
+  .contact-email {
+    color: var(--color-text);
+    font-size: clamp(var(--font-size-lead), 3vw, var(--font-size-heading-sm));
+    font-weight: var(--font-weight-bold);
+    overflow-wrap: anywhere;
+  }
+
+  .copy-email-button {
+    display: none;
+    padding-inline: var(--space-4);
+    border: var(--border-width) solid var(--color-border-strong);
+    background: var(--color-surface-raised);
+    color: var(--color-text);
+  }
+
+  [data-copy-email-ready] .copy-email-button {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .copy-email-button:hover {
+    border-color: var(--color-interactive);
   }
 
   .contact-links a {
@@ -499,8 +603,13 @@ const backToTopLabel = locale === 'en' ? 'Back to top' : 'Volver arriba';
     }
 
     .entry-list article,
-    .education-list article {
+    .education-list article,
+    .cv-layout {
       grid-template-columns: 1fr;
+    }
+
+    .cv-preview {
+      max-inline-size: 28rem;
     }
 
     .education-list article > :last-child {
