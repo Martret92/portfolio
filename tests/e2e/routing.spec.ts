@@ -52,7 +52,7 @@ const professionalHomes = [
     inProgress: 'In progress',
     incomplete: 'Studies not completed',
     contact: 'Contact',
-    email: 'Email',
+    email: 'jaime.martret@gmail.com',
     backToTop: 'Back to top',
     navigation: {
       work: 'Work',
@@ -61,7 +61,7 @@ const professionalHomes = [
       cv: 'CV',
       contact: 'Contact',
     },
-    cv: 'Download CV',
+    cv: 'Download PDF',
   },
   {
     path: '/es',
@@ -75,7 +75,7 @@ const professionalHomes = [
     inProgress: 'En curso',
     incomplete: 'Estudios no finalizados',
     contact: 'Contacto',
-    email: 'Correo electrónico',
+    email: 'jaime.martret@gmail.com',
     backToTop: 'Volver arriba',
     navigation: {
       work: 'Proyectos',
@@ -84,7 +84,7 @@ const professionalHomes = [
       cv: 'CV',
       contact: 'Contacto',
     },
-    cv: 'Descargar CV',
+    cv: 'Descargar PDF',
   },
 ] as const;
 
@@ -150,7 +150,7 @@ for (const home of professionalHomes) {
       'href',
       'mailto:jaime.martret@gmail.com',
     );
-    await expect(contact).not.toContainText('jaime.martret@gmail.com');
+    await expect(contact).toContainText('jaime.martret@gmail.com');
     await expect(page.getByRole('link', { name: /GitHub/i })).toHaveAttribute(
       'href',
       'https://github.com/Martret92',

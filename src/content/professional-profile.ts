@@ -40,8 +40,8 @@ const professionalProfiles = {
     about: {
       heading: 'About',
       paragraphs: [
-        'I’m interested in understanding how a product works beyond its interface: how data is validated, how responsibilities are organised and how consistency is maintained across the system.',
-        'I’m currently completing the IFCD0112 professional certificate and building practical projects involving frontend, backend, databases, testing, Docker and CI/CD. My previous professional experience has also given me a strong foundation in organisation, customer service, coordination and day-to-day operations.',
+        'I like understanding the whole path from a product decision to the system that supports it. That means asking where responsibilities belong, making rules explicit and keeping the interface connected to reliable data.',
+        'I’m building my software career through practical projects and formal training, bringing with me experience in customer-facing operations, coordination and organised delivery.',
       ],
     },
     capabilities: {
@@ -156,11 +156,20 @@ const professionalProfiles = {
     contact: {
       heading: 'Contact',
       introduction:
-        'I’m open to junior Full Stack and backend-oriented opportunities where I can continue learning, contribute to real products and strengthen my engineering practice.',
+        'If you’re looking for a junior Full Stack developer with a backend focus, let’s talk about the product and the systems behind it.',
       emailLabel: 'Email',
-      githubLabel: 'GitHub profile',
-      linkedinLabel: 'LinkedIn profile',
-      cvLabel: 'Download CV',
+      githubLabel: 'GitHub',
+      linkedinLabel: 'LinkedIn',
+      copyEmailLabel: 'Copy email',
+      copiedEmailLabel: 'Copied ✓',
+    },
+    cv: {
+      heading: 'CV',
+      introduction:
+        'A concise, ATS-ready overview of my projects, technical background, training and professional experience.',
+      previewAlt: 'First page preview of Jaime Martret’s CV',
+      viewLabel: 'View CV',
+      downloadLabel: 'Download PDF',
     },
     footer: 'Jaime Martret · Junior Full Stack Developer · Barcelona',
   },
@@ -193,8 +202,8 @@ const professionalProfiles = {
     about: {
       heading: 'Sobre mí',
       paragraphs: [
-        'Me interesa comprender cómo funciona un producto más allá de su interfaz: cómo se validan los datos, cómo se organizan las responsabilidades y cómo se mantiene la coherencia entre las distintas partes del sistema.',
-        'Actualmente curso el certificado profesional IFCD0112 y desarrollo proyectos prácticos con frontend, backend, bases de datos, testing, Docker y CI/CD. Mi experiencia profesional anterior también me ha dado una base sólida en organización, atención al cliente, coordinación y operativa diaria.',
+        'Me gusta comprender todo el recorrido entre una decisión de producto y el sistema que la sostiene. Eso implica preguntarme dónde pertenece cada responsabilidad, hacer explícitas las reglas y conectar la interfaz con datos fiables.',
+        'Estoy construyendo mi trayectoria en software mediante proyectos prácticos y formación reglada, apoyándome también en mi experiencia en atención al cliente, coordinación y operativa organizada.',
       ],
     },
     capabilities: {
@@ -309,11 +318,20 @@ const professionalProfiles = {
     contact: {
       heading: 'Contacto',
       introduction:
-        'Estoy abierto a oportunidades junior Full Stack y con orientación backend en las que pueda seguir aprendiendo, contribuir a productos reales y reforzar mi práctica de ingeniería.',
+        'Si buscas un desarrollador Full Stack junior con orientación backend, hablemos del producto y de los sistemas que lo hacen posible.',
       emailLabel: 'Correo electrónico',
-      githubLabel: 'Perfil de GitHub',
-      linkedinLabel: 'Perfil de LinkedIn',
-      cvLabel: 'Descargar CV',
+      githubLabel: 'GitHub',
+      linkedinLabel: 'LinkedIn',
+      copyEmailLabel: 'Copiar email',
+      copiedEmailLabel: 'Copiado ✓',
+    },
+    cv: {
+      heading: 'CV',
+      introduction:
+        'Una síntesis clara y preparada para ATS de mis proyectos, perfil técnico, formación y experiencia profesional.',
+      previewAlt: 'Vista previa de la primera página del CV de Jaime Martret',
+      viewLabel: 'Ver CV',
+      downloadLabel: 'Descargar PDF',
     },
     footer: 'Jaime Martret · Desarrollador Full Stack Junior · Barcelona',
   },
