@@ -56,7 +56,9 @@ const professionalHomes = [
     backToTop: 'Back to top',
     navigation: {
       work: 'Work',
+      stack: 'Stack',
       about: 'About',
+      cv: 'CV',
       contact: 'Contact',
     },
     cv: 'Download CV',
@@ -77,7 +79,9 @@ const professionalHomes = [
     backToTop: 'Volver arriba',
     navigation: {
       work: 'Proyectos',
+      stack: 'Stack',
       about: 'Sobre mí',
+      cv: 'CV',
       contact: 'Contacto',
     },
     cv: 'Descargar CV',
@@ -90,7 +94,11 @@ for (const home of professionalHomes) {
   }) => {
     await page.goto(home.path);
 
-    await expect(page.getByRole('banner')).toContainText('Jaime Martret');
+    await expect(
+      page.getByRole('banner').getByRole('link', {
+        name: `Jaime Martret — ${home.path === '/en' ? 'Home' : 'Inicio'}`,
+      }),
+    ).toBeVisible();
     await expect(page.locator('main')).toContainText(home.hero);
     await expect(
       page.getByRole('heading', { level: 2, name: home.about }),
@@ -119,10 +127,16 @@ for (const home of professionalHomes) {
     });
     await expect(
       navigation.getByRole('link', { name: home.navigation.work }),
-    ).toHaveAttribute('href', `${home.path}#featured-work`);
+    ).toHaveAttribute('href', `${home.path}#work`);
+    await expect(
+      navigation.getByRole('link', { name: home.navigation.stack }),
+    ).toHaveAttribute('href', `${home.path}#stack`);
     await expect(
       navigation.getByRole('link', { name: home.navigation.about }),
     ).toHaveAttribute('href', `${home.path}#about`);
+    await expect(
+      navigation.getByRole('link', { name: home.navigation.cv }),
+    ).toHaveAttribute('href', `${home.path}#cv`);
     await expect(
       navigation.getByRole('link', { name: home.navigation.contact }),
     ).toHaveAttribute('href', `${home.path}#contact`);

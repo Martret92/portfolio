@@ -3,6 +3,7 @@ import HomeProjectPreview from '@components/HomeProjectPreview.astro';
 import ContactIcon from '@components/ContactIcon.astro';
 import DuckyArenaHomePreview from '@components/DuckyArenaHomePreview.astro';
 import QuestBoardHomePreview from '@components/QuestBoardHomePreview.astro';
+import SiteFooter from '@components/SiteFooter.astro';
 import SiteHeader from '@components/SiteHeader.astro';
 import { getProjectInspectionModel } from '@content/project-inspections';
 import { getDuckyArenaContent } from '@content/projects/duckyarena';
@@ -66,40 +67,38 @@ const backToTopLabel = locale === 'en' ? 'Back to top' : 'Volver arriba';
       <h1 id="home-heading">{profile.hero.heading}</h1>
       <p class="measure introduction">{profile.hero.introduction}</p>
       <div class="hero-actions">
-        <a class="action-link action-link--primary" href="#featured-work">
+        <a class="action-link action-link--primary" href="#work">
           {profile.hero.workCta}
         </a>
         <a class="action-link" href="#contact">{profile.hero.contactCta}</a>
       </div>
     </section>
 
-    <QuestBoardHomePreview content={questBoardContent} href={questBoardPath} />
+    <div id="work" class="work-region">
+      <QuestBoardHomePreview
+        content={questBoardContent}
+        href={questBoardPath}
+      />
 
-    <DuckyArenaHomePreview content={duckyArenaContent} href={duckyArenaPath} />
+      <DuckyArenaHomePreview
+        content={duckyArenaContent}
+        href={duckyArenaPath}
+      />
 
-    <HomeProjectPreview
-      copy={t.home.featuredProject}
-      href={projectPath}
-      productVisual={projectInspection.productVisual}
-    />
-
-    <section id="about" class="profile-section" aria-labelledby="about-heading">
-      <div class="section-heading">
-        <p class="section-index">01</p>
-        <h2 id="about-heading">{profile.about.heading}</h2>
-      </div>
-      <div class="profile-section__body measure stack">
-        {profile.about.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
-      </div>
-    </section>
+      <HomeProjectPreview
+        copy={t.home.featuredProject}
+        href={projectPath}
+        productVisual={projectInspection.productVisual}
+      />
+    </div>
 
     <section
-      id="capabilities"
+      id="stack"
       class="profile-section"
       aria-labelledby="capabilities-heading"
     >
       <div class="section-heading">
-        <p class="section-index">02</p>
+        <p class="section-index">01</p>
         <h2 id="capabilities-heading">{profile.capabilities.heading}</h2>
       </div>
       <div class="profile-section__body stack">
@@ -120,6 +119,16 @@ const backToTopLabel = locale === 'en' ? 'Back to top' : 'Volver arriba';
           }
         </dl>
         <p class="secondary-copy">{profile.capabilities.secondary}</p>
+      </div>
+    </section>
+
+    <section id="about" class="profile-section" aria-labelledby="about-heading">
+      <div class="section-heading">
+        <p class="section-index">02</p>
+        <h2 id="about-heading">{profile.about.heading}</h2>
+      </div>
+      <div class="profile-section__body measure stack">
+        {profile.about.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
       </div>
     </section>
 
@@ -187,13 +196,26 @@ const backToTopLabel = locale === 'en' ? 'Back to top' : 'Volver arriba';
       </ul>
     </section>
 
+    <section id="cv" class="profile-section" aria-labelledby="cv-heading">
+      <div class="section-heading">
+        <p class="section-index">05</p>
+        <h2 id="cv-heading">CV</h2>
+      </div>
+      <div class="profile-section__body">
+        <a class="action-link" href={publicCvPath} download>
+          <ContactIcon type="download" />
+          {profile.contact.cvLabel}
+        </a>
+      </div>
+    </section>
+
     <section
       id="contact"
       class="profile-section contact-section"
       aria-labelledby="contact-heading"
     >
       <div class="section-heading">
-        <p class="section-index">05</p>
+        <p class="section-index">06</p>
         <h2 id="contact-heading">{profile.contact.heading}</h2>
       </div>
       <div class="profile-section__body stack">
@@ -227,12 +249,6 @@ const backToTopLabel = locale === 'en' ? 'Back to top' : 'Volver arriba';
               {profile.contact.linkedinLabel}
             </a>
           </li>
-          <li>
-            <a href={publicCvPath} download>
-              <ContactIcon type="download" />
-              {profile.contact.cvLabel}
-            </a>
-          </li>
         </ul>
       </div>
     </section>
@@ -242,11 +258,7 @@ const backToTopLabel = locale === 'en' ? 'Back to top' : 'Volver arriba';
     </a>
   </div>
 
-  <footer slot="footer" class="site-footer">
-    <div class="container">
-      <p>{profile.footer}</p>
-    </div>
-  </footer>
+  <SiteFooter slot="footer" locale={locale} />
 </BaseLayout>
 
 <style>
@@ -259,6 +271,10 @@ const backToTopLabel = locale === 'en' ? 'Back to top' : 'Volver arriba';
 
     max-inline-size: 58rem;
     padding-block-end: clamp(var(--space-8), 14vw, 9rem);
+  }
+
+  .work-region {
+    min-inline-size: 0;
   }
 
   .eyebrow,
@@ -305,6 +321,7 @@ const backToTopLabel = locale === 'en' ? 'Back to top' : 'Volver arriba';
   }
 
   .action-link {
+    gap: var(--space-2);
     padding-inline: var(--space-4);
     border: var(--border-width) solid var(--color-border-strong);
     text-decoration: none;
@@ -460,18 +477,7 @@ const backToTopLabel = locale === 'en' ? 'Back to top' : 'Volver arriba';
     font-size: var(--font-size-body);
   }
 
-  .site-footer {
-    padding-block: var(--space-6);
-    border-block-start: var(--border-width) solid var(--color-border);
-    color: var(--color-text-muted);
-    font-size: var(--font-size-sm);
-  }
-
-  .site-footer p {
-    margin: 0;
-  }
-
-  @media (width < 64rem) {
+  @media (width <= 64rem) {
     .capability-groups {
       grid-template-columns: 1fr;
     }

@@ -7,6 +7,8 @@
 }
 
 html {
+  scroll-behavior: smooth;
+  scroll-padding-block-start: var(--site-header-offset);
   background: var(--color-canvas);
   color: var(--color-text);
   font-family: var(--font-family-body);
@@ -19,17 +21,27 @@ html {
 
 body {
   min-block-size: 100vh;
+  display: flex;
+  flex-direction: column;
   margin: 0;
   background: var(--color-canvas);
   color: var(--color-text);
   font-size: var(--font-size-body);
 }
 
+main {
+  flex: 1;
+}
+
+:where([id]) {
+  scroll-margin-block-start: var(--site-header-offset);
+}
+
 .skip-link {
   position: fixed;
   inset-block-start: var(--space-2);
   inset-inline-start: var(--space-2);
-  z-index: var(--z-index-overlay);
+  z-index: var(--z-index-modal);
   min-block-size: var(--touch-target-min);
   display: inline-flex;
   align-items: center;

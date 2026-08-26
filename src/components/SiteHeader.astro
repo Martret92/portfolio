@@ -12,83 +12,158 @@ interface Props {
 const { locale, pathname } = Astro.props;
 const profile = getProfessionalProfile(locale);
 const homePath = getLocalizedPath(locale);
-const isHome = pathname === homePath || pathname === `${homePath}/`;
+const normalizedPathname = pathname.replace(/\/$/, '');
+const isHome = normalizedPathname === homePath;
+const homeHref = (section: string) => `${homePath}#${section}`;
+const identityLabel = `${profile.identity} — ${profile.navigation.home}`;
+const sections = [
+  { id: 'work', label: profile.navigation.work },
+  { id: 'stack', label: profile.navigation.stack },
+  { id: 'about', label: profile.navigation.about },
+  { id: 'cv', label: profile.navigation.cv },
+  { id: 'contact', label: profile.navigation.contact },
+];
 ---
 
-<header class="site-header">
+<header class="site-header" data-site-header>
   <div class="container site-header__inner">
-    <a class="site-identity" href={homePath}>
-      {profile.identity}
+    <a
+      class="site-identity"
+      href={homePath}
+      aria-label={identityLabel}
+      aria-current={isHome ? 'page' : undefined}
+    >
+      JM.
     </a>
 
-    <div class="site-header__navigation">
-      <nav aria-label={profile.navigationLabel}>
-        <a href={homePath} aria-current={isHome ? 'page' : undefined}>
-          {profile.navigation.home}
-        </a>
-        <a href={`${homePath}#featured-work`}>
-          {profile.navigation.work}
-        </a>
-        <a href={`${homePath}#about`}>{profile.navigation.about}</a>
-        <a href={`${homePath}#contact`}>{profile.navigation.contact}</a>
-      </nav>
+    <nav
+      class="primary-navigation"
+      aria-label={profile.navigationLabel}
+      data-section-navigation
+      data-home-path={homePath}
+    >
+      {
+        sections.map((section) => (
+          <a href={homeHref(section.id)} data-section-id={section.id}>
+            {section.label}
+          </a>
+        ))
+      }
+    </nav>
 
-      <LanguageSwitcher locale={locale} pathname={pathname} />
-    </div>
+    <LanguageSwitcher locale={locale} pathname={pathname} />
   </div>
 </header>
 
+<script is:inline type="module" src="/scripts/section-navigation.js"></script>
+
 <style>
   .site-header {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: var(--z-index-overlay);
     border-block-end: var(--border-width) solid var(--color-border);
-  }
-
-  .site-header__inner,
-  .site-header__navigation,
-  nav {
-    display: flex;
-    align-items: center;
+    background: var(--color-canvas);
+    box-shadow: var(--shadow-sm);
   }
 
   .site-header__inner {
     min-block-size: 4.5rem;
-    flex-wrap: wrap;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
     gap: var(--space-3) var(--space-6);
-    padding-block: var(--space-3);
-  }
-
-  .site-header__navigation {
-    flex-wrap: wrap;
-    gap: var(--space-2) var(--space-5);
-  }
-
-  nav {
-    gap: var(--space-2);
-  }
-
-  a {
-    display: inline-flex;
-    min-block-size: var(--touch-target-min);
     align-items: center;
-    padding-inline: var(--space-2);
+    padding-block: var(--space-2);
   }
 
-  .site-identity {
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-    color: var(--color-text);
-    font-family: var(--font-family-display);
-    font-weight: var(--font-weight-bold);
-    line-height: var(--line-height-tight);
+  .site-identity,
+  .primary-navigation a {
+    min-block-size: var(--touch-target-min);
+    display: inline-flex;
+    align-items: center;
     text-decoration: none;
   }
 
-  @media (width < 40rem) {
-    .site-header__navigation {
-      inline-size: 100%;
-      justify-content: space-between;
+  .site-identity {
+    justify-content: center;
+    color: var(--color-text);
+    font-family: var(--font-family-display);
+    font-size: var(--font-size-lead);
+    font-weight: var(--font-weight-bold);
+    letter-spacing: var(--letter-spacing-tight);
+  }
+
+  .site-identity[aria-current='page'] {
+    background: transparent;
+  }
+
+  .primary-navigation {
+    min-inline-size: 0;
+    display: flex;
+    justify-content: center;
+    gap: var(--space-1);
+  }
+
+  .primary-navigation a {
+    position: relative;
+    padding-inline: var(--space-3);
+    color: var(--color-text-muted);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    white-space: nowrap;
+  }
+
+  .primary-navigation a::after {
+    position: absolute;
+    inset-inline: var(--space-3);
+    inset-block-end: 0.35rem;
+    block-size: var(--border-width-strong);
+    background: var(--color-accent-secondary);
+    content: '';
+    opacity: 0;
+    transform: scaleX(0.4);
+    transition:
+      opacity var(--motion-duration-micro) var(--motion-easing-standard),
+      transform var(--motion-duration-micro) var(--motion-easing-standard);
+  }
+
+  .primary-navigation a:hover,
+  .primary-navigation a[aria-current='location'] {
+    color: var(--color-text);
+  }
+
+  .primary-navigation a[aria-current='location'] {
+    background: var(--color-selected);
+  }
+
+  .primary-navigation a[aria-current='location']::after {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+
+  :global(.language-switcher) {
+    white-space: nowrap;
+  }
+
+  @media (width < 48rem) {
+    .site-header__inner {
+      grid-template-columns: auto 1fr;
+      gap: var(--space-1) var(--space-3);
+      padding-block: var(--space-1);
+    }
+
+    .primary-navigation {
+      grid-column: 1 / -1;
+      grid-row: 2;
+      justify-content: flex-start;
+      overflow-x: auto;
+      overscroll-behavior-inline: contain;
+      scrollbar-color: var(--color-border-strong) transparent;
+      scrollbar-width: thin;
+    }
+
+    :global(.language-switcher) {
+      justify-self: end;
     }
   }
 </style>

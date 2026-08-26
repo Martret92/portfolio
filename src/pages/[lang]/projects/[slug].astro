@@ -4,6 +4,7 @@ import { getCollection } from 'astro:content';
 import DuckyArenaCaseStudy from '@components/DuckyArenaCaseStudy.astro';
 import DevDataCaseStudy from '@components/DevDataCaseStudy.astro';
 import QuestBoardCaseStudy from '@components/QuestBoardCaseStudy.astro';
+import SiteFooter from '@components/SiteFooter.astro';
 import SiteHeader from '@components/SiteHeader.astro';
 import { getProjectInspectionModel } from '@content/project-inspections';
 import { getDuckyArenaContent } from '@content/projects/duckyarena';
@@ -121,4 +122,6 @@ const inspectionModel =
       )
     )
   }
+
+  <SiteFooter slot="footer" locale={locale} />
 </BaseLayout>

@@ -15,7 +15,7 @@ const alternatePath = getAlternateLocalePath(locale, pathname);
 const t = useTranslations(locale);
 ---
 
-<nav aria-label={t.language.navigationLabel}>
+<nav class="language-switcher" aria-label={t.language.navigationLabel}>
   <span aria-current="true">{t.language.current}</span>
 
   <a href={alternatePath} lang={alternateLocale} hreflang={alternateLocale}>
