@@ -15,7 +15,10 @@ interface PreviewCopy {
   generatedDataLabel: string;
   previewLabel: string;
   exportLabel: string;
+  boundaryLabel: string;
+  boundaryCopy: string;
   cta: string;
+  repositoryCta: string;
 }
 
 interface Props {
@@ -25,20 +28,21 @@ interface Props {
 }
 
 const { copy, href, productVisual } = Astro.props;
+const repositoryUrl = 'https://github.com/Martret92/devdata-generator';
 ---
 
 <section
-  class="featured-preview"
-  aria-labelledby="featured-heading"
+  class="selected-work"
+  aria-labelledby="selected-work-heading"
   data-home-project-preview
 >
-  <header class="featured-preview__header">
-    <p class="featured-preview__eyebrow">{copy.eyebrow}</p>
-    <h2 id="featured-heading">{copy.title}</h2>
+  <header class="selected-work__header">
+    <p class="eyebrow">{copy.eyebrow}</p>
+    <h2 id="selected-work-heading">{copy.title}</h2>
     <p>{copy.summary}</p>
   </header>
 
-  <div class="featured-preview__composition">
+  <div class="selected-work__composition">
     <figure class="product-capture">
       <img
         src={productVisual.optimizedSrc}
@@ -51,95 +55,63 @@ const { copy, href, productVisual } = Astro.props;
       <figcaption>{productVisual.caption}</figcaption>
     </figure>
 
-    <div class="featured-preview__reading">
-      <section class="preview-layer preview-layer--product">
+    <div class="selected-work__evidence">
+      <section>
         <p>{copy.workflowLabel}</p>
         <h3>{copy.workflowSummary}</h3>
+        <ol class="compact-flow" aria-label={copy.topologyLabel}>
+          <li>{copy.configureLabel}</li>
+          <li>{copy.generateLabel}</li>
+          <li><code>{copy.generatedDataLabel}</code></li>
+          <li>
+            <span>{copy.previewLabel}</span>
+            <span>{copy.exportLabel}</span>
+          </li>
+        </ol>
       </section>
 
-      <section class="preview-layer preview-layer--system">
+      <section>
         <p>{copy.resultLabel}</p>
         <h3>{copy.resultSummary}</h3>
-
-        <div class="signature-topology" data-home-topology>
-          <div class="signature-topology__visual" aria-hidden="true">
-            <span class="signature-node signature-node--configure">
-              {copy.configureLabel}
-            </span>
-            <span class="signature-node signature-node--generate">
-              {copy.generateLabel}
-            </span>
-            <code class="signature-node signature-node--result">
-              {copy.generatedDataLabel}
-            </code>
-            <span class="signature-node signature-node--preview">
-              {copy.previewLabel}
-            </span>
-            <span class="signature-node signature-node--export">
-              {copy.exportLabel}
-            </span>
-
-            <svg
-              viewBox="0 0 100 100"
-              preserveAspectRatio="none"
-              aria-hidden="true"
-              focusable="false"
-            >
-              <defs>
-                <marker
-                  id="home-signature-arrow"
-                  viewBox="0 0 8 8"
-                  refX="7"
-                  refY="4"
-                  markerWidth="6"
-                  markerHeight="6"
-                  orient="auto"
-                >
-                  <path d="M0 0 8 4 0 8Z"></path>
-                </marker>
-              </defs>
-              <path class="topology-desktop" d="M20 23H34"></path>
-              <path class="topology-desktop" d="M53 23H67"></path>
-              <path class="topology-desktop" d="M82 34V48H61V66"></path>
-              <path class="topology-desktop" d="M82 48H87V66"></path>
-              <path class="topology-mobile" d="M50 15V25"></path>
-              <path class="topology-mobile" d="M50 38V48"></path>
-              <path class="topology-mobile" d="M50 61V70H23V83"></path>
-              <path class="topology-mobile" d="M50 70H77V83"></path>
-            </svg>
-          </div>
-
-          <ol class="visually-hidden" aria-label={copy.topologyLabel}>
-            <li>{copy.configureLabel} → {copy.generateLabel}</li>
-            <li>{copy.generateLabel} → {copy.generatedDataLabel}</li>
-            <li>{copy.generatedDataLabel} → {copy.previewLabel}</li>
-            <li>{copy.generatedDataLabel} → {copy.exportLabel}</li>
-          </ol>
-        </div>
       </section>
 
-      <a class="featured-preview__cta" href={href}>
-        {copy.cta}<span aria-hidden="true">→</span>
-      </a>
+      <section class="browser-boundary">
+        <p>{copy.boundaryLabel}</p>
+        <h3>{copy.boundaryCopy}</h3>
+      </section>
+
+      <div class="selected-work__actions">
+        <a class="button-primary" href={href}>
+          {copy.cta}<span aria-hidden="true">→</span>
+        </a>
+        <a
+          class="button-secondary"
+          href={repositoryUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {copy.repositoryCta}<span aria-hidden="true">↗</span>
+        </a>
+      </div>
     </div>
   </div>
 </section>
 
 <style>
-  .featured-preview {
+  .selected-work {
     padding-block: clamp(var(--space-7), 8vw, var(--space-9));
-    border-block-start: var(--border-width) solid var(--color-border);
+    border-block: var(--border-width) solid var(--color-border);
   }
 
-  .featured-preview__header {
+  .selected-work__header {
     max-inline-size: 54rem;
     display: grid;
     gap: var(--space-3);
     margin-block-end: clamp(var(--space-6), 6vw, var(--space-8));
   }
 
-  .featured-preview__eyebrow,
-  .preview-layer > p {
+  .eyebrow,
+  .selected-work__evidence section > p {
     margin: 0;
     color: var(--color-text-muted);
     font-family: var(--font-family-mono);
@@ -149,71 +121,70 @@ const { copy, href, productVisual } = Astro.props;
     text-transform: uppercase;
   }
 
-  .featured-preview h2,
-  .featured-preview h3,
-  .featured-preview p,
+  h2,
+  h3,
+  .selected-work__header > p,
   .product-capture {
-    margin-block: 0;
+    margin: 0;
   }
 
-  .featured-preview h2 {
+  h2 {
     font-size: var(--font-size-heading-md);
   }
 
-  .featured-preview__header > p:last-child {
+  .selected-work__header > p:last-child {
     max-inline-size: var(--content-measure);
     color: var(--color-text-muted);
     font-size: var(--font-size-lead);
   }
 
-  .featured-preview__composition {
+  .selected-work__composition {
     display: grid;
+    grid-template-columns: minmax(14rem, 0.72fr) minmax(0, 1.28fr);
     gap: clamp(var(--space-6), 6vw, var(--space-8));
     align-items: start;
   }
 
   .product-capture {
     min-inline-size: 0;
+    padding: var(--space-3);
+    border: var(--border-width) solid var(--color-border-strong);
+    background: var(--color-surface-subtle);
   }
 
   .product-capture img {
-    display: block;
     inline-size: 100%;
     block-size: auto;
-    border-block: var(--border-width) solid var(--color-border);
-    transition: border-color var(--motion-duration-fast)
-      var(--motion-easing-standard);
   }
 
   .product-capture figcaption {
-    max-inline-size: var(--content-measure);
     margin-block-start: var(--space-3);
     padding-inline-start: var(--space-3);
-    border-inline-start: var(--border-width-strong) solid var(--color-border);
+    border-inline-start: var(--border-width-strong) solid var(--color-accent);
     color: var(--color-text-muted);
     font-size: var(--font-size-sm);
   }
 
-  .featured-preview__reading {
+  .selected-work__evidence {
     min-inline-size: 0;
     display: grid;
-    gap: var(--space-6);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-5);
   }
 
-  .preview-layer {
-    display: grid;
-    gap: var(--space-3);
-    padding-inline-start: var(--space-4);
-    border-inline-start: var(--border-width) solid var(--color-border);
+  .selected-work__evidence section {
+    min-inline-size: 0;
+    padding-block-start: var(--space-4);
+    border-block-start: var(--border-width) solid var(--color-border);
   }
 
-  .preview-layer--product {
-    padding-block: var(--space-2);
-    border-inline-start-width: var(--border-width-strong);
-    border-inline-start-color: var(--color-border-strong);
+  .selected-work__evidence section:first-child {
+    grid-column: 1 / -1;
+    border-block-start-color: var(--color-border-strong);
   }
 
-  .preview-layer h3 {
+  .selected-work__evidence h3 {
+    margin-block-start: var(--space-3);
     color: var(--color-text-muted);
     font-family: var(--font-family-body);
     font-size: var(--font-size-body);
@@ -221,193 +192,118 @@ const { copy, href, productVisual } = Astro.props;
     line-height: var(--line-height-loose);
   }
 
-  .preview-layer--product h3 {
+  .selected-work__evidence section:first-child h3 {
+    max-inline-size: 48rem;
     color: var(--color-text);
     font-size: var(--font-size-lead);
     font-weight: var(--font-weight-medium);
   }
 
-  .signature-topology {
+  .compact-flow {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(10rem, 1.2fr);
+    gap: var(--space-3);
+    padding: 0;
+    margin: var(--space-6) 0 0;
+    list-style: none;
+  }
+
+  .compact-flow li {
+    min-inline-size: 0;
+    padding-block-start: var(--space-3);
+    border-block-start: var(--border-width-strong) solid var(--color-border);
+    color: var(--color-text-muted);
+    font-size: var(--font-size-sm);
+  }
+
+  .compact-flow li:not(:last-child)::after {
+    float: inline-end;
+    color: var(--color-accent);
+    content: '→';
+  }
+
+  .compact-flow code {
+    color: var(--color-accent-secondary);
+    font-size: inherit;
+  }
+
+  .compact-flow li:last-child {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-4);
+    border-block-start-color: var(--color-accent);
+    color: var(--color-text);
+  }
+
+  .selected-work__actions {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
     margin-block-start: var(--space-2);
   }
 
-  .signature-topology__visual {
-    min-block-size: 15rem;
-    position: relative;
-  }
-
-  .signature-topology svg {
-    position: absolute;
-    inset: 0;
-    inline-size: 100%;
-    block-size: 100%;
-    overflow: visible;
-    pointer-events: none;
-  }
-
-  .signature-topology svg path:not(marker path) {
-    fill: none;
-    stroke: var(--architecture-connection);
-    stroke-width: 1.3;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    vector-effect: non-scaling-stroke;
-    marker-end: url('#home-signature-arrow');
-    transition: stroke var(--motion-duration-fast) var(--motion-easing-standard);
-  }
-
-  .signature-topology marker path {
-    fill: var(--architecture-connection);
-    transition: fill var(--motion-duration-fast) var(--motion-easing-standard);
-  }
-
-  .signature-node {
-    position: absolute;
-    z-index: var(--z-index-raised);
-    min-inline-size: 0;
-    padding-block-start: var(--space-2);
-    border-block-start: var(--border-width) solid var(--color-border);
-    background: var(--color-canvas);
-    font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-medium);
-  }
-
-  .signature-node--configure {
-    inset-block-start: 5%;
-    inset-inline-start: 0;
-    inline-size: 20%;
-  }
-
-  .signature-node--generate {
-    inset-block-start: 5%;
-    inset-inline-start: 34%;
-    inline-size: 20%;
-  }
-
-  .signature-node--result {
-    inset-block-start: 5%;
-    inset-inline-start: 67%;
-    inline-size: 30%;
-    font-size: var(--font-size-body);
-    font-weight: var(--font-weight-bold);
-  }
-
-  .signature-node--preview {
-    inset-block-start: 66%;
-    inset-inline-start: 49%;
-    inline-size: 24%;
-  }
-
-  .signature-node--export {
-    inset-block-start: 66%;
-    inset-inline-start: 78%;
-    inline-size: 22%;
-  }
-
-  .topology-mobile {
-    display: none;
-  }
-
-  .featured-preview__cta {
-    inline-size: fit-content;
+  .selected-work__actions a {
     min-block-size: var(--touch-target-min);
     display: inline-flex;
     align-items: center;
-    padding-inline-start: var(--space-3);
-    border-inline-start: var(--border-width-strong) solid
-      var(--architecture-node-focus-border);
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-4);
+    border: var(--border-width-strong) solid var(--color-border-strong);
     font-weight: var(--font-weight-medium);
-    transition:
-      border-color var(--motion-duration-fast) var(--motion-easing-standard),
-      background-color var(--motion-duration-fast) var(--motion-easing-standard);
+    text-decoration: none;
   }
 
-  .featured-preview__cta span {
-    margin-inline-start: var(--space-2);
-    transition: transform var(--motion-duration-fast)
-      var(--motion-easing-standard);
+  .button-primary {
+    background: var(--color-interactive);
+    color: var(--color-canvas);
   }
 
-  .featured-preview__cta:hover,
-  .featured-preview__cta:focus-visible {
-    border-inline-start-color: var(--architecture-node-hover-border);
-    background: var(--color-surface);
+  .button-primary:hover {
+    background: var(--color-interactive-hover);
+    color: var(--color-canvas);
   }
 
-  .featured-preview__cta:hover span,
-  .featured-preview__cta:focus-visible span {
-    transform: translateX(var(--space-1));
+  .button-secondary {
+    background: var(--color-surface-subtle);
+    color: var(--color-text);
   }
 
-  .featured-preview:focus-within .signature-topology svg path:not(marker path),
-  .featured-preview:hover .signature-topology svg path:not(marker path) {
-    stroke: var(--architecture-node-hover-border);
+  .button-secondary:hover {
+    border-color: var(--color-interactive-hover);
+    background: var(--color-surface-raised);
   }
 
-  .featured-preview:focus-within .signature-topology marker path,
-  .featured-preview:hover .signature-topology marker path {
-    fill: var(--architecture-node-hover-border);
-  }
+  @media (width < 64rem) {
+    .selected-work__composition {
+      grid-template-columns: minmax(12rem, 0.7fr) minmax(0, 1.3fr);
+    }
 
-  .product-capture:hover img,
-  .featured-preview:focus-within .product-capture img {
-    border-color: var(--color-border-strong);
-  }
+    .compact-flow {
+      grid-template-columns: 1fr;
+    }
 
-  @media (width >= 64rem) {
-    .featured-preview__composition {
-      grid-template-columns: minmax(0, 1.65fr) minmax(20rem, 0.85fr);
+    .compact-flow li:not(:last-child)::after {
+      float: none;
+      display: block;
+      margin-block-start: var(--space-2);
+      content: '↓';
     }
   }
 
   @media (width < 48rem) {
-    .signature-topology__visual {
-      min-block-size: 21rem;
+    .selected-work__composition,
+    .selected-work__evidence {
+      grid-template-columns: 1fr;
     }
 
-    .topology-desktop {
-      display: none;
+    .product-capture {
+      inline-size: min(100%, 29rem);
     }
 
-    .topology-mobile {
-      display: block;
-    }
-
-    .signature-node--configure,
-    .signature-node--generate,
-    .signature-node--result {
-      inset-inline-start: 25%;
-      inline-size: 50%;
-    }
-
-    .signature-node--configure {
-      inset-block-start: 2%;
-    }
-
-    .signature-node--generate {
-      inset-block-start: 25%;
-    }
-
-    .signature-node--result {
-      inset-block-start: 48%;
-    }
-
-    .signature-node--preview {
-      inset-block-start: 83%;
-      inset-inline-start: 0;
-      inline-size: 46%;
-    }
-
-    .signature-node--export {
-      inset-block-start: 83%;
-      inset-inline-start: 54%;
-      inline-size: 46%;
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .featured-preview__cta span {
-      transform: none;
+    .selected-work__evidence section:first-child,
+    .selected-work__actions {
+      grid-column: auto;
     }
   }
 </style>

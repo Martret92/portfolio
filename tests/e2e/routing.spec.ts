@@ -463,20 +463,27 @@ for (const preview of homePreviews) {
       `ol[aria-label="${preview.topologyLabel}"]`,
     );
     await expect(topology.getByRole('listitem')).toHaveText([
-      `${preview.configureLabel} → ${preview.generateLabel}`,
-      `${preview.generateLabel} → generatedData`,
-      `generatedData → ${preview.previewLabel}`,
-      `generatedData → ${preview.exportLabel}`,
+      preview.configureLabel,
+      preview.generateLabel,
+      'generatedData',
+      `${preview.previewLabel}${preview.exportLabel}`,
     ]);
-    await expect(topology).not.toContainText(
-      `${preview.previewLabel} → ${preview.exportLabel}`,
-    );
 
     const cta = section.getByRole('link', { name: new RegExp(preview.cta) });
     await expect(cta).toHaveAttribute(
       'href',
       `${preview.path}/projects/devdata-generator`,
     );
+
+    const repository = section.getByRole('link', {
+      name: /Repository|Repositorio/,
+    });
+    await expect(repository).toHaveAttribute(
+      'href',
+      'https://github.com/Martret92/devdata-generator',
+    );
+    await expect(repository).toHaveAttribute('target', '_blank');
+    await expect(repository).toHaveAttribute('rel', 'noopener noreferrer');
   });
 }
 

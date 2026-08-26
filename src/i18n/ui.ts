@@ -34,7 +34,11 @@ const ui = {
         generatedDataLabel: 'generatedData',
         previewLabel: 'Preview',
         exportLabel: 'Export',
+        boundaryLabel: 'Browser boundary',
+        boundaryCopy:
+          'Runs entirely in the browser. No backend or database is required, and SQL is generated as text rather than executed.',
         cta: 'Explore case study',
+        repositoryCta: 'Repository',
       },
     },
     caseStudy: {
@@ -198,7 +202,11 @@ const ui = {
         generatedDataLabel: 'generatedData',
         previewLabel: 'Vista previa',
         exportLabel: 'Exportar',
+        boundaryLabel: 'Límite del navegador',
+        boundaryCopy:
+          'Se ejecuta completamente en el navegador. No requiere backend ni base de datos, y SQL se genera como texto en lugar de ejecutarse.',
         cta: 'Explorar caso de estudio',
+        repositoryCta: 'Repositorio',
       },
     },
     caseStudy: {

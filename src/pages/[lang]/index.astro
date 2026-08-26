@@ -101,23 +101,27 @@ const backToTopLabel = locale === 'en' ? 'Back to top' : 'Volver arriba';
         <h2 id="capabilities-heading">{profile.capabilities.heading}</h2>
       </div>
       <div class="profile-section__body stack">
+        <p class="capabilities-introduction">
+          {profile.capabilities.introduction}
+        </p>
         <dl class="capability-groups">
           {
             profile.capabilities.groups.map((group) => (
               <div>
                 <dt>{group.title}</dt>
                 <dd>
+                  <p class="capability-description">{group.description}</p>
                   <ul class="inline-list" aria-label={group.title}>
                     {group.items.map((item) => (
                       <li>{item}</li>
                     ))}
                   </ul>
+                  <p class="capability-evidence">{group.evidence}</p>
                 </dd>
               </div>
             ))
           }
         </dl>
-        <p class="secondary-copy">{profile.capabilities.secondary}</p>
       </div>
     </section>
 
@@ -351,7 +355,7 @@ const backToTopLabel = locale === 'en' ? 'Back to top' : 'Volver arriba';
   .capability-groups {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: var(--space-6);
+    gap: clamp(var(--space-5), 4vw, var(--space-7));
   }
 
   .capability-groups > div,
@@ -361,7 +365,12 @@ const backToTopLabel = locale === 'en' ? 'Back to top' : 'Volver arriba';
   }
 
   .capability-groups dt {
-    font-weight: var(--font-weight-bold);
+    color: var(--color-accent-secondary);
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    letter-spacing: var(--letter-spacing-wide);
+    text-transform: uppercase;
   }
 
   .capability-groups dd {
@@ -381,6 +390,25 @@ const backToTopLabel = locale === 'en' ? 'Back to top' : 'Volver arriba';
     flex-wrap: wrap;
     gap: var(--space-1) var(--space-3);
     color: var(--color-text-muted);
+  }
+
+  .capabilities-introduction {
+    max-inline-size: var(--content-measure);
+    color: var(--color-text-muted);
+    font-size: var(--font-size-lead);
+  }
+
+  .capability-description {
+    min-block-size: 4.5em;
+    color: var(--color-text);
+  }
+
+  .capability-evidence {
+    margin-block-start: var(--space-4) !important;
+    padding-block-start: var(--space-3);
+    border-block-start: var(--border-width) solid var(--color-border);
+    color: var(--color-text-soft);
+    font-size: var(--font-size-sm);
   }
 
   .inline-list li:not(:last-child)::after {
@@ -459,7 +487,15 @@ const backToTopLabel = locale === 'en' ? 'Back to top' : 'Volver arriba';
 
   @media (width <= 64rem) {
     .capability-groups {
-      grid-template-columns: 1fr;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .capability-groups > div:last-child {
+      grid-column: 1 / -1;
+    }
+
+    .capability-description {
+      min-block-size: 0;
     }
 
     .entry-list article,
@@ -476,6 +512,14 @@ const backToTopLabel = locale === 'en' ? 'Back to top' : 'Volver arriba';
     .profile-section {
       grid-template-columns: 1fr;
       gap: var(--space-5);
+    }
+
+    .capability-groups {
+      grid-template-columns: 1fr;
+    }
+
+    .capability-groups > div:last-child {
+      grid-column: auto;
     }
   }
 </style>
