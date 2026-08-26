@@ -163,6 +163,7 @@ const { content, href } = Astro.props;
   }
 
   .project-intro {
+    min-inline-size: 0;
     max-inline-size: 58rem;
   }
 
@@ -428,7 +429,7 @@ const { content, href } = Astro.props;
       gap: var(--space-3);
     }
     h2 {
-      font-size: clamp(2.5rem, 16vw, 4.5rem);
+      font-size: clamp(2.5rem, 13vw, 4.5rem);
     }
     .workflow-panel {
       padding: var(--space-4);
