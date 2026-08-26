@@ -114,9 +114,8 @@ const { content, href } = Astro.props;
       var(--layout-container-wide),
       calc(100vw - (2 * var(--layout-gutter)))
     );
-    margin-inline: 50%;
+    margin-inline: calc(50% - 50vw + var(--layout-gutter));
     padding-block: clamp(var(--space-8), 9vw, calc(var(--space-9) * 1.35));
-    transform: translateX(-50%);
     border-block: var(--border-width) solid var(--color-border);
     isolation: isolate;
   }
@@ -424,11 +423,6 @@ const { content, href } = Astro.props;
   }
 
   @media (width <= 48rem) {
-    .questboard-flagship {
-      inline-size: 100%;
-      margin-inline: 0;
-      transform: none;
-    }
     .flagship-header {
       grid-template-columns: 2rem minmax(0, 1fr);
       gap: var(--space-3);
