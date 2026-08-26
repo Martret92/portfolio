@@ -39,6 +39,24 @@ describe('professional profile content', () => {
     expect(spanish.education.entries[2].status).toBe('Estudios no finalizados');
   });
 
+  it.each(locales)(
+    '%s exposes three evidence-led capability groups',
+    (locale) => {
+      const capabilities = getProfessionalProfile(locale).capabilities;
+
+      expect(capabilities.groups).toHaveLength(3);
+      expect(capabilities.groups.map(({ title }) => title)).toEqual(
+        locale === 'en'
+          ? ['Backend', 'Frontend', 'Engineering']
+          : ['Backend', 'Frontend', 'Ingeniería'],
+      );
+      for (const group of capabilities.groups) {
+        expect(group.description.length).toBeGreaterThan(0);
+        expect(group.evidence.length).toBeGreaterThan(0);
+      }
+    },
+  );
+
   it('does not introduce prohibited professional claims or private contact data', () => {
     const content = locales
       .map((locale) => JSON.stringify(getProfessionalProfile(locale)))

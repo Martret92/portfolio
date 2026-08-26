@@ -46,44 +46,59 @@ const professionalProfiles = {
     },
     capabilities: {
       heading: 'Technical capabilities',
+      introduction:
+        'A capability map grounded in the systems, interfaces and delivery workflows shown above.',
       groups: [
         {
-          title: 'Backend and data',
+          title: 'Backend',
+          description:
+            'APIs, application rules, realtime coordination and relational data.',
           items: [
             'Python',
-            'Django',
+            'Django REST Framework',
             'Node.js',
             'Express',
             'REST APIs',
+            'Socket.IO',
             'PostgreSQL',
             'SQL',
           ],
+          evidence:
+            'Explicit domain rules, contextual permissions, server authority and durable persistence.',
         },
         {
           title: 'Frontend',
+          description:
+            'Responsive, accessible interfaces that make application state understandable.',
           items: [
             'JavaScript',
             'TypeScript',
             'React',
+            'Astro',
             'HTML',
             'CSS',
             'Responsive Design',
           ],
+          evidence:
+            'Static editorial delivery, browser-native workflows and realtime product feedback.',
         },
         {
-          title: 'Engineering workflow',
+          title: 'Engineering',
+          description:
+            'Tests, containers and delivery checks that keep changes reproducible.',
           items: [
             'Git',
-            'GitHub',
             'Docker',
             'Testing',
             'GitHub Actions',
             'CI/CD',
+            'OpenAPI',
+            'Linux',
           ],
+          evidence:
+            'Automated quality gates, PostgreSQL integration, container builds and documented API contracts.',
         },
       ],
-      secondary:
-        'Also used: Vite, Bootstrap, MySQL, SQLite, Linux and Postman.',
     },
     experience: {
       heading: 'Professional experience',
@@ -184,44 +199,59 @@ const professionalProfiles = {
     },
     capabilities: {
       heading: 'Capacidades técnicas',
+      introduction:
+        'Un mapa de capacidades basado en los sistemas, interfaces y flujos de entrega mostrados arriba.',
       groups: [
         {
-          title: 'Backend y datos',
+          title: 'Backend',
+          description:
+            'APIs, reglas de aplicación, coordinación realtime y datos relacionales.',
           items: [
             'Python',
-            'Django',
+            'Django REST Framework',
             'Node.js',
             'Express',
             'APIs REST',
+            'Socket.IO',
             'PostgreSQL',
             'SQL',
           ],
+          evidence:
+            'Reglas de dominio explícitas, permisos contextuales, autoridad del servidor y persistencia duradera.',
         },
         {
           title: 'Frontend',
+          description:
+            'Interfaces responsive y accesibles que hacen comprensible el estado de la aplicación.',
           items: [
             'JavaScript',
             'TypeScript',
             'React',
+            'Astro',
             'HTML',
             'CSS',
             'Diseño responsive',
           ],
+          evidence:
+            'Entrega editorial estática, flujos nativos del navegador y feedback de producto realtime.',
         },
         {
-          title: 'Flujo de ingeniería',
+          title: 'Ingeniería',
+          description:
+            'Tests, contenedores y controles de entrega que mantienen los cambios reproducibles.',
           items: [
             'Git',
-            'GitHub',
             'Docker',
             'Testing',
             'GitHub Actions',
             'CI/CD',
+            'OpenAPI',
+            'Linux',
           ],
+          evidence:
+            'Quality gates automatizados, integración PostgreSQL, builds de contenedores y contratos de API documentados.',
         },
       ],
-      secondary:
-        'También he utilizado: Vite, Bootstrap, MySQL, SQLite, Linux y Postman.',
     },
     experience: {
       heading: 'Experiencia profesional',
